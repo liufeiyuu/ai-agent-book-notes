@@ -68,6 +68,14 @@ Agent = LLM + 【上下文 + 工具 + 约束 + 验证 + 纠正】 = Model + Harn
 最小可工作的 Agent 只需要 LLM + 上下文 + 工具，就能跑起来，但只能算是个 demo。
 如果要在生产级环境运行，还需要补全约束、验证、纠正功能。
 
+### 工程范式的演进
+
+Prompt Engineering -> Context Engineering -> Harness Engineering -> Loop Engineering -> Graph Engineering
+
+Loop Engineering：从单次运行到跨轮次的持续自主运转，谁来发现下一件该做的事，何时验证，何时才算真正完成。
+
+Graph Engineering：更高层的编排视角，把 Agent 循环、确定性程序和人工审批组织成显式的执行图，其中节点承担具体能力，边规定路由与依赖，结构化状态沿边传递并在关键边界处持久化。
+
 ## 待读时验证的问题
 
 - [ ] ReAct 在什么条件下会陷入无限循环？
