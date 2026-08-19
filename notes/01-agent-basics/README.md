@@ -153,3 +153,4 @@ Graph Engineering：更高层的编排视角，把 Agent 循环、确定性程�
 
 - [原书第一章](https://bojieli.github.io/ai-agent-book/book/chapter1/)
 - [实验 1-1：上下文消融实验](https://github.com/bojieli/ai-agent-book/tree/main/chapter1/context)
+- [Day 1 学习记录：建立 Agent 的最小心智模型](./day-01.md)
