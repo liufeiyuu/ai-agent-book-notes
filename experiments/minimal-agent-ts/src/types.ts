@@ -12,17 +12,19 @@ export type AssistantMessage = {
   toolCalls: ToolCall[];
 };
 
+export type ToolMessage = {
+  role: "tool";
+  toolCallId: string;
+  content: string;
+};
+
 export type Message =
   | {
       role: "system" | "user";
       content: string;
     }
   | AssistantMessage
-  | {
-      role: "tool";
-      toolCallId: string;
-      content: string;
-    };
+  | ToolMessage;
 
 export type ModelResponse = {
   message: AssistantMessage;
@@ -35,12 +37,14 @@ export type ToolDefinition = {
   inputSchema: JsonSchema;
 };
 
+export type ModelInput = {
+  messages: Message[];
+  tools: ToolDefinition[];
+  signal?: AbortSignal;
+};
+
 export interface Model {
-  generate(input: {
-    messages: Message[];
-    tools: ToolDefinition[];
-    signal?: AbortSignal;
-  }): Promise<ModelResponse>;
+  generate(input: ModelInput): Promise<ModelResponse>;
 }
 
 export type ToolResult =
@@ -55,7 +59,12 @@ export type ToolResult =
       toolCallId: string;
       toolName: string;
       error: {
-        code: "invalid_arguments" | "timeout" | "execution_error";
+        code:
+          | "invalid_arguments"
+          | "tool_not_found"
+          | "timeout"
+          | "cancelled"
+          | "execution_error";
         message: string;
         retryable: boolean;
       };
@@ -111,6 +120,7 @@ export type TraceEvent =
   | Timestamped<{
       type: "run_stop";
       reason: StopReason;
+      error?: string;
     }>;
 
 export type AgentRunResult = {
@@ -119,6 +129,7 @@ export type AgentRunResult = {
   stopReason: StopReason;
   turns: number;
   finalAnswer?: string;
+  error?: string;
   messages: Message[];
   trace: TraceEvent[];
 };
