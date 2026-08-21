@@ -154,3 +154,89 @@ Graph Engineering：更高层的编排视角，把 Agent 循环、确定性程�
 - [原书第一章](https://bojieli.github.io/ai-agent-book/book/chapter1/)
 - [实验 1-1：上下文消融实验](https://github.com/bojieli/ai-agent-book/tree/main/chapter1/context)
 - [Day 1 学习记录：建立 Agent 的最小心智模型](./day-01.md)
+
+## 补充
+
+type StopReason =
+  | "final_response"
+  | "max_turns"
+  | "timeout"
+  | "cancelled"
+  | "model_error";
+
+
+Loop 终止条件就这五种：
+
+正常回答；
+达到最大轮数；
+超时；
+用户取消；
+模型异常。
+
+stopReason 不是“告诉模型为什么终止”，模型通常不会看到 AgentRunResult。它是 Harness 返回给调用方、日志和测试的信息。
+
+“调用方”指调用 Agent/Harness 运行函数的那段上层代码，不是模型。
+
+假设 Harness 暴露：
+
+```ts
+const result = await runAgent({
+  model,
+  tools,
+  messages,
+});
+```
+
+那么执行这行代码的程序就是调用方，可能是：
+
+- CLI 命令行入口
+- Node.js API 路由
+- React 应用的服务端
+- 自动化测试
+- 另一个 Workflow 或 Agent
+
+例如 CLI 是调用方：
+
+```ts
+async function main() {
+  const result = await runAgent(...);
+
+  console.log(result.finalAnswer);
+  console.log(result.trace);
+}
+```
+
+测试代码也可以是调用方：
+
+```ts
+test("达到最大轮数后停止", async () => {
+  const result = await runAgent(...);
+
+  expect(result.stopReason).toBe("max_turns");
+});
+```
+
+调用关系是：
+
+```text
+用户
+  ↓
+CLI / API / 测试代码    ← 调用方
+  ↓
+Harness / runAgent()
+  ↓
+Model 与 Tools
+  ↓
+Harness 返回 AgentRunResult
+  ↓
+调用方决定如何展示、保存或继续处理
+```
+
+所以：
+
+- Model 返回的是 `ModelResponse`。
+- Tool 返回的是 `Tool Result`。
+- Harness 返回给调用方的是完整的 `AgentRunResult`。
+- 调用方再把其中的 `finalAnswer` 展示给最终用户，或者把 `trace` 写入日志。
+
+用户有时就是间接的接收者，但严格来说，调用方是调用函数的程序代码。
