@@ -155,6 +155,7 @@ Graph Engineering：更高层的编排视角，把 Agent 循环、确定性程�
 - [实验 1-1：上下文消融实验](https://github.com/bojieli/ai-agent-book/tree/main/chapter1/context)
 - [TypeScript 最小 Agent 实验](../../experiments/minimal-agent-ts/README.md)
 - [Day 1 学习记录：建立 Agent 的最小心智模型](./day-01.md)
+- [第一周复盘：Agent 基础与最小实现](./week-01-review.md)
 
 ## 补充
 
