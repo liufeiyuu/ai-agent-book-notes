@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "demo": "tsx src/demo.ts",
+    "demo:failures": "tsx src/failure-demo.ts",
+    "demo:openrouter": "tsx src/openrouter-demo.ts",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts"
   },

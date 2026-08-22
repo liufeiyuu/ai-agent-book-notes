@@ -87,7 +87,8 @@ export async function runAgent(
       let response;
       try {
         response = await raceWithAbort(
-          // experiments/minimal-agent-ts/src/demo.ts - L6
+          // 调用模型
+          // experiments/minimal-agent-ts/src/openrouter-demo.ts
           // experiments/minimal-agent-ts/src/mock-model.ts - L32
           // experiments/minimal-agent-ts/src/types.ts - L21
           options.model.generate({
@@ -138,6 +139,7 @@ export async function runAgent(
         });
       }
 
+      // 执行工具
       for (const call of toolCalls) {
         trace.push({
           type: "tool_start",

@@ -3,7 +3,8 @@ export type JsonSchema = Record<string, unknown>;
 export type ToolCall = {
   id: string;
   name: string;
-  arguments: Record<string, unknown>;
+  // Model output is untrusted until the Tool validates it.
+  arguments: unknown;
 };
 
 export type AssistantMessage = {
