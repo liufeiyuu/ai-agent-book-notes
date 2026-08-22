@@ -1,0 +1,790 @@
+{
+  "model": "deepseek/deepseek-v4-flash",
+  "run": {
+    "completed": true,
+    "stopReason": "final_response",
+    "turns": 2,
+    "finalAnswer": "三件事已完成，汇总如下：\n\n1. **读取文件**：项目名称为 **agent-learning-lab**，版本号为 **1.0.0**。\n2. **当前时间（Asia/Shanghai）**：**2026年8月22日 星期六 13:46:27** (GMT+8)\n3. **计算 17 × 23**：结果为 **391**。",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a workspace assistant. Use read_file for file contents, current_time for the current time, and calculator for arithmetic. You must use all three tools to complete the user's three requested items. If a tool reports invalid arguments, correct them and try again. Return a concise final answer only after every requested item is complete."
+      },
+      {
+        "role": "user",
+        "content": "请完成三件事：\n1. 读取无敏感演示文件 fixtures/demo-project.json，告诉我项目的 name 和 version；\n2. 查询 Asia/Shanghai 当前时间；\n3. 计算 17 × 23。"
+      },
+      {
+        "role": "assistant",
+        "content": "好的，我来同时完成这三件事",
+        "toolCalls": [
+          {
+            "id": "call_d362ef552f954ef8b3c8907e",
+            "name": "read_file",
+            "arguments": {
+              "path": "fixtures/demo-project.json"
+            }
+          },
+          {
+            "id": "call_0409a5e0d31a46f59e667b0b",
+            "name": "current_time",
+            "arguments": {
+              "timeZone": "Asia/Shanghai"
+            }
+          },
+          {
+            "id": "call_f560ec94c86b40d7835ff214",
+            "name": "calculator",
+            "arguments": {
+              "left": 17,
+              "operation": "multiply",
+              "right": 23
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "toolCallId": "call_d362ef552f954ef8b3c8907e",
+        "content": "{\"ok\":true,\"toolCallId\":\"call_d362ef552f954ef8b3c8907e\",\"toolName\":\"read_file\",\"output\":{\"path\":\"fixtures/demo-project.json\",\"bytes\":135,\"content\":\"{\\n  \\\"name\\\": \\\"agent-learning-lab\\\",\\n  \\\"version\\\": \\\"1.0.0\\\",\\n  \\\"purpose\\\": \\\"Synthetic, non-sensitive fixture for the read_file tool demo.\\\"\\n}\\n\"}}"
+      },
+      {
+        "role": "tool",
+        "toolCallId": "call_0409a5e0d31a46f59e667b0b",
+        "content": "{\"ok\":true,\"toolCallId\":\"call_0409a5e0d31a46f59e667b0b\",\"toolName\":\"current_time\",\"output\":{\"iso\":\"2026-08-22T05:46:27.457Z\",\"timeZone\":\"Asia/Shanghai\",\"localTime\":\"2026年8月22日星期六 GMT+8 13:46:27\"}}"
+      },
+      {
+        "role": "tool",
+        "toolCallId": "call_f560ec94c86b40d7835ff214",
+        "content": "{\"ok\":true,\"toolCallId\":\"call_f560ec94c86b40d7835ff214\",\"toolName\":\"calculator\",\"output\":391}"
+      },
+      {
+        "role": "assistant",
+        "content": "三件事已完成，汇总如下：\n\n1. **读取文件**：项目名称为 **agent-learning-lab**，版本号为 **1.0.0**。\n2. **当前时间（Asia/Shanghai）**：**2026年8月22日 星期六 13:46:27** (GMT+8)\n3. **计算 17 × 23**：结果为 **391**。",
+        "toolCalls": []
+      }
+    ],
+    "trace": [
+      {
+        "type": "model_request",
+        "turn": 1,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a workspace assistant. Use read_file for file contents, current_time for the current time, and calculator for arithmetic. You must use all three tools to complete the user's three requested items. If a tool reports invalid arguments, correct them and try again. Return a concise final answer only after every requested item is complete."
+          },
+          {
+            "role": "user",
+            "content": "请完成三件事：\n1. 读取无敏感演示文件 fixtures/demo-project.json，告诉我项目的 name 和 version；\n2. 查询 Asia/Shanghai 当前时间；\n3. 计算 17 × 23。"
+          }
+        ],
+        "tools": [
+          {
+            "name": "calculator",
+            "description": "Perform one arithmetic operation on two finite numbers.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "add",
+                    "subtract",
+                    "multiply",
+                    "divide"
+                  ],
+                  "description": "The arithmetic operation to perform."
+                },
+                "left": {
+                  "type": "number",
+                  "description": "The left operand."
+                },
+                "right": {
+                  "type": "number",
+                  "description": "The right operand."
+                }
+              },
+              "required": [
+                "operation",
+                "left",
+                "right"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "current_time",
+            "description": "Get the current date and time in an IANA time zone.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "timeZone": {
+                  "type": "string",
+                  "description": "An IANA time zone such as Asia/Shanghai or UTC."
+                }
+              },
+              "required": [
+                "timeZone"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "read_file",
+            "description": "Read one UTF-8 text file inside the configured workspace. Absolute paths and parent-directory traversal are forbidden.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "A workspace-relative file path, for example package.json."
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "timestamp": "2026-08-22T05:46:24.221Z"
+      },
+      {
+        "type": "model_response",
+        "turn": 1,
+        "response": {
+          "message": {
+            "role": "assistant",
+            "content": "好的，我来同时完成这三件事",
+            "toolCalls": [
+              {
+                "id": "call_d362ef552f954ef8b3c8907e",
+                "name": "read_file",
+                "arguments": {
+                  "path": "fixtures/demo-project.json"
+                }
+              },
+              {
+                "id": "call_0409a5e0d31a46f59e667b0b",
+                "name": "current_time",
+                "arguments": {
+                  "timeZone": "Asia/Shanghai"
+                }
+              },
+              {
+                "id": "call_f560ec94c86b40d7835ff214",
+                "name": "calculator",
+                "arguments": {
+                  "left": 17,
+                  "operation": "multiply",
+                  "right": 23
+                }
+              }
+            ]
+          },
+          "finishReason": "tool_calls"
+        },
+        "timestamp": "2026-08-22T05:46:27.454Z"
+      },
+      {
+        "type": "tool_start",
+        "turn": 1,
+        "call": {
+          "id": "call_d362ef552f954ef8b3c8907e",
+          "name": "read_file",
+          "arguments": {
+            "path": "fixtures/demo-project.json"
+          }
+        },
+        "timestamp": "2026-08-22T05:46:27.454Z"
+      },
+      {
+        "type": "tool_end",
+        "turn": 1,
+        "result": {
+          "ok": true,
+          "toolCallId": "call_d362ef552f954ef8b3c8907e",
+          "toolName": "read_file",
+          "output": {
+            "path": "fixtures/demo-project.json",
+            "bytes": 135,
+            "content": "{\n  \"name\": \"agent-learning-lab\",\n  \"version\": \"1.0.0\",\n  \"purpose\": \"Synthetic, non-sensitive fixture for the read_file tool demo.\"\n}\n"
+          }
+        },
+        "timestamp": "2026-08-22T05:46:27.457Z"
+      },
+      {
+        "type": "tool_start",
+        "turn": 1,
+        "call": {
+          "id": "call_0409a5e0d31a46f59e667b0b",
+          "name": "current_time",
+          "arguments": {
+            "timeZone": "Asia/Shanghai"
+          }
+        },
+        "timestamp": "2026-08-22T05:46:27.457Z"
+      },
+      {
+        "type": "tool_end",
+        "turn": 1,
+        "result": {
+          "ok": true,
+          "toolCallId": "call_0409a5e0d31a46f59e667b0b",
+          "toolName": "current_time",
+          "output": {
+            "iso": "2026-08-22T05:46:27.457Z",
+            "timeZone": "Asia/Shanghai",
+            "localTime": "2026年8月22日星期六 GMT+8 13:46:27"
+          }
+        },
+        "timestamp": "2026-08-22T05:46:27.502Z"
+      },
+      {
+        "type": "tool_start",
+        "turn": 1,
+        "call": {
+          "id": "call_f560ec94c86b40d7835ff214",
+          "name": "calculator",
+          "arguments": {
+            "left": 17,
+            "operation": "multiply",
+            "right": 23
+          }
+        },
+        "timestamp": "2026-08-22T05:46:27.502Z"
+      },
+      {
+        "type": "tool_end",
+        "turn": 1,
+        "result": {
+          "ok": true,
+          "toolCallId": "call_f560ec94c86b40d7835ff214",
+          "toolName": "calculator",
+          "output": 391
+        },
+        "timestamp": "2026-08-22T05:46:27.502Z"
+      },
+      {
+        "type": "model_request",
+        "turn": 2,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a workspace assistant. Use read_file for file contents, current_time for the current time, and calculator for arithmetic. You must use all three tools to complete the user's three requested items. If a tool reports invalid arguments, correct them and try again. Return a concise final answer only after every requested item is complete."
+          },
+          {
+            "role": "user",
+            "content": "请完成三件事：\n1. 读取无敏感演示文件 fixtures/demo-project.json，告诉我项目的 name 和 version；\n2. 查询 Asia/Shanghai 当前时间；\n3. 计算 17 × 23。"
+          },
+          {
+            "role": "assistant",
+            "content": "好的，我来同时完成这三件事",
+            "toolCalls": [
+              {
+                "id": "call_d362ef552f954ef8b3c8907e",
+                "name": "read_file",
+                "arguments": {
+                  "path": "fixtures/demo-project.json"
+                }
+              },
+              {
+                "id": "call_0409a5e0d31a46f59e667b0b",
+                "name": "current_time",
+                "arguments": {
+                  "timeZone": "Asia/Shanghai"
+                }
+              },
+              {
+                "id": "call_f560ec94c86b40d7835ff214",
+                "name": "calculator",
+                "arguments": {
+                  "left": 17,
+                  "operation": "multiply",
+                  "right": 23
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "toolCallId": "call_d362ef552f954ef8b3c8907e",
+            "content": "{\"ok\":true,\"toolCallId\":\"call_d362ef552f954ef8b3c8907e\",\"toolName\":\"read_file\",\"output\":{\"path\":\"fixtures/demo-project.json\",\"bytes\":135,\"content\":\"{\\n  \\\"name\\\": \\\"agent-learning-lab\\\",\\n  \\\"version\\\": \\\"1.0.0\\\",\\n  \\\"purpose\\\": \\\"Synthetic, non-sensitive fixture for the read_file tool demo.\\\"\\n}\\n\"}}"
+          },
+          {
+            "role": "tool",
+            "toolCallId": "call_0409a5e0d31a46f59e667b0b",
+            "content": "{\"ok\":true,\"toolCallId\":\"call_0409a5e0d31a46f59e667b0b\",\"toolName\":\"current_time\",\"output\":{\"iso\":\"2026-08-22T05:46:27.457Z\",\"timeZone\":\"Asia/Shanghai\",\"localTime\":\"2026年8月22日星期六 GMT+8 13:46:27\"}}"
+          },
+          {
+            "role": "tool",
+            "toolCallId": "call_f560ec94c86b40d7835ff214",
+            "content": "{\"ok\":true,\"toolCallId\":\"call_f560ec94c86b40d7835ff214\",\"toolName\":\"calculator\",\"output\":391}"
+          }
+        ],
+        "tools": [
+          {
+            "name": "calculator",
+            "description": "Perform one arithmetic operation on two finite numbers.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "add",
+                    "subtract",
+                    "multiply",
+                    "divide"
+                  ],
+                  "description": "The arithmetic operation to perform."
+                },
+                "left": {
+                  "type": "number",
+                  "description": "The left operand."
+                },
+                "right": {
+                  "type": "number",
+                  "description": "The right operand."
+                }
+              },
+              "required": [
+                "operation",
+                "left",
+                "right"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "current_time",
+            "description": "Get the current date and time in an IANA time zone.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "timeZone": {
+                  "type": "string",
+                  "description": "An IANA time zone such as Asia/Shanghai or UTC."
+                }
+              },
+              "required": [
+                "timeZone"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "read_file",
+            "description": "Read one UTF-8 text file inside the configured workspace. Absolute paths and parent-directory traversal are forbidden.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "A workspace-relative file path, for example package.json."
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "timestamp": "2026-08-22T05:46:27.502Z"
+      },
+      {
+        "type": "model_response",
+        "turn": 2,
+        "response": {
+          "message": {
+            "role": "assistant",
+            "content": "三件事已完成，汇总如下：\n\n1. **读取文件**：项目名称为 **agent-learning-lab**，版本号为 **1.0.0**。\n2. **当前时间（Asia/Shanghai）**：**2026年8月22日 星期六 13:46:27** (GMT+8)\n3. **计算 17 × 23**：结果为 **391**。",
+            "toolCalls": []
+          },
+          "finishReason": "stop"
+        },
+        "timestamp": "2026-08-22T05:46:29.391Z"
+      },
+      {
+        "type": "run_stop",
+        "reason": "final_response",
+        "timestamp": "2026-08-22T05:46:29.391Z"
+      }
+    ]
+  },
+  "providerExchanges": [
+    {
+      "request": {
+        "model": "deepseek/deepseek-v4-flash",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a workspace assistant. Use read_file for file contents, current_time for the current time, and calculator for arithmetic. You must use all three tools to complete the user's three requested items. If a tool reports invalid arguments, correct them and try again. Return a concise final answer only after every requested item is complete."
+          },
+          {
+            "role": "user",
+            "content": "请完成三件事：\n1. 读取无敏感演示文件 fixtures/demo-project.json，告诉我项目的 name 和 version；\n2. 查询 Asia/Shanghai 当前时间；\n3. 计算 17 × 23。"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "calculator",
+              "description": "Perform one arithmetic operation on two finite numbers.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "add",
+                      "subtract",
+                      "multiply",
+                      "divide"
+                    ],
+                    "description": "The arithmetic operation to perform."
+                  },
+                  "left": {
+                    "type": "number",
+                    "description": "The left operand."
+                  },
+                  "right": {
+                    "type": "number",
+                    "description": "The right operand."
+                  }
+                },
+                "required": [
+                  "operation",
+                  "left",
+                  "right"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "current_time",
+              "description": "Get the current date and time in an IANA time zone.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "timeZone": {
+                    "type": "string",
+                    "description": "An IANA time zone such as Asia/Shanghai or UTC."
+                  }
+                },
+                "required": [
+                  "timeZone"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "description": "Read one UTF-8 text file inside the configured workspace. Absolute paths and parent-directory traversal are forbidden.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "A workspace-relative file path, for example package.json."
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto"
+      },
+      "responseStatus": 200,
+      "responseBody": {
+        "id": "gen-1787377585-4ohFUJj54u5hDPdOllW4",
+        "object": "chat.completion",
+        "created": 1787377585,
+        "model": "deepseek/deepseek-v4-flash",
+        "provider": "Baidu",
+        "system_fingerprint": null,
+        "service_tier": null,
+        "choices": [
+          {
+            "index": 0,
+            "logprobs": null,
+            "finish_reason": "tool_calls",
+            "native_finish_reason": "tool_calls",
+            "message": {
+              "role": "assistant",
+              "content": "好的，我来同时完成这三件事",
+              "refusal": null,
+              "reasoning": "用户要求完成三件事，我需要使用三个工具：\n\n1. 读取文件 fixtures/demo-project.json\n2. 查询 Asia/Shanghai 的当前时间\n3. 计算 17 × 23\n\n这三个任务互相独立，可以同时进行。",
+              "tool_calls": [
+                {
+                  "type": "function",
+                  "index": 0,
+                  "id": "call_d362ef552f954ef8b3c8907e",
+                  "function": {
+                    "name": "read_file",
+                    "arguments": "{\"path\": \"fixtures/demo-project.json\"}"
+                  }
+                },
+                {
+                  "type": "function",
+                  "index": 1,
+                  "id": "call_0409a5e0d31a46f59e667b0b",
+                  "function": {
+                    "name": "current_time",
+                    "arguments": "{\"timeZone\": \"Asia/Shanghai\"}"
+                  }
+                },
+                {
+                  "type": "function",
+                  "index": 2,
+                  "id": "call_f560ec94c86b40d7835ff214",
+                  "function": {
+                    "name": "calculator",
+                    "arguments": "{\"left\": 17, \"operation\": \"multiply\", \"right\": 23}"
+                  }
+                }
+              ],
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "用户要求完成三件事，我需要使用三个工具：\n\n1. 读取文件 fixtures/demo-project.json\n2. 查询 Asia/Shanghai 的当前时间\n3. 计算 17 × 23\n\n这三个任务互相独立，可以同时进行。",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 635,
+          "completion_tokens": 207,
+          "total_tokens": 842,
+          "cost": 0.0000763672,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0000763672,
+            "upstream_inference_prompt_cost": 0.000046228,
+            "upstream_inference_completions_cost": 0.0000301392
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 54,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    },
+    {
+      "request": {
+        "model": "deepseek/deepseek-v4-flash",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a workspace assistant. Use read_file for file contents, current_time for the current time, and calculator for arithmetic. You must use all three tools to complete the user's three requested items. If a tool reports invalid arguments, correct them and try again. Return a concise final answer only after every requested item is complete."
+          },
+          {
+            "role": "user",
+            "content": "请完成三件事：\n1. 读取无敏感演示文件 fixtures/demo-project.json，告诉我项目的 name 和 version；\n2. 查询 Asia/Shanghai 当前时间；\n3. 计算 17 × 23。"
+          },
+          {
+            "role": "assistant",
+            "content": "好的，我来同时完成这三件事",
+            "tool_calls": [
+              {
+                "id": "call_d362ef552f954ef8b3c8907e",
+                "type": "function",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\":\"fixtures/demo-project.json\"}"
+                }
+              },
+              {
+                "id": "call_0409a5e0d31a46f59e667b0b",
+                "type": "function",
+                "function": {
+                  "name": "current_time",
+                  "arguments": "{\"timeZone\":\"Asia/Shanghai\"}"
+                }
+              },
+              {
+                "id": "call_f560ec94c86b40d7835ff214",
+                "type": "function",
+                "function": {
+                  "name": "calculator",
+                  "arguments": "{\"left\":17,\"operation\":\"multiply\",\"right\":23}"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "tool_call_id": "call_d362ef552f954ef8b3c8907e",
+            "content": "{\"ok\":true,\"toolCallId\":\"call_d362ef552f954ef8b3c8907e\",\"toolName\":\"read_file\",\"output\":{\"path\":\"fixtures/demo-project.json\",\"bytes\":135,\"content\":\"{\\n  \\\"name\\\": \\\"agent-learning-lab\\\",\\n  \\\"version\\\": \\\"1.0.0\\\",\\n  \\\"purpose\\\": \\\"Synthetic, non-sensitive fixture for the read_file tool demo.\\\"\\n}\\n\"}}"
+          },
+          {
+            "role": "tool",
+            "tool_call_id": "call_0409a5e0d31a46f59e667b0b",
+            "content": "{\"ok\":true,\"toolCallId\":\"call_0409a5e0d31a46f59e667b0b\",\"toolName\":\"current_time\",\"output\":{\"iso\":\"2026-08-22T05:46:27.457Z\",\"timeZone\":\"Asia/Shanghai\",\"localTime\":\"2026年8月22日星期六 GMT+8 13:46:27\"}}"
+          },
+          {
+            "role": "tool",
+            "tool_call_id": "call_f560ec94c86b40d7835ff214",
+            "content": "{\"ok\":true,\"toolCallId\":\"call_f560ec94c86b40d7835ff214\",\"toolName\":\"calculator\",\"output\":391}"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "calculator",
+              "description": "Perform one arithmetic operation on two finite numbers.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "add",
+                      "subtract",
+                      "multiply",
+                      "divide"
+                    ],
+                    "description": "The arithmetic operation to perform."
+                  },
+                  "left": {
+                    "type": "number",
+                    "description": "The left operand."
+                  },
+                  "right": {
+                    "type": "number",
+                    "description": "The right operand."
+                  }
+                },
+                "required": [
+                  "operation",
+                  "left",
+                  "right"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "current_time",
+              "description": "Get the current date and time in an IANA time zone.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "timeZone": {
+                    "type": "string",
+                    "description": "An IANA time zone such as Asia/Shanghai or UTC."
+                  }
+                },
+                "required": [
+                  "timeZone"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "description": "Read one UTF-8 text file inside the configured workspace. Absolute paths and parent-directory traversal are forbidden.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "A workspace-relative file path, for example package.json."
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto"
+      },
+      "responseStatus": 200,
+      "responseBody": {
+        "id": "gen-1787377587-XAWJ2PcFdnm5xDonUHty",
+        "object": "chat.completion",
+        "created": 1787377587,
+        "model": "deepseek/deepseek-v4-flash",
+        "provider": "Baidu",
+        "system_fingerprint": null,
+        "service_tier": null,
+        "choices": [
+          {
+            "index": 0,
+            "logprobs": null,
+            "finish_reason": "stop",
+            "native_finish_reason": "stop",
+            "message": {
+              "role": "assistant",
+              "content": "三件事已完成，汇总如下：\n\n1. **读取文件**：项目名称为 **agent-learning-lab**，版本号为 **1.0.0**。\n2. **当前时间（Asia/Shanghai）**：**2026年8月22日 星期六 13:46:27** (GMT+8)\n3. **计算 17 × 23**：结果为 **391**。",
+              "refusal": null,
+              "reasoning": "All three tasks are complete. Let me summarize the results.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "All three tasks are complete. Let me summarize the results.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1029,
+          "completion_tokens": 98,
+          "total_tokens": 1127,
+          "cost": 0.00005936112,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 512,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00005936112,
+            "upstream_inference_prompt_cost": 0.00004509232,
+            "upstream_inference_completions_cost": 0.0000142688
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 12,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    }
+  ]
+}
