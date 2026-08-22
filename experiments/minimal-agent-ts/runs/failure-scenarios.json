@@ -120,7 +120,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.309Z"
+        "timestamp": "2026-08-22T08:24:58.040Z"
       },
       {
         "type": "model_response",
@@ -141,7 +141,7 @@
             ]
           }
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.040Z"
       },
       {
         "type": "tool_start",
@@ -153,7 +153,7 @@
             "city": "Shanghai"
           }
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.040Z"
       },
       {
         "type": "tool_end",
@@ -168,7 +168,7 @@
             "retryable": false
           }
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "model_request",
@@ -270,7 +270,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "model_response",
@@ -283,12 +283,12 @@
             "toolCalls": []
           }
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "run_stop",
         "reason": "final_response",
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       }
     ]
   },
@@ -429,7 +429,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "model_response",
@@ -448,7 +448,7 @@
             ]
           }
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "tool_start",
@@ -458,7 +458,7 @@
           "name": "current_time",
           "arguments": {}
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "tool_end",
@@ -473,7 +473,7 @@
             "retryable": true
           }
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "model_request",
@@ -573,7 +573,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "model_response",
@@ -594,7 +594,7 @@
             ]
           }
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "tool_start",
@@ -606,7 +606,7 @@
             "timeZone": "Asia/Shanghai"
           }
         },
-        "timestamp": "2026-08-22T05:45:33.310Z"
+        "timestamp": "2026-08-22T08:24:58.041Z"
       },
       {
         "type": "tool_end",
@@ -621,7 +621,7 @@
             "localTime": "2026年8月22日星期六 GMT+8 08:00:00"
           }
         },
-        "timestamp": "2026-08-22T05:45:33.319Z"
+        "timestamp": "2026-08-22T08:24:58.066Z"
       },
       {
         "type": "model_request",
@@ -739,7 +739,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.319Z"
+        "timestamp": "2026-08-22T08:24:58.066Z"
       },
       {
         "type": "model_response",
@@ -752,12 +752,12 @@
             "toolCalls": []
           }
         },
-        "timestamp": "2026-08-22T05:45:33.319Z"
+        "timestamp": "2026-08-22T08:24:58.066Z"
       },
       {
         "type": "run_stop",
         "reason": "final_response",
-        "timestamp": "2026-08-22T05:45:33.319Z"
+        "timestamp": "2026-08-22T08:24:58.066Z"
       }
     ]
   },
@@ -882,7 +882,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.319Z"
+        "timestamp": "2026-08-22T08:24:58.066Z"
       },
       {
         "type": "model_response",
@@ -903,7 +903,7 @@
             ]
           }
         },
-        "timestamp": "2026-08-22T05:45:33.319Z"
+        "timestamp": "2026-08-22T08:24:58.066Z"
       },
       {
         "type": "tool_start",
@@ -915,7 +915,7 @@
             "path": "does-not-exist.txt"
           }
         },
-        "timestamp": "2026-08-22T05:45:33.319Z"
+        "timestamp": "2026-08-22T08:24:58.066Z"
       },
       {
         "type": "tool_end",
@@ -930,7 +930,7 @@
             "retryable": false
           }
         },
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "model_request",
@@ -1032,7 +1032,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "model_response",
@@ -1045,12 +1045,12 @@
             "toolCalls": []
           }
         },
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "run_stop",
         "reason": "final_response",
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       }
     ]
   },
@@ -1191,7 +1191,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "model_response",
@@ -1214,7 +1214,7 @@
             ]
           }
         },
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "tool_start",
@@ -1228,7 +1228,7 @@
             "right": 1
           }
         },
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "tool_end",
@@ -1239,7 +1239,7 @@
           "toolName": "calculator",
           "output": 1
         },
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "model_request",
@@ -1343,7 +1343,7 @@
             }
           }
         ],
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "model_response",
@@ -1366,7 +1366,7 @@
             ]
           }
         },
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "tool_start",
@@ -1380,7 +1380,7 @@
             "right": 1
           }
         },
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "tool_end",
@@ -1391,12 +1391,12 @@
           "toolName": "calculator",
           "output": 2
         },
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       },
       {
         "type": "run_stop",
         "reason": "max_turns",
-        "timestamp": "2026-08-22T05:45:33.320Z"
+        "timestamp": "2026-08-22T08:24:58.067Z"
       }
     ]
   }
