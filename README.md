@@ -9,13 +9,23 @@
 - 记录实践中的问题、判断与结论
 - 建立一套可以持续迭代的 Agent 工程知识库
 
+## 最高优先级原则：抓大放小
+
+时间有限时，优先掌握核心概念、组件边界、完整数据流、关键取舍、失败诊断、最小实现与评测方法。数学推导、框架细节、生产优化和前沿扩展不阻塞当前主线时，记录到[延后学习清单](notes/learning-backlog.md)，等项目出现真实需求再深入。
+
+学习顺序统一为：
+
+```text
+搭建框架 → 理解重点 → 最小实践 → 验证结果 → 项目按需深入
+```
+
 ## 阅读进度
 
 | 章节 | 主题 | 状态 | 笔记 |
 | --- | --- | --- | --- |
 | 0 | 引言 | 阅读中 | [进入笔记](notes/00-introduction/README.md) |
 | 1 | Agent 基础知识 | 待读 | [进入笔记](notes/01-agent-basics/README.md) |
-| 2 | 上下文工程 | 待读 | [进入笔记](notes/02-context-engineering/README.md) |
+| 2 | 上下文工程 | 阅读中 | [进入笔记](notes/02-context-engineering/README.md) |
 | 3 | 用户记忆和知识库 | 待读 | [进入笔记](notes/03-memory-and-knowledge/README.md) |
 | 4 | 工具 | 待读 | [进入笔记](notes/04-tools/README.md) |
 | 5 | Coding Agent 与代码生成 | 待读 | [进入笔记](notes/05-coding-agent/README.md) |
@@ -45,9 +55,9 @@
 3. 摘抄与个人理解分开记录，引用原文时附上来源链接。
 4. 实验不仅记录代码，也记录假设、结果、失败和结论。
 5. Notion 仅作为便于阅读、筛选和检索的同步副本。
+6. 非核心细节最多探索 10–15 分钟；不阻塞主线时写入延后学习清单。
 
 ## 资料
 
 - [在线阅读](https://bojieli.github.io/ai-agent-book/book/introduction/)
 - [原书 GitHub 仓库](https://github.com/bojieli/ai-agent-book)
-
