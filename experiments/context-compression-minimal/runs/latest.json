@@ -1,0 +1,143 @@
+[
+  {
+    "strategy": "no_compression",
+    "rendered_context": "[SYSTEM]\nSAFETY: Do not access the external network without user permission.\nRULE: Preserve exact identifiers without rewriting them.\n\n[USER]\nHARD_CONSTRAINT: Do not access the external network for this task.\nORDER_ID: ORD-2026-0830\n\n[ASSISTANT]\nPlan: read the local refund policy, check eligibility, then ask for confirmation.\n\n[TOOL]\nSOURCE: doc://refund-policy-v3\nA refund is allowed within 7 days of delivery.\nnavigation footer repeated content block 000\nnavigation footer repeated content block 001\nnavigation footer repeated content block 002\nnavigation footer repeated content block 003\nnavigation footer repeated content block 004\nnavigation footer repeated content block 005\nnavigation footer repeated content block 006\nnavigation footer repeated content block 007\nnavigation footer repeated content block 008\nnavigation footer repeated content block 009\nnavigation footer repeated content block 010\nnavigation footer repeated content block 011\nnavigation footer repeated content block 012\nnavigation footer repeated content block 013\nnavigation footer repeated content block 014\nnavigation footer repeated content block 015\nnavigation footer repeated content block 016\nnavigation footer repeated content block 017\nnavigation footer repeated content block 018\nnavigation footer repeated content block 019\nnavigation footer repeated content block 020\nnavigation footer repeated content block 021\nnavigation footer repeated content block 022\nnavigation footer repeated content block 023\nnavigation footer repeated content block 024\nnavigation footer repeated content block 025\nnavigation footer repeated content block 026\nnavigation footer repeated content block 027\nnavigation footer repeated content block 028\nnavigation footer repeated content block 029\nnavigation footer repeated content block 030\nnavigation footer repeated content block 031\nnavigation footer repeated content block 032\nnavigation footer repeated content block 033\nnavigation footer repeated content block 034\nnavigation footer repeated content block 035\nnavigation footer repeated content block 036\nnavigation footer repeated content block 037\nnavigation footer repeated content block 038\nnavigation footer repeated content block 039\nnavigation footer repeated content block 040\nnavigation footer repeated content block 041\nnavigation footer repeated content block 042\nnavigation footer repeated content block 043\nnavigation footer repeated content block 044\nnavigation footer repeated content block 045\nnavigation footer repeated content block 046\nnavigation footer repeated content block 047\nnavigation footer repeated content block 048\nnavigation footer repeated content block 049\nnavigation footer repeated content block 050\nnavigation footer repeated content block 051\nnavigation footer repeated content block 052\nnavigation footer repeated content block 053\nnavigation footer repeated content block 054\nnavigation footer repeated content block 055\nnavigation footer repeated content block 056\nnavigation footer repeated content block 057\nnavigation footer repeated content block 058\nnavigation footer repeated content block 059\nnavigation footer repeated content block 060\nnavigation footer repeated content block 061\nnavigation footer repeated content block 062\nnavigation footer repeated content block 063\nnavigation footer repeated content block 064\nnavigation footer repeated content block 065\nnavigation footer repeated content block 066\nnavigation footer repeated content block 067\nnavigation footer repeated content block 068\nnavigation footer repeated content block 069\nnavigation footer repeated content block 070\nnavigation footer repeated content block 071\nnavigation footer repeated content block 072\nnavigation footer repeated content block 073\nnavigation footer repeated content block 074\nnavigation footer repeated content block 075\nnavigation footer repeated content block 076\nnavigation footer repeated content block 077\nnavigation footer repeated content block 078\nnavigation footer repeated content block 079\nnavigation footer repeated content block 080\nnavigation footer repeated content block 081\nnavigation footer repeated content block 082\nnavigation footer repeated content block 083\nnavigation footer repeated content block 084\nnavigation footer repeated content block 085\nnavigation footer repeated content block 086\nnavigation footer repeated content block 087\nnavigation footer repeated content block 088\nnavigation footer repeated content block 089\nnavigation footer repeated content block 090\nnavigation footer repeated content block 091\nnavigation footer repeated content block 092\nnavigation footer repeated content block 093\nnavigation footer repeated content block 094\nnavigation footer repeated content block 095\nnavigation footer repeated content block 096\nnavigation footer repeated content block 097\nnavigation footer repeated content block 098\nnavigation footer repeated content block 099\nnavigation footer repeated content block 100\nnavigation footer repeated content block 101\nnavigation footer repeated content block 102\nnavigation footer repeated content block 103\nnavigation footer repeated content block 104\nnavigation footer repeated content block 105\nnavigation footer repeated content block 106\nnavigation footer repeated content block 107\nnavigation footer repeated content block 108\nnavigation footer repeated content block 109\nnavigation footer repeated content block 110\nnavigation footer repeated content block 111\nnavigation footer repeated content block 112\nnavigation footer repeated content block 113\nnavigation footer repeated content block 114\nnavigation footer repeated content block 115\nnavigation footer repeated content block 116\nnavigation footer repeated content block 117\nnavigation footer repeated content block 118\nnavigation footer repeated content block 119\nnavigation footer repeated content block 120\nnavigation footer repeated content block 121\nnavigation footer repeated content block 122\nnavigation footer repeated content block 123\nnavigation footer repeated content block 124\nnavigation footer repeated content block 125\nnavigation footer repeated content block 126\nnavigation footer repeated content block 127\nnavigation footer repeated content block 128\nnavigation footer repeated content block 129\nnavigation footer repeated content block 130\nnavigation footer repeated content block 131\nnavigation footer repeated content block 132\nnavigation footer repeated content block 133\nnavigation footer repeated content block 134\nnavigation footer repeated content block 135\nnavigation footer repeated content block 136\nnavigation footer repeated content block 137\nnavigation footer repeated content block 138\nnavigation footer repeated content block 139\nnavigation footer repeated content block 140\nnavigation footer repeated content block 141\nnavigation footer repeated content block 142\nnavigation footer repeated content block 143\nnavigation footer repeated content block 144\nnavigation footer repeated content block 145\nnavigation footer repeated content block 146\nnavigation footer repeated content block 147\nnavigation footer repeated content block 148\nnavigation footer repeated content block 149\nnavigation footer repeated content block 150\nnavigation footer repeated content block 151\nnavigation footer repeated content block 152\nnavigation footer repeated content block 153\nnavigation footer repeated content block 154\nnavigation footer repeated content block 155\nnavigation footer repeated content block 156\nnavigation footer repeated content block 157\nnavigation footer repeated content block 158\nnavigation footer repeated content block 159\nnavigation footer repeated content block 160\nnavigation footer repeated content block 161\nnavigation footer repeated content block 162\nnavigation footer repeated content block 163\nnavigation footer repeated content block 164\nnavigation footer repeated content block 165\nnavigation footer repeated content block 166\nnavigation footer repeated content block 167\nnavigation footer repeated content block 168\nnavigation footer repeated content block 169\nnavigation footer repeated content block 170\nnavigation footer repeated content block 171\nnavigation footer repeated content block 172\nnavigation footer repeated content block 173\nnavigation footer repeated content block 174\nnavigation footer repeated content block 175\nnavigation footer repeated content block 176\nnavigation footer repeated content block 177\nnavigation footer repeated content block 178\nnavigation footer repeated content block 179\nnavigation footer repeated content block 180\nnavigation footer repeated content block 181\nnavigation footer repeated content block 182\nnavigation footer repeated content block 183\nnavigation footer repeated content block 184\nnavigation footer repeated content block 185\nnavigation footer repeated content block 186\nnavigation footer repeated content block 187\nnavigation footer repeated content block 188\nnavigation footer repeated content block 189\nnavigation footer repeated content block 190\nnavigation footer repeated content block 191\nnavigation footer repeated content block 192\nnavigation footer repeated content block 193\nnavigation footer repeated content block 194\nnavigation footer repeated content block 195\nnavigation footer repeated content block 196\nnavigation footer repeated content block 197\nnavigation footer repeated content block 198\nnavigation footer repeated content block 199\nnavigation footer repeated content block 200\nnavigation footer repeated content block 201\nnavigation footer repeated content block 202\nnavigation footer repeated content block 203\nnavigation footer repeated content block 204\nnavigation footer repeated content block 205\nnavigation footer repeated content block 206\nnavigation footer repeated content block 207\nnavigation footer repeated content block 208\nnavigation footer repeated content block 209\nnavigation footer repeated content block 210\nnavigation footer repeated content block 211\nnavigation footer repeated content block 212\nnavigation footer repeated content block 213\nnavigation footer repeated content block 214\nnavigation footer repeated content block 215\nnavigation footer repeated content block 216\nnavigation footer repeated content block 217\nnavigation footer repeated content block 218\nnavigation footer repeated content block 219\nnavigation footer repeated content block 220\nnavigation footer repeated content block 221\nnavigation footer repeated content block 222\nnavigation footer repeated content block 223\nnavigation footer repeated content block 224\nnavigation footer repeated content block 225\nnavigation footer repeated content block 226\nnavigation footer repeated content block 227\nnavigation footer repeated content block 228\nnavigation footer repeated content block 229\nnavigation footer repeated content block 230\nnavigation footer repeated content block 231\nnavigation footer repeated content block 232\nnavigation footer repeated content block 233\nnavigation footer repeated content block 234\nnavigation footer repeated content block 235\nnavigation footer repeated content block 236\nnavigation footer repeated content block 237\nnavigation footer repeated content block 238\nnavigation footer repeated content block 239\nnavigation footer repeated content block 240\nnavigation footer repeated content block 241\nnavigation footer repeated content block 242\nnavigation footer repeated content block 243\nnavigation footer repeated content block 244\nnavigation footer repeated content block 245\nnavigation footer repeated content block 246\nnavigation footer repeated content block 247\nnavigation footer repeated content block 248\nnavigation footer repeated content block 249\nnavigation footer repeated content block 250\nnavigation footer repeated content block 251\nnavigation footer repeated content block 252\nnavigation footer repeated content block 253\nnavigation footer repeated content block 254\nnavigation footer repeated content block 255\nnavigation footer repeated content block 256\nnavigation footer repeated content block 257\nnavigation footer repeated content block 258\nnavigation footer repeated content block 259\nnavigation footer repeated content block 260\nnavigation footer repeated content block 261\nnavigation footer repeated content block 262\nnavigation footer repeated content block 263\nnavigation footer repeated content block 264\nnavigation footer repeated content block 265\nnavigation footer repeated content block 266\nnavigation footer repeated content block 267\nnavigation footer repeated content block 268\nnavigation footer repeated content block 269\nnavigation footer repeated content block 270\nnavigation footer repeated content block 271\nnavigation footer repeated content block 272\nnavigation footer repeated content block 273\nnavigation footer repeated content block 274\nnavigation footer repeated content block 275\nnavigation footer repeated content block 276\nnavigation footer repeated content block 277\nnavigation footer repeated content block 278\nnavigation footer repeated content block 279\nnavigation footer repeated content block 280\nnavigation footer repeated content block 281\nnavigation footer repeated content block 282\nnavigation footer repeated content block 283\nnavigation footer repeated content block 284\nnavigation footer repeated content block 285\nnavigation footer repeated content block 286\nnavigation footer repeated content block 287\nnavigation footer repeated content block 288\nnavigation footer repeated content block 289\nnavigation footer repeated content block 290\nnavigation footer repeated content block 291\nnavigation footer repeated content block 292\nnavigation footer repeated content block 293\nnavigation footer repeated content block 294\nnavigation footer repeated content block 295\nnavigation footer repeated content block 296\nnavigation footer repeated content block 297\nnavigation footer repeated content block 298\nnavigation footer repeated content block 299\nnavigation footer repeated content block 300\nnavigation footer repeated content block 301\nnavigation footer repeated content block 302\nnavigation footer repeated content block 303\nnavigation footer repeated content block 304\nnavigation footer repeated content block 305\nnavigation footer repeated content block 306\nnavigation footer repeated content block 307\nnavigation footer repeated content block 308\nnavigation footer repeated content block 309\nnavigation footer repeated content block 310\nnavigation footer repeated content block 311\nnavigation footer repeated content block 312\nnavigation footer repeated content block 313\nnavigation footer repeated content block 314\nnavigation footer repeated content block 315\nnavigation footer repeated content block 316\nnavigation footer repeated content block 317\nnavigation footer repeated content block 318\nnavigation footer repeated content block 319\nnavigation footer repeated content block 320\nnavigation footer repeated content block 321\nnavigation footer repeated content block 322\nnavigation footer repeated content block 323\nnavigation footer repeated content block 324\nnavigation footer repeated content block 325\nnavigation footer repeated content block 326\nnavigation footer repeated content block 327\nnavigation footer repeated content block 328\nnavigation footer repeated content block 329\nnavigation footer repeated content block 330\nnavigation footer repeated content block 331\nnavigation footer repeated content block 332\nnavigation footer repeated content block 333\nnavigation footer repeated content block 334\nnavigation footer repeated content block 335\nnavigation footer repeated content block 336\nnavigation footer repeated content block 337\nnavigation footer repeated content block 338\nnavigation footer repeated content block 339\nnavigation footer repeated content block 340\nnavigation footer repeated content block 341\nnavigation footer repeated content block 342\nnavigation footer repeated content block 343\nnavigation footer repeated content block 344\nnavigation footer repeated content block 345\nnavigation footer repeated content block 346\nnavigation footer repeated content block 347\nnavigation footer repeated content block 348\nnavigation footer repeated content block 349\nnavigation footer repeated content block 350\nnavigation footer repeated content block 351\nnavigation footer repeated content block 352\nnavigation footer repeated content block 353\nnavigation footer repeated content block 354\nnavigation footer repeated content block 355\nnavigation footer repeated content block 356\nnavigation footer repeated content block 357\nnavigation footer repeated content block 358\nnavigation footer repeated content block 359\nnavigation footer repeated content block 360\nnavigation footer repeated content block 361\nnavigation footer repeated content block 362\nnavigation footer repeated content block 363\nnavigation footer repeated content block 364\nnavigation footer repeated content block 365\nnavigation footer repeated content block 366\nnavigation footer repeated content block 367\nnavigation footer repeated content block 368\nnavigation footer repeated content block 369\nnavigation footer repeated content block 370\nnavigation footer repeated content block 371\nnavigation footer repeated content block 372\nnavigation footer repeated content block 373\nnavigation footer repeated content block 374\nnavigation footer repeated content block 375\nnavigation footer repeated content block 376\nnavigation footer repeated content block 377\nnavigation footer repeated content block 378\nnavigation footer repeated content block 379\nnavigation footer repeated content block 380\nnavigation footer repeated content block 381\nnavigation footer repeated content block 382\nnavigation footer repeated content block 383\nnavigation footer repeated content block 384\nnavigation footer repeated content block 385\nnavigation footer repeated content block 386\nnavigation footer repeated content block 387\nnavigation footer repeated content block 388\nnavigation footer repeated content block 389\nnavigation footer repeated content block 390\nnavigation footer repeated content block 391\nnavigation footer repeated content block 392\nnavigation footer repeated content block 393\nnavigation footer repeated content block 394\nnavigation footer repeated content block 395\nnavigation footer repeated content block 396\nnavigation footer repeated content block 397\nnavigation footer repeated content block 398\nnavigation footer repeated content block 399\nnavigation footer repeated content block 400\nnavigation footer repeated content block 401\nnavigation footer repeated content block 402\nnavigation footer repeated content block 403\nnavigation footer repeated content block 404\nnavigation footer repeated content block 405\nnavigation footer repeated content block 406\nnavigation footer repeated content block 407\nnavigation footer repeated content block 408\nnavigation footer repeated content block 409\nnavigation footer repeated content block 410\nnavigation footer repeated content block 411\nnavigation footer repeated content block 412\nnavigation footer repeated content block 413\nnavigation footer repeated content block 414\nnavigation footer repeated content block 415\nnavigation footer repeated content block 416\nnavigation footer repeated content block 417\nnavigation footer repeated content block 418\nnavigation footer repeated content block 419\n\n[ASSISTANT]\nTOOL_CALL id=call_web_1 name=web_search arguments={\"query\":\"refund policy\"}\n\n[TOOL]\ntool_call_id=call_web_1 ERROR: web_search failed because of a missing API key.\n\n[ASSISTANT]\nFAILED_ATTEMPT: web_search failed because of a missing API key; do not retry it.\n\n[USER]\nUnrelated small-talk message 1.\n\n[ASSISTANT]\nUnrelated small-talk response 1.\n\n[USER]\nUnrelated small-talk message 2.\n\n[ASSISTANT]\nUnrelated small-talk response 2.\n\n[USER]\nUnrelated small-talk message 3.\n\n[ASSISTANT]\nUnrelated small-talk response 3.\n\n[USER]\nUnrelated small-talk message 4.\n\n[ASSISTANT]\nUnrelated small-talk response 4.\n\n[USER]\nUnrelated small-talk message 5.\n\n[ASSISTANT]\nUnrelated small-talk response 5.\n\n[USER]\nUnrelated small-talk message 6.\n\n[ASSISTANT]\nUnrelated small-talk response 6.\n\n[USER]\nContinue processing the refund request.\n\n[USER]\nCURRENT_TODO: Check whether the order satisfies the refund conditions.",
+    "character_count": 20226,
+    "rough_token_estimate": 5057,
+    "compression_ratio": 1.0,
+    "checks": [
+      {
+        "name": "hard_constraint",
+        "passed": true,
+        "detail": "The active no-network constraint must remain visible."
+      },
+      {
+        "name": "exact_identifier",
+        "passed": true,
+        "detail": "The order identifier must remain byte-for-byte identical."
+      },
+      {
+        "name": "failed_path",
+        "passed": true,
+        "detail": "The failed action, reason, and no-retry decision must remain visible."
+      },
+      {
+        "name": "current_todo",
+        "passed": true,
+        "detail": "The current task state must remain visible."
+      },
+      {
+        "name": "evidence",
+        "passed": true,
+        "detail": "The task-relevant fact must remain visible."
+      },
+      {
+        "name": "source",
+        "passed": true,
+        "detail": "The retained fact must remain traceable to its source."
+      },
+      {
+        "name": "system_prompt",
+        "passed": true,
+        "detail": "The stable system prompt must remain unchanged at the front."
+      }
+    ],
+    "retention_passed": true,
+    "size_reduction_passed": false,
+    "passes_all_conditions": false
+  },
+  {
+    "strategy": "sliding_window",
+    "rendered_context": "[SYSTEM]\nSAFETY: Do not access the external network without user permission.\nRULE: Preserve exact identifiers without rewriting them.\n\n[USER]\nUnrelated small-talk message 6.\n\n[ASSISTANT]\nUnrelated small-talk response 6.\n\n[USER]\nContinue processing the refund request.\n\n[USER]\nCURRENT_TODO: Check whether the order satisfies the refund conditions.",
+    "character_count": 346,
+    "rough_token_estimate": 87,
+    "compression_ratio": 0.01710669435380204,
+    "checks": [
+      {
+        "name": "hard_constraint",
+        "passed": false,
+        "detail": "The active no-network constraint must remain visible."
+      },
+      {
+        "name": "exact_identifier",
+        "passed": false,
+        "detail": "The order identifier must remain byte-for-byte identical."
+      },
+      {
+        "name": "failed_path",
+        "passed": false,
+        "detail": "The failed action, reason, and no-retry decision must remain visible."
+      },
+      {
+        "name": "current_todo",
+        "passed": true,
+        "detail": "The current task state must remain visible."
+      },
+      {
+        "name": "evidence",
+        "passed": false,
+        "detail": "The task-relevant fact must remain visible."
+      },
+      {
+        "name": "source",
+        "passed": false,
+        "detail": "The retained fact must remain traceable to its source."
+      },
+      {
+        "name": "system_prompt",
+        "passed": true,
+        "detail": "The stable system prompt must remain unchanged at the front."
+      }
+    ],
+    "retention_passed": false,
+    "size_reduction_passed": true,
+    "passes_all_conditions": false
+  },
+  {
+    "strategy": "task_aware_structured",
+    "rendered_context": "[SYSTEM]\nSAFETY: Do not access the external network without user permission.\nRULE: Preserve exact identifiers without rewriting them.\n\n[USER]\n<agent_status>\n{\n  \"hard_constraints\": [\n    {\n      \"text\": \"Do not access the external network for this task.\",\n      \"source\": \"user\",\n      \"status\": \"active\"\n    }\n  ],\n  \"exact_identifiers\": {\n    \"order_id\": \"ORD-2026-0830\"\n  },\n  \"completed_steps\": [\n    \"Read the local refund policy.\"\n  ],\n  \"current_todo\": [\n    \"Check whether the order satisfies the refund conditions.\"\n  ],\n  \"failed_attempts\": [\n    {\n      \"action\": \"web_search\",\n      \"reason\": \"missing API key\",\n      \"retry\": false\n    }\n  ],\n  \"evidence\": [\n    {\n      \"fact\": \"A refund is allowed within 7 days of delivery.\",\n      \"source\": \"doc://refund-policy-v3\"\n    }\n  ],\n  \"archived_content\": [\n    {\n      \"kind\": \"large_tool_result\",\n      \"source\": \"doc://refund-policy-v3\",\n      \"runtime_status\": \"removed_after_extraction\"\n    }\n  ]\n}\n</agent_status>\n\n[USER]\nContinue processing the refund request.",
+    "character_count": 1027,
+    "rough_token_estimate": 257,
+    "compression_ratio": 0.05077622861663206,
+    "checks": [
+      {
+        "name": "hard_constraint",
+        "passed": true,
+        "detail": "The active no-network constraint must remain visible."
+      },
+      {
+        "name": "exact_identifier",
+        "passed": true,
+        "detail": "The order identifier must remain byte-for-byte identical."
+      },
+      {
+        "name": "failed_path",
+        "passed": true,
+        "detail": "The failed action, reason, and no-retry decision must remain visible."
+      },
+      {
+        "name": "current_todo",
+        "passed": true,
+        "detail": "The current task state must remain visible."
+      },
+      {
+        "name": "evidence",
+        "passed": true,
+        "detail": "The task-relevant fact must remain visible."
+      },
+      {
+        "name": "source",
+        "passed": true,
+        "detail": "The retained fact must remain traceable to its source."
+      },
+      {
+        "name": "system_prompt",
+        "passed": true,
+        "detail": "The stable system prompt must remain unchanged at the front."
+      }
+    ],
+    "retention_passed": true,
+    "size_reduction_passed": true,
+    "passes_all_conditions": true
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "name": "context-compression-minimal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "../minimal-agent-ts/node_modules/.bin/tsc -p tsconfig.json",
+    "demo": "npm run build && node dist/src/experiment.js",
+    "test": "npm run build && node --test dist/tests/*.test.js"
+  }
+}

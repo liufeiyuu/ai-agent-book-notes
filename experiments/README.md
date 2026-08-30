@@ -10,3 +10,7 @@
 
 开始新实验时，可以复制 [`templates/experiment-template.md`](../templates/experiment-template.md)。
 
+## 实验列表
+
+- [最小 Agent（TypeScript）](./minimal-agent-ts/README.md)
+- [上下文压缩最小对照实验](./context-compression-minimal/README.md)
