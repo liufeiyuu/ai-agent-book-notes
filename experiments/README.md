@@ -14,3 +14,4 @@
 
 - [最小 Agent（TypeScript）](./minimal-agent-ts/README.md)
 - [上下文压缩最小对照实验](./context-compression-minimal/README.md)
+- [RAG 检索与重排序最小对照实验](./rag-retrieval-minimal/README.md)

@@ -1,0 +1,1004 @@
+{
+  "topK": 2,
+  "corpus": [
+    {
+      "id": "account-profile-edit",
+      "title": "账号资料修改指南",
+      "content": "账号昵称、头像和联系方式可以在个人设置页面修改。",
+      "year": 2026,
+      "status": "active",
+      "semanticConcepts": [
+        "account-profile"
+      ]
+    },
+    {
+      "id": "generic-server-error",
+      "title": "服务器错误通用排查",
+      "content": "遇到技术错误时，先检查服务器状态并查看通用故障日志。",
+      "year": 2026,
+      "status": "active",
+      "semanticConcepts": [
+        "technical-error",
+        "server-troubleshooting"
+      ]
+    },
+    {
+      "id": "guide-login-failure",
+      "title": "用户登录失败处理指南",
+      "content": "当使用者无法进入个人账户时，先重置密码，再检查登录保护状态。",
+      "year": 2026,
+      "status": "active",
+      "semanticConcepts": [
+        "authentication",
+        "account-access"
+      ]
+    },
+    {
+      "id": "refund-policy-2024",
+      "title": "2024 年退款政策",
+      "content": "退款期限：订单签收后 30 天内可以申请退款。此版本已经废止。",
+      "year": 2024,
+      "status": "superseded",
+      "semanticConcepts": [
+        "refund",
+        "return-window",
+        "policy"
+      ]
+    },
+    {
+      "id": "refund-policy-2026",
+      "title": "2026 年退款政策",
+      "content": "退款期限：订单签收后 7 天内可以申请退款。此版本当前有效。",
+      "year": 2026,
+      "status": "active",
+      "semanticConcepts": [
+        "refund",
+        "return-window",
+        "policy"
+      ]
+    },
+    {
+      "id": "runbook-http-403",
+      "title": "HTTP-403 权限错误处理手册",
+      "content": "HTTP-403 表示访问被拒绝。请检查 API Key、权限范围和资源策略。",
+      "year": 2026,
+      "status": "active",
+      "semanticConcepts": [
+        "authorization",
+        "api-credential"
+      ]
+    }
+  ],
+  "queryCases": [
+    {
+      "id": "exact_identifier",
+      "query": "HTTP-403 怎么处理？",
+      "goldDocumentId": "runbook-http-403",
+      "semanticConcepts": [
+        "technical-error",
+        "server-troubleshooting"
+      ],
+      "requiresCurrentVersion": false
+    },
+    {
+      "id": "semantic_paraphrase",
+      "query": "账号进不去了怎么办？",
+      "goldDocumentId": "guide-login-failure",
+      "semanticConcepts": [
+        "authentication",
+        "account-access"
+      ],
+      "requiresCurrentVersion": false
+    },
+    {
+      "id": "fresh_policy",
+      "query": "现在退款期限是多少？",
+      "goldDocumentId": "refund-policy-2026",
+      "semanticConcepts": [
+        "refund",
+        "return-window",
+        "policy"
+      ],
+      "requiresCurrentVersion": true,
+      "staleDocumentId": "refund-policy-2024"
+    }
+  ],
+  "strategies": [
+    {
+      "strategy": "sparse",
+      "recallAtK": 0.6666666666666666,
+      "meanReciprocalRank": 0.611111111111111,
+      "freshnessPassed": false,
+      "passesAllConditions": false,
+      "queries": [
+        {
+          "queryId": "exact_identifier",
+          "query": "HTTP-403 怎么处理？",
+          "goldDocumentId": "runbook-http-403",
+          "topK": 2,
+          "goldRank": 1,
+          "recallAtK": true,
+          "reciprocalRank": 1,
+          "freshnessPassed": null,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 3.1904441354473243,
+              "status": "active",
+              "signals": {
+                "sparseScore": 3.1904441354473243,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0.9620821797133818,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0.9620821797133818,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 0,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        },
+        {
+          "queryId": "semantic_paraphrase",
+          "query": "账号进不去了怎么办？",
+          "goldDocumentId": "guide-login-failure",
+          "topK": 2,
+          "goldRank": 3,
+          "recallAtK": false,
+          "reciprocalRank": 0.3333333333333333,
+          "freshnessPassed": null,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 2.143077516273714,
+              "status": "active",
+              "signals": {
+                "sparseScore": 2.143077516273714,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 0,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        },
+        {
+          "queryId": "fresh_policy",
+          "query": "现在退款期限是多少？",
+          "goldDocumentId": "refund-policy-2026",
+          "topK": 2,
+          "goldRank": 2,
+          "recallAtK": true,
+          "reciprocalRank": 0.5,
+          "freshnessPassed": false,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 3.771235753267655,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 3.771235753267655,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 3.771235753267655,
+              "status": "active",
+              "signals": {
+                "sparseScore": 3.771235753267655,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "strategy": "semantic_proxy",
+      "recallAtK": 0.6666666666666666,
+      "meanReciprocalRank": 0.5555555555555556,
+      "freshnessPassed": false,
+      "passesAllConditions": false,
+      "queries": [
+        {
+          "queryId": "exact_identifier",
+          "query": "HTTP-403 怎么处理？",
+          "goldDocumentId": "runbook-http-403",
+          "topK": 2,
+          "goldRank": 6,
+          "recallAtK": false,
+          "reciprocalRank": 0.16666666666666666,
+          "freshnessPassed": null,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0.9999999999999998,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0.9999999999999998,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 0,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        },
+        {
+          "queryId": "semantic_paraphrase",
+          "query": "账号进不去了怎么办？",
+          "goldDocumentId": "guide-login-failure",
+          "topK": 2,
+          "goldRank": 1,
+          "recallAtK": true,
+          "reciprocalRank": 1,
+          "freshnessPassed": null,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0.9999999999999998,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0.9999999999999998,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 0,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        },
+        {
+          "queryId": "fresh_policy",
+          "query": "现在退款期限是多少？",
+          "goldDocumentId": "refund-policy-2026",
+          "topK": 2,
+          "goldRank": 2,
+          "recallAtK": true,
+          "reciprocalRank": 0.5,
+          "freshnessPassed": false,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 1.0000000000000002,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 1.0000000000000002,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 1.0000000000000002,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 1.0000000000000002,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 0,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "strategy": "hybrid_rerank",
+      "recallAtK": 1,
+      "meanReciprocalRank": 0.8333333333333334,
+      "freshnessPassed": false,
+      "passesAllConditions": false,
+      "queries": [
+        {
+          "queryId": "exact_identifier",
+          "query": "HTTP-403 怎么处理？",
+          "goldDocumentId": "runbook-http-403",
+          "topK": 2,
+          "goldRank": 1,
+          "recallAtK": true,
+          "reciprocalRank": 1,
+          "freshnessPassed": null,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 0.231544957774466,
+              "status": "active",
+              "signals": {
+                "sparseScore": 3.1904441354473243,
+                "semanticScore": 0,
+                "rrfScore": 0.031544957774465976,
+                "identifierBoost": 0.2,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0.07201844262295082,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0.9999999999999998,
+                "rrfScore": 0.032018442622950824,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 0.03200204813108039,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.03200204813108039,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0.03200204813108039,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0.9620821797133818,
+                "semanticScore": 0,
+                "rrfScore": 0.03200204813108039,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 0.031009615384615385,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.031009615384615385,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 0.030536130536130537,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.030536130536130537,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        },
+        {
+          "queryId": "semantic_paraphrase",
+          "query": "账号进不去了怎么办？",
+          "goldDocumentId": "guide-login-failure",
+          "topK": 2,
+          "goldRank": 1,
+          "recallAtK": true,
+          "reciprocalRank": 1,
+          "freshnessPassed": null,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0.07226645849596669,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0.9999999999999998,
+                "rrfScore": 0.032266458495966696,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 0.03252247488101534,
+              "status": "active",
+              "signals": {
+                "sparseScore": 2.143077516273714,
+                "semanticScore": 0,
+                "rrfScore": 0.03252247488101534,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0.03200204813108039,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.03200204813108039,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 0.03125,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.03125,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 0.03076923076923077,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.03076923076923077,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 0.030303030303030304,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.030303030303030304,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        },
+        {
+          "queryId": "fresh_policy",
+          "query": "现在退款期限是多少？",
+          "goldDocumentId": "refund-policy-2026",
+          "topK": 2,
+          "goldRank": 2,
+          "recallAtK": true,
+          "reciprocalRank": 0.5,
+          "freshnessPassed": false,
+          "ranking": [
+            {
+              "rank": 1,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 0.07278688524590166,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 3.771235753267655,
+                "semanticScore": 1.0000000000000002,
+                "rrfScore": 0.03278688524590164,
+                "identifierBoost": 0,
+                "freshnessBoost": -0.03
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "refund-policy-2026",
+              "title": "2026 年退款政策",
+              "score": 0.07225806451612904,
+              "status": "active",
+              "signals": {
+                "sparseScore": 3.771235753267655,
+                "semanticScore": 1.0000000000000002,
+                "rrfScore": 0.03225806451612903,
+                "identifierBoost": 0,
+                "freshnessBoost": 0.03
+              }
+            },
+            {
+              "rank": 3,
+              "documentId": "account-profile-edit",
+              "title": "账号资料修改指南",
+              "score": 0.031746031746031744,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.031746031746031744,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 4,
+              "documentId": "generic-server-error",
+              "title": "服务器错误通用排查",
+              "score": 0.03125,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.03125,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 5,
+              "documentId": "guide-login-failure",
+              "title": "用户登录失败处理指南",
+              "score": 0.03076923076923077,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.03076923076923077,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            },
+            {
+              "rank": 6,
+              "documentId": "runbook-http-403",
+              "title": "HTTP-403 权限错误处理手册",
+              "score": 0.030303030303030304,
+              "status": "active",
+              "signals": {
+                "sparseScore": 0,
+                "semanticScore": 0,
+                "rrfScore": 0.030303030303030304,
+                "identifierBoost": 0,
+                "freshnessBoost": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Semantic retrieval uses hand-authored concept labels rather than a real embedding model.",
+    "The corpus and queries are synthetic and intentionally expose complementary failure modes.",
+    "The experiment evaluates retrieval rankings, not an LLM generator or end-to-end answer quality."
+  ]
+}
