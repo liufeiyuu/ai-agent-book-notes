@@ -701,9 +701,9 @@
     {
       "strategy": "hybrid_rerank",
       "recallAtK": 1,
-      "meanReciprocalRank": 0.8333333333333334,
-      "freshnessPassed": false,
-      "passesAllConditions": false,
+      "meanReciprocalRank": 1,
+      "freshnessPassed": true,
+      "passesAllConditions": true,
       "queries": [
         {
           "queryId": "exact_identifier",
@@ -902,30 +902,16 @@
           "query": "现在退款期限是多少？",
           "goldDocumentId": "refund-policy-2026",
           "topK": 2,
-          "goldRank": 2,
+          "goldRank": 1,
           "recallAtK": true,
-          "reciprocalRank": 0.5,
-          "freshnessPassed": false,
+          "reciprocalRank": 1,
+          "freshnessPassed": true,
           "ranking": [
             {
               "rank": 1,
-              "documentId": "refund-policy-2024",
-              "title": "2024 年退款政策",
-              "score": 0.07278688524590166,
-              "status": "superseded",
-              "signals": {
-                "sparseScore": 3.771235753267655,
-                "semanticScore": 1.0000000000000002,
-                "rrfScore": 0.03278688524590164,
-                "identifierBoost": 0,
-                "freshnessBoost": -0.03
-              }
-            },
-            {
-              "rank": 2,
               "documentId": "refund-policy-2026",
               "title": "2026 年退款政策",
-              "score": 0.07225806451612904,
+              "score": 0.10225806451612904,
               "status": "active",
               "signals": {
                 "sparseScore": 3.771235753267655,
@@ -933,6 +919,20 @@
                 "rrfScore": 0.03225806451612903,
                 "identifierBoost": 0,
                 "freshnessBoost": 0.03
+              }
+            },
+            {
+              "rank": 2,
+              "documentId": "refund-policy-2024",
+              "title": "2024 年退款政策",
+              "score": 0.04278688524590166,
+              "status": "superseded",
+              "signals": {
+                "sparseScore": 3.771235753267655,
+                "semanticScore": 1.0000000000000002,
+                "rrfScore": 0.03278688524590164,
+                "identifierBoost": 0,
+                "freshnessBoost": -0.03
               }
             },
             {

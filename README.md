@@ -25,8 +25,8 @@
 | --- | --- | --- | --- |
 | 0 | 引言 | 阅读中 | [进入笔记](notes/00-introduction/README.md) |
 | 1 | Agent 基础知识 | 待读 | [进入笔记](notes/01-agent-basics/README.md) |
-| 2 | 上下文工程 | 阅读中 | [进入笔记](notes/02-context-engineering/README.md) |
-| 3 | 用户记忆和知识库 | 待读 | [进入笔记](notes/03-memory-and-knowledge/README.md) |
+| 2 | 上下文工程 | 已完成 | [进入笔记](notes/02-context-engineering/README.md) |
+| 3 | 用户记忆和知识库 | 已完成 | [进入笔记](notes/03-memory-and-knowledge/README.md) |
 | 4 | 工具 | 待读 | [进入笔记](notes/04-tools/README.md) |
 | 5 | Coding Agent 与代码生成 | 待读 | [进入笔记](notes/05-coding-agent/README.md) |
 | 6 | Agent 的评估 | 待读 | [进入笔记](notes/06-evaluation/README.md) |
@@ -36,6 +36,13 @@
 | 10 | 多 Agent 协作 | 待读 | [进入笔记](notes/10-multi-agent/README.md) |
 
 状态统一使用：`待读`、`阅读中`、`已完成`、`需复习`。
+
+第 2、3 章的“已完成”指第二周选定的知识主干、教学实验与场景验收，不代表全章细节和生产实现均已完成。业务 Prompt 独立实践等补验及延后事项见[第二周复盘](notes/week-02-review.md)与[延后学习清单](notes/learning-backlog.md)。
+
+## 阶段复盘
+
+- [第一周：Agent 基础与最小实现](notes/01-agent-basics/week-01-review.md)
+- [第二周：上下文、用户记忆与 RAG](notes/week-02-review.md)
 
 ## 仓库结构
 
