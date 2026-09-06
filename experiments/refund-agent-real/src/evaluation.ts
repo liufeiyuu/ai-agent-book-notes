@@ -1,4 +1,6 @@
-import { record, type Answer, type AnswerStatus, type SearchHit } from "./types";
+import { type Answer, type AnswerStatus, type SearchHit } from "./types";
+import { parseAnswer } from "./answer";
+export { parseAnswer } from "./answer";
 
 export interface Case {
   id: string;
@@ -18,19 +20,6 @@ export const CASES: Case[] = [
   { id: "ambiguous", question: "帮我看看上次买的那个耳机，拆封了还能退吗？", expectedStatus: "needs_clarification" },
   { id: "exception", question: "E1004 入耳式耳机卫生封条拆开了，没有质量问题，能无理由退货吗？", orderId: "E1004", expectedStatus: "ineligible", requiredDocument: "earbuds-v1", requiredChunkId: "earbuds-v1#1" },
 ];
-
-export function parseAnswer(raw: string): Answer {
-  const text = raw.trim().replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```$/, "");
-  const value: unknown = JSON.parse(text);
-  if (!record(value) || !["eligible", "ineligible", "needs_clarification", "insufficient_evidence"].includes(String(value.status)) ||
-      typeof value.answer !== "string" || !value.answer.trim() ||
-      !Array.isArray(value.orderIds) || value.orderIds.some(x => typeof x !== "string") ||
-      !Array.isArray(value.missingInformation) || value.missingInformation.some(x => typeof x !== "string") ||
-      !Array.isArray(value.citations) || value.citations.some(x => !record(x) || typeof x.chunkId !== "string" || typeof x.quote !== "string" || !x.quote.trim())) {
-    throw new Error("Final answer does not match the required JSON structure.");
-  }
-  return value as unknown as Answer;
-}
 
 // 学习入口 6：引用必须来自实际送给模型的块；字符串出现本身并不证明语义支持。
 export function evaluateAnswer(raw: string, hits: SearchHit[], knownOrderIds: string[], expected?: Case) {

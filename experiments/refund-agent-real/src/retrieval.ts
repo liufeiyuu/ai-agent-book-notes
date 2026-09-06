@@ -20,6 +20,13 @@ export function cosine(left: number[], right: number[]): number {
   return result;
 }
 
+// Qwen's query encoder expects a task instruction; indexed documents stay unprefixed.
+export function formatRetrievalQuery(query: string, model: string): string {
+  return model.startsWith("qwen/qwen3-embedding-")
+    ? `Instruct: Given a customer return eligibility question, retrieve policy passages that specify the applicable return conditions, time limits, and exceptions.\nQuery:${query}`
+    : query;
+}
+
 // 学习入口 3：先以订单事实限定适用范围，再计算真实向量相似度并选择 Top-K。
 export async function retrieve(query: string, scope: SearchScope, index: IndexArtifact,
   embedder: Embedder, topK = 3, signal?: AbortSignal): Promise<SearchTrace> {
@@ -32,15 +39,16 @@ export async function retrieve(query: string, scope: SearchScope, index: IndexAr
     if (reason) excluded.push({ chunkId: entry.chunk.id, reason });
     return !reason;
   });
-  if (!candidates.length) return { query, scope, topK, embeddingModel: embedder.model, excluded, ranking: [], hits: [], queryUsage: null };
-  const { vectors, usage } = await embedder.embed([query], signal);
+  const embeddingQuery = formatRetrievalQuery(query, embedder.model);
+  if (!candidates.length) return { query, embeddingQuery, scope, topK, embeddingModel: embedder.model, excluded, ranking: [], hits: [], queryUsage: null };
+  const { vectors, usage } = await embedder.embed([embeddingQuery], signal);
   if (vectors.length !== 1) throw new Error("Expected one query embedding.");
   const vector = vectors[0]!;
   validateVector(vector, index.dimension);
   const ranked = candidates.map(entry => ({ chunk: entry.chunk, score: cosine(vector, entry.vector), rank: 0 }))
     .sort((a, b) => b.score - a.score || a.chunk.id.localeCompare(b.chunk.id))
     .map((item, i) => ({ ...item, rank: i + 1 }));
-  return { query, scope, topK, embeddingModel: embedder.model, excluded,
+  return { query, embeddingQuery, scope, topK, embeddingModel: embedder.model, excluded,
     ranking: ranked.map(item => ({ chunkId: item.chunk.id, score: item.score, rank: item.rank })),
     hits: ranked.slice(0, topK), queryUsage: usage };
 }

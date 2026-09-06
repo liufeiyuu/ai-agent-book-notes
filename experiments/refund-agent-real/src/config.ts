@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 export const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 export const INDEX_PATH = resolve(PROJECT_ROOT, "data/index.json");
-export const DEFAULT_EMBEDDING_MODEL = "openai/text-embedding-3-small";
+export const DEFAULT_EMBEDDING_MODEL = "qwen/qwen3-embedding-8b";
 export const DEMO_TODAY = "2026-09-06"; // Fixed business clock makes fixture expectations reproducible.
 
 // Read only explicitly scoped local config; shell environment has priority.

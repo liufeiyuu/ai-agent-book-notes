@@ -50,7 +50,7 @@ async function main() {
     return;
   }
   const key = requireKey(settings);
-  const budget = new CallBudget(positiveInteger(settings.MAX_API_CALLS, 24, 100));
+  const budget = new CallBudget(positiveInteger(settings.MAX_API_CALLS, 40, 100));
   const embedder = new OpenRouterEmbedder(embeddingModel, key, budget);
   const topK = positiveInteger(flags["top-k"], 3, 10);
   const runPath = resolve(PROJECT_ROOT, "runs", `${new Date().toISOString().replace(/[:.]/g, "-")}-${command}-${randomUUID().slice(0, 8)}.json`);

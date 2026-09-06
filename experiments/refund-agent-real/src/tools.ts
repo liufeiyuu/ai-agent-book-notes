@@ -17,6 +17,7 @@ function optionalString(value: unknown, name: string): string | undefined {
 
 export function createTools(options: { orders: Order[]; userId: string; today: string; index: IndexArtifact; embedder: Embedder; topK: number }) {
   const queriedOrders = new Map<string, Order>();
+  const orderQueries: Array<{ order_id?: string; keyword?: string }> = [];
   const searches: SearchTrace[] = [];
   const cache = new Map<string, SearchTrace>();
   const queryOrders: Tool<{ order_id?: string; keyword?: string }> = {
@@ -31,6 +32,7 @@ export function createTools(options: { orders: Order[]; userId: string; today: s
     async execute(args, signal) {
       signal?.throwIfAborted();
       const orders = visibleOrders(options.orders, options.userId, args.order_id, args.keyword);
+      orderQueries.push({ ...args });
       for (const order of orders) queriedOrders.set(order.id, order);
       return { source: "fixtures/orders.json", businessDate: options.today,
         orders: orders.map(order => orderFacts(order, options.today)), multipleCandidates: orders.length > 1 };
@@ -61,9 +63,12 @@ export function createTools(options: { orders: Order[]; userId: string; today: s
       }
       searches.push(trace);
       return { scope: trace.scope, cacheHit, evidence: evidencePayload(trace.hits),
+        applicableCandidateCount: trace.ranking.length,
         missingEvidence: trace.hits.length === 0,
-        note: "结果来自按订单适用范围过滤后的知识库；是否足以回答仍需核对条款。" };
+        note: trace.ranking.length === 0
+          ? "业务范围内不存在政策候选。改变 query 不会产生适用条款；应停止搜索并说明缺少此范围的政策。"
+          : "结果来自按订单适用范围过滤后的知识库；核对条款，证据已覆盖所需条件时直接回答，不重复查证同一事实。" };
     },
   };
-  return { tools: [queryOrders, searchPolicy] as Tool[], queriedOrders, searches };
+  return { tools: [queryOrders, searchPolicy] as Tool[], queriedOrders, orderQueries, searches };
 }

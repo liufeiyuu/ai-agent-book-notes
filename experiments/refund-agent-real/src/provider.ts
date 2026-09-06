@@ -1,5 +1,6 @@
 import { OpenRouterModel } from "../../minimal-agent-ts/src/openrouter-model";
 import { record, type Embedder } from "./types";
+import { ANSWER_SCHEMA } from "./answer";
 
 type FetchLike = typeof fetch;
 
@@ -37,7 +38,18 @@ export class OpenRouterEmbedder implements Embedder {
       body: JSON.stringify({ model: this.model, input: texts, encoding_format: "float" }),
       signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(45_000)]) : AbortSignal.timeout(45_000),
     });
-    if (!response.ok) throw new Error(`Embedding API returned HTTP ${response.status}; check model access, balance and configuration.`);
+    if (!response.ok) {
+      // Preserve a useful provider diagnosis without logging headers, credentials or arbitrary HTML.
+      let detail = "No structured error detail; check model access, balance and configuration.";
+      try {
+        const failure: unknown = await response.json();
+        const error = record(failure) && record(failure.error) ? failure.error : failure;
+        if (record(error) && typeof error.message === "string") detail = error.message;
+      } catch { /* Some gateways return HTML rather than a JSON API error. */ }
+      const redacted = detail.split(this.apiKey).join("[REDACTED]")
+        .replace(/sk-or-[A-Za-z0-9_-]+/g, "[REDACTED]").slice(0, 1000);
+      throw new Error(`Embedding API returned HTTP ${response.status}: ${redacted}`);
+    }
     const body: unknown = await response.json();
     if (!record(body) || !Array.isArray(body.data) || body.data.length !== texts.length) throw new Error("Embedding response count mismatch.");
     const vectors = new Array<number[]>(texts.length);
@@ -55,8 +67,18 @@ export class OpenRouterEmbedder implements Embedder {
   }
 }
 
+export function chatParameters(model: string, maxOutputTokens: number) {
+  return { max_tokens: maxOutputTokens, temperature: 0,
+    response_format: { type: "json_schema", json_schema: { name: "refund_consultation", strict: true, schema: ANSWER_SCHEMA } },
+    provider: { require_parameters: true },
+    // Week-one messages do not round-trip reasoning blocks. Use V4's supported non-thinking mode.
+    // This also leaves the small output budget available for a final answer/tool arguments.
+    ...(model.startsWith("deepseek/deepseek-v4-") ? { reasoning: { enabled: false } } : {}),
+  };
+}
+
 // Reuse week-one request conversion and response parsing. Limit each paid request here.
-export function createChatModel(apiKey: string, model: string, budget: CallBudget, maxOutputTokens: number) {
+export function createChatModel(apiKey: string, model: string, budget: CallBudget, maxOutputTokens: number, fetch_: FetchLike = fetch) {
   const transportRequests: Record<string, unknown>[] = [];
   const adapter = new OpenRouterModel({
     apiKey, model, appTitle: "refund-agent-real-learning",
@@ -64,10 +86,9 @@ export function createChatModel(apiKey: string, model: string, budget: CallBudge
       init?.signal?.throwIfAborted();
       budget.take();
       const body: Record<string, unknown> = JSON.parse(String(init?.body));
-      body.max_tokens = maxOutputTokens;
-      body.temperature = 0;
+      Object.assign(body, chatParameters(model, maxOutputTokens));
       transportRequests.push(structuredClone(body)); // Exact sent payload, never authorization headers.
-      return fetch(url, { ...init, body: JSON.stringify(body),
+      return fetch_(url, { ...init, body: JSON.stringify(body),
         signal: init?.signal ? AbortSignal.any([init.signal, AbortSignal.timeout(60_000)]) : AbortSignal.timeout(60_000) });
     },
   });

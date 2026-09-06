@@ -5,8 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chunkDocument, loadDocuments, loadChunks, corpusFingerprint } from "../src/corpus";
 import { buildIndex, readIndex, validateIndex } from "../src/index-store";
-import { CallBudget, OpenRouterEmbedder, validateVector } from "../src/provider";
-import { cosine, exclusionReason, retrieve } from "../src/retrieval";
+import { CallBudget, OpenRouterEmbedder, validateVector, chatParameters, createChatModel } from "../src/provider";
+import { cosine, exclusionReason, retrieve, formatRetrievalQuery } from "../src/retrieval";
+import { ANSWER_SCHEMA } from "../src/answer";
 import { loadOrders, orderFacts, scopeForOrder, visibleOrders } from "../src/orders";
 import { createTools } from "../src/tools";
 import { buildContext } from "../src/context";
@@ -20,6 +21,45 @@ import type { Model, ModelInput, ModelResponse } from "../../minimal-agent-ts/sr
 const chunks = await loadChunks();
 const orders = await loadOrders();
 const modelName = "test-only-vectors";
+
+test("DeepSeek V4 uses non-thinking mode without changing other models' reasoning settings", () => {
+  assert.deepEqual(chatParameters("deepseek/deepseek-v4-flash-0731", 1500).reasoning, { enabled: false });
+  assert.equal(chatParameters("other/model", 1500).reasoning, undefined);
+});
+
+test("chat transport sends strict schema and required-parameter routing, without logging credentials", async () => {
+  let sent: any;
+  const model = createChatModel("test-secret", "deepseek/deepseek-v4-flash-0731", new CallBudget(1), 1500, async (_url, init) => {
+    sent = JSON.parse(String(init?.body));
+    return Response.json({ choices: [{ message: { role: "assistant", content: JSON.stringify(answerFor()) }, finish_reason: "stop" }] });
+  });
+  await model.generate({ messages: [{ role: "user", content: "能退吗" }], tools: [] });
+  assert.deepEqual(sent.response_format.json_schema.schema, ANSWER_SCHEMA);
+  assert.equal(sent.response_format.json_schema.strict, true);
+  assert.equal(sent.provider.require_parameters, true);
+  assert.equal(sent.reasoning.enabled, false);
+  assert.equal(sent.max_tokens, 1500);
+  assert.deepEqual(model.transportRequests, [sent]);
+  assert.equal(JSON.stringify(model.transportRequests).includes("test-secret"), false);
+});
+
+test("Qwen retrieval adds a query-only task instruction and records the exact embedding input", async () => {
+  const model = "qwen/qwen3-embedding-8b", embedder = { ...testEmbedder(), model };
+  const result = await retrieve("包装拆了能退吗", scope(), { ...indexFor(), embeddingModel: model }, embedder);
+  assert.match(result.embeddingQuery, /^Instruct: .*\nQuery:包装拆了能退吗$/);
+  assert.deepEqual(embedder.calls[0], [result.embeddingQuery]);
+  assert.equal(result.query, "包装拆了能退吗");
+  assert.equal(formatRetrievalQuery("question", "other/model"), "question");
+});
+
+test("answer validation rejects prose, fences, extra fields, coercion and empty references", () => {
+  const valid = answerFor(), json = JSON.stringify(valid);
+  assert.deepEqual(parseAnswer(json), valid);
+  for (const raw of [`Explanation\n${json}`, `\u0060\u0060\u0060json\n${json}\n\u0060\u0060\u0060`,
+    JSON.stringify({ ...valid, extra: true }), JSON.stringify({ ...valid, status: ["eligible"] }),
+    JSON.stringify({ ...valid, citations: [{ chunkId: "", quote: "text" }] }),
+    JSON.stringify({ ...valid, citations: [{ ...valid.citations[0], extra: true }] })]) assert.throws(() => parseAnswer(raw));
+});
 function indexFor(items = chunks): IndexArtifact {
   return { schemaVersion: 1, embeddingModel: modelName, dimension: 2, createdAt: "test",
     fingerprint: corpusFingerprint(items, modelName),
@@ -104,6 +144,19 @@ test("HTTP failure never falls back to fake vectors; pre-abort consumes no budge
   assert.equal(budget.used, 0);
   await assert.rejects(provider.embed(["one"]), /HTTP 401/);
   assert.equal(budget.used, 1);
+});
+
+test("provider errors preserve diagnostics but redact echoed credentials", async () => {
+  const provider = new OpenRouterEmbedder("m", "test-secret", new CallBudget(1), async () => Response.json({
+    error: { message: "Access denied for test-secret and sk-or-v1-another-secret" },
+  }, { status: 403 }));
+  await assert.rejects(provider.embed(["one"]), (error: unknown) => {
+    assert.ok(error instanceof Error);
+    assert.match(error.message, /HTTP 403: Access denied/);
+    assert.equal(error.message.includes("test-secret"), false);
+    assert.equal(error.message.includes("sk-or-"), false);
+    return true;
+  });
 });
 
 test("index cache reuses vectors; changed source, metadata or model invalidate it", async () => {
@@ -233,4 +286,79 @@ test("endless agent is bounded, and a stopped run is not a successful task", asy
   assert.equal(calls, 6);
   assert.equal(result.evaluation.automatedPassed, false);
   assert.equal((result.execution as { stopReason: string }).stopReason, "max_turns");
+});
+
+test("RAG generation failure retains retrieved ranking and fails closed", async () => {
+  const result = await runConsultation({ mode: "rag", question: "能退吗", orderId: "H1001", today: DEMO_TODAY,
+    userId: "demo-user", orders, index: indexFor(), embedder: testEmbedder(), topK: 3,
+    model: { async generate() { throw new Error("provider unavailable"); } } });
+  assert.equal(result.searches[0]!.ranking.length, 5);
+  assert.equal(result.evaluation.automatedPassed, false);
+  assert.match(JSON.stringify(result.execution), /provider unavailable/);
+});
+
+test("malformed output gets only one tool-free regeneration from observed evidence", async () => {
+  for (const repairSucceeds of [true, false]) {
+    const inputs: ModelInput[] = [];
+    const model: Model = { async generate(input) {
+      inputs.push(structuredClone(input));
+      return response(inputs.length === 2 && repairSucceeds ? JSON.stringify(answerFor()) : `Prose ${JSON.stringify(answerFor())}`);
+    } };
+    const result = await runConsultation({ mode: "rag", question: "能退吗", orderId: "H1001", today: DEMO_TODAY,
+      userId: "demo-user", orders, index: indexFor(), embedder: testEmbedder(), topK: 3, model, expected: CASES[0]! });
+    assert.equal(inputs.length, 2);
+    assert.equal(inputs[1]!.tools.length, 0);
+    assert.match(JSON.stringify(result.formatRecovery), /Prose/);
+    assert.equal(result.evaluation.automatedPassed, repairSucceeds);
+    assert.equal(JSON.parse(inputs[1]!.messages[1]!.content!).retrievedEvidence.length, 3);
+  }
+});
+
+test("an actual order lookup with no accessible results is not a skipped lookup", async () => {
+  let calls = 0;
+  const model: Model = { async generate() { return ++calls === 1
+    ? toolResponse("lookup", "query_orders", { order_id: "PRIVATE-2001" })
+    : response(JSON.stringify({ status: "needs_clarification", orderIds: [], answer: "请核对您自己的订单号。", citations: [], missingInformation: ["当前用户可访问的订单号"] })); } };
+  const result = await runConsultation({ mode: "agent", question: "查 PRIVATE-2001", today: DEMO_TODAY,
+    userId: "demo-user", orders, index: indexFor(), embedder: testEmbedder(), topK: 3, model });
+  assert.equal(result.evaluation.automatedPassed, true);
+  assert.deepEqual(result.knownOrderIds, []);
+  assert.equal(result.searches.length, 0);
+});
+
+test("Agent format recovery preserves tool trace, cannot acquire new facts, and has no gold labels", async () => {
+  const inputs: ModelInput[] = [];
+  const script = [toolResponse("order", "query_orders", { order_id: "H1001" }),
+    toolResponse("policy", "search_policy", { order_id: "H1001", query: "退货" }),
+    response(`Explanation ${JSON.stringify(answerFor())}`), response(JSON.stringify(answerFor()))];
+  const model: Model = { async generate(input) { inputs.push(structuredClone(input)); return script[inputs.length - 1]!; } };
+  const result = await runConsultation({ mode: "agent", question: CASES[0]!.question, today: DEMO_TODAY,
+    userId: "demo-user", orders, index: indexFor(), embedder: testEmbedder(), topK: 3, model, expected: CASES[0]! });
+  assert.equal(result.evaluation.automatedPassed, true);
+  assert.equal(inputs.length, 4);
+  assert.equal(inputs[3]!.tools.length, 0);
+  const context = JSON.parse(inputs[3]!.messages[1]!.content!);
+  assert.deepEqual(context.orderFacts.map((order: { id: string }) => order.id), ["H1001"]);
+  assert.equal(context.retrievedEvidence.length, 3);
+  assert.equal("expectedStatus" in context, false);
+  assert.match(JSON.stringify(result.execution), /Explanation/);
+  assert.equal(result.searches.length, 1);
+});
+
+test("format recovery budget errors remain failures; empty policy candidates explain why rephrasing is futile", async () => {
+  let calls = 0;
+  const model: Model = { async generate() {
+    if (++calls === 1) return response("malformed");
+    throw new Error("API call budget exhausted");
+  } };
+  const result = await runConsultation({ mode: "rag", question: "能退吗", orderId: "H1001", today: DEMO_TODAY,
+    userId: "demo-user", orders, index: indexFor(), embedder: testEmbedder(), topK: 3, model });
+  assert.equal(calls, 2);
+  assert.equal(result.evaluation.automatedPassed, false);
+  assert.match(JSON.stringify(result.formatRecovery), /budget exhausted/);
+  const state = createTools({ orders, userId: "demo-user", today: DEMO_TODAY, index: indexFor(), embedder: testEmbedder(), topK: 3 });
+  await state.tools[0]!.execute({ order_id: "B1003" });
+  const search = await state.tools[1]!.execute({ order_id: "B1003", query: "退货" });
+  assert.match(JSON.stringify(search), /"applicableCandidateCount":0/);
+  assert.match(JSON.stringify(search), /改变 query 不会产生适用条款/);
 });

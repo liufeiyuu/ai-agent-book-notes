@@ -62,6 +62,7 @@ export interface SearchHit {
 
 export interface SearchTrace {
   query: string;
+  embeddingQuery: string;
   scope: SearchScope;
   topK: number;
   embeddingModel: string;

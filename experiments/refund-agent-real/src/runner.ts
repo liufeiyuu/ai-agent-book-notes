@@ -3,6 +3,7 @@ import { ToolRegistry } from "../../minimal-agent-ts/src/tool-registry";
 import type { Model } from "../../minimal-agent-ts/src/types";
 import { buildContext, SYSTEM_PROMPT } from "./context";
 import { evaluateAnswer, type Case } from "./evaluation";
+import { parseAnswer } from "./answer";
 import { visibleOrders, scopeForOrder } from "./orders";
 import { exclusionReason, retrieve } from "./retrieval";
 import { createTools } from "./tools";
@@ -30,21 +31,27 @@ export async function runConsultation(options: RunOptions) {
   let knownOrderIds: string[] = [];
   let rawAnswer = "";
   let completed = false;
+  let orderQueryCount = 0;
   let execution: unknown;
   if (options.mode === "rag") {
     // Fixed RAG requires a caller-selected order; ambiguous input passes all candidates for clarification.
     const orders = visibleOrders(options.orders, options.userId, options.orderId);
     knownOrderIds = orders.map(order => order.id);
-    if (orders.length === 1) {
-      const search = await retrieve(options.question, scopeForOrder(orders[0]!), options.index, options.embedder, options.topK);
-      searches.push(search);
-      hits = search.hits;
+    try {
+      if (orders.length === 1) {
+        const search = await retrieve(options.question, scopeForOrder(orders[0]!), options.index, options.embedder, options.topK);
+        searches.push(search);
+        hits = search.hits;
+      }
+      const messages = buildContext(options.question, orders, hits, options.today);
+      const response = await options.model.generate({ messages, tools: [], signal: AbortSignal.timeout(90_000) });
+      rawAnswer = response.message.content ?? "";
+      completed = response.message.toolCalls.length === 0 && response.finishReason !== "length" && rawAnswer.trim().length > 0;
+      execution = { messages, response, completed };
+    } catch (error) {
+      // Retain successful retrieval and its full ranking even when generation fails.
+      execution = { completed: false, error: error instanceof Error ? error.message : String(error) };
     }
-    const messages = buildContext(options.question, orders, hits, options.today);
-    const response = await options.model.generate({ messages, tools: [], signal: AbortSignal.timeout(90_000) });
-    rawAnswer = response.message.content ?? "";
-    completed = response.message.toolCalls.length === 0 && response.finishReason !== "length" && rawAnswer.trim().length > 0;
-    execution = { messages, response, completed };
   } else {
     const state = createTools(options);
     const result = await runAgent({
@@ -57,8 +64,31 @@ export async function runConsultation(options: RunOptions) {
     rawAnswer = result.finalAnswer ?? "";
     completed = result.completed;
     knownOrderIds = [...state.queriedOrders.keys()];
+    orderQueryCount = state.orderQueries.length;
     searches.push(...state.searches);
     hits = searches.flatMap(search => search.hits);
+  }
+  // Some providers do not enforce response_format while tools are enabled.
+  // One bounded, tool-free regeneration from observed facts; retain the failed draft.
+  let formatRecovery: unknown = null;
+  if (completed) {
+    let valid = true;
+    try { parseAnswer(rawAnswer); } catch { valid = false; }
+    if (!valid) {
+      const initialAnswer = rawAnswer;
+      const observedOrders = visibleOrders(options.orders, options.userId).filter(order => knownOrderIds.includes(order.id));
+      const messages = buildContext(options.question, observedOrders, hits, options.today);
+      try {
+        const response = await options.model.generate({ messages, tools: [], signal: AbortSignal.timeout(60_000) });
+        rawAnswer = response.message.content ?? "";
+        completed = response.message.toolCalls.length === 0 && response.finishReason !== "length" && rawAnswer.trim().length > 0;
+        formatRecovery = { attempted: true, initialAnswer, messages, response };
+      } catch (error) {
+        rawAnswer = "";
+        completed = false;
+        formatRecovery = { attempted: true, initialAnswer, error: error instanceof Error ? error.message : String(error) };
+      }
+    }
   }
   const evaluation = evaluateAnswer(rawAnswer, hits, knownOrderIds, options.expected);
   if (evaluation.answer?.status === "eligible" || evaluation.answer?.status === "ineligible") {
@@ -70,12 +100,12 @@ export async function runConsultation(options: RunOptions) {
   }
   evaluation.checks.push({ name: "execution_completed", passed: completed });
   if (options.mode === "agent") {
-    evaluation.checks.push({ name: "orders_actually_queried", passed: knownOrderIds.length > 0 });
-    if (evaluation.answer?.status !== "needs_clarification") {
+    evaluation.checks.push({ name: "orders_actually_queried", passed: orderQueryCount > 0 });
+    if (knownOrderIds.length > 0 && evaluation.answer?.status !== "needs_clarification") {
       evaluation.checks.push({ name: "policy_search_attempted", passed: searches.length > 0 });
     }
   }
   evaluation.automatedPassed = evaluation.checks.every(check => check.passed);
   return { mode: options.mode, question: options.question, businessDate: options.today,
-    elapsedMs: Date.now() - started, rawAnswer, knownOrderIds, searches, execution, evaluation };
+    elapsedMs: Date.now() - started, rawAnswer, knownOrderIds, searches, execution, formatRecovery, evaluation };
 }

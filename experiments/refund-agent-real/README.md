@@ -7,9 +7,12 @@
 ## 当前验证状态
 
 - 已实现全部 CLI 入口、真实接口适配、索引缓存、两种运行模式和分阶段 Trace。
-- 2026-09-06：TypeScript 编译通过，20 个离线测试通过；`inspect` 识别出 5 份政策、14 个块。
-- 当前未配置 API Key/聊天模型，尚未生成真实向量索引，尚未进行真实模型验收。`ask` 已验证会明确报缺少配置，不降级到假模型。
-- 离线测试使用显式测试替身，只验证程序行为，不能证明真实模型会正确检索、调用工具或理解引用。真实运行结果待配置后记录在 `runs/`。
+- 2026-09-06：TypeScript 编译与 30 个离线测试通过；5 份政策、14 个块。
+- 当前模型：`qwen/qwen3-embedding-8b` + `deepseek/deepseek-v4-flash-0731`。14 个块的 4096 维真实索引、查询向量化、聊天及 Agent 工具调用均已运行；先前 OpenAI/Gemini 的 403 记录保留在[真实运行记录](./LIVE-RUN.md)。
+- DeepSeek V4 使用非思考模式（`reasoning.enabled=false`），适配本项目小输出预算和未实现 reasoning 回传的第一周协议。首次未显式关闭思考时，输出因 `length` 截断且无最终答案；该失败也已归档。
+- 最终代码真实验收：固定 RAG **6/6**、Agent **6/6**，分别使用 10/40、31/40 次请求。修复后固定 RAG 两轮均 6/6。完整 Trace 与逐例语义核对见[真实运行记录](./LIVE-RUN.md#修复与最终验收)。
+- 检索问题已通过补齐 Qwen 查询指令修复；没有扩大 Top-K、塞入全部政策或修改金标。Agent 本轮六例均使用了一次格式恢复：模型首次仍可能输出说明文字，程序保留原文后无工具重生成，严格检查最终结果。没有假模型降级或宽松截取 JSON。
+- 当前教学范围的实现与验收已完成；学习者的代码理解与实践尚未完成。小样本通过不代表生产可靠性，所有回答仍需人工核对。
 
 ## 范围：哪些真，哪些是本地样例
 
@@ -33,13 +36,17 @@
 
 ```dotenv
 OPENROUTER_API_KEY=你本地保存的密钥
-OPENROUTER_MODEL=你账号可用且支持工具调用的模型ID
-OPENROUTER_EMBEDDING_MODEL=openai/text-embedding-3-small
-MAX_API_CALLS=24
+OPENROUTER_MODEL=deepseek/deepseek-v4-flash-0731
+OPENROUTER_EMBEDDING_MODEL=qwen/qwen3-embedding-8b
+MAX_API_CALLS=40
 MAX_OUTPUT_TOKENS=1500
 ```
 
-可复用第一周 `.env`：加载顺序是第一周文件 → 本目录文件 → shell 环境变量，空值不会覆盖已有配置。不要把密钥发到聊天里。`.env`、`data/`、`runs/` 均被 Git 忽略。占位聊天模型不提供默认值，避免替你选择未授权或不可用的模型。
+当前默认 Embedding 已改为 [Qwen3 Embedding 8B](https://openrouter.ai/qwen/qwen3-embedding-8b)。文档和查询使用同一模型；更换模型后必须重新建索引，不能混用旧向量。模型列在平台目录中不保证当前账户或地区可访问，需以实际调用为准。
+
+可复用第一周 `.env`：加载顺序是第一周文件 → 本目录文件 → shell 环境变量，空值不会覆盖已有配置。不要把密钥发到聊天里。`.env`、`data/`、`runs/` 均被 Git 忽略。配置示例按用户要求选用 DeepSeek V4 Flash 0731；代码仍要求显式配置聊天模型，不提供隐式回退。
+
+聊天模型和 Embedding 模型不要求同一厂商。当前 DeepSeek 官方模型目录与 OpenRouter Embedding 列表未提供 DeepSeek Embedding 模型，不能把 V4 聊天模型 ID 填进 Embedding 配置；因此保留 Qwen 向量模型。核对来源：[DeepSeek 模型目录](https://api-docs.deepseek.com/quick_start/pricing/)、[OpenRouter Embedding 列表](https://openrouter.ai/api/v1/embeddings/models)、[V4 Flash 0731](https://openrouter.ai/deepseek/deepseek-v4-flash-0731)。
 
 ```bash
 cd /Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/refund-agent-real
@@ -105,22 +112,27 @@ CLI 每次启动一个新会话。若模型请你澄清，下一条命令显式�
 
 ## Trace：运行后看什么
 
-每条联网命令输出唯一 Trace 路径。缺失凭据在调用前报错，无真实运行 Trace；请求开始后的网络/解析失败则尽量保存错误与已发请求。不会重试到成功，也不会为通过评测偷偷改变答案。
+每条联网命令输出唯一 Trace 路径。缺失凭据在调用前报错，无真实运行 Trace；请求开始后的网络/解析失败则尽量保存错误与已发请求。不会无限重试，也不会为通过评测偷偷改变答案或截取末尾 JSON。
+
+Qwen 查询按官方要求使用 `Instruct: …\nQuery:…`，文档不加这个前缀；Trace 同时保留原始 `query` 和实际 `embeddingQuery`。文档索引、业务过滤和 Top-3 不变。
+
+聊天请求声明严格 JSON Schema，并要求供应商支持参数；本地仍严格解析。实测 DeepSeek 在带工具的请求中仍可能夹带解释，因此只对格式不合规且正常结束的回答，追加**最多一次无工具重生成**，输入仅为本次已观察的订单与证据，不包含评测标签。原始失败稿保留在 `formatRecovery.initialAnswer`；第二次仍失败则整例失败。它不是退款操作，也不保证任意模型都能恢复。
 
 `data/index.json` 保存块、向量、模型、维度和源内容指纹。正文、元数据或模型改变后，查询拒绝使用旧索引；执行 `npm run index` 重建派生索引。小项目全量重建，未实现生产增量发布/回滚。
 
 回答 Trace 重点：
 
-- `cases[i].requests`：真正发给聊天 API 的 body，包括实际 messages/tools、temperature 和 max_tokens，不包含认证头。
+- `cases[i].requests`：真正发给聊天 API 的 body，包括实际 messages/tools、JSON Schema、reasoning、temperature 和 max_tokens，不包含认证头。
 - `cases[i].exchanges`：第一周适配器记录的响应体及 HTTP 状态；其中 request 是注入 token 限制之前的副本，实际 payload 以 `requests` 为准。
-- `cases[i].searches`：查询、业务过滤范围、排除原因、完整候选排名、最终 hits 和查询 usage。
+- `cases[i].searches`：原始/向量化查询、业务过滤范围、排除原因、完整候选排名、最终 hits 和查询 usage。
 - `cases[i].execution`：固定 RAG 的请求/响应，或 Agent 每轮事件及 tool_call_id。
 - `cases[i].rawAnswer` / `evaluation`：未经美化的回答和逐项检查。
+- `cases[i].formatRecovery`：若触发格式恢复，记录原始失败稿、无工具请求和响应；否则为 null。`execution` 保留恢复前的原始执行轨迹。
 - `apiCalls` / `embeddingExchanges`：调用数量、Embedding usage 与延迟；聊天 usage 见对应响应体。
 
 同一 Agent 运行中的相同订单/相同检索语句会复用结果；Trace 保留每次工具观察。没有候选时不调用查询 Embedding，也不把空结果解释为允许退款。
 
-调用预算每个 CLI 进程单独计算，默认最多 24 次 Chat+Embedding 请求；Agent 最多 6 轮、150 秒。预算不是金额上限；重跑命令会开启新预算，具体费用以账户账单为准。不要一开始执行大量评测。
+调用预算每个 CLI 进程单独计算，默认最多 40 次 Chat+Embedding 请求，整套案例共享；Agent 工具循环最多 6 轮、150 秒，格式恢复最多额外 1 次、60 秒。预算耗尽会明确失败；这是本地保护，不是账户余额耗尽。预算不是金额上限；重跑命令会开启新预算，具体费用以账户账单为准。不要一开始执行大量评测。
 
 仅使用虚构数据。自定义问题和检索原文会发送到外部接口，并可能保存在本地 Trace；不要输入真实个人信息、密钥或订单。Trace 未做通用 PII 脱敏，不应未经检查分享或提交。
 
