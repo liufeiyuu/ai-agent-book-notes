@@ -1,0 +1,15 @@
+{
+  "name": "refund-agent-real",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "../minimal-agent-ts/node_modules/.bin/tsc --noEmit",
+    "test": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs --test tests/*.test.ts",
+    "inspect": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts inspect",
+    "index": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts index",
+    "retrieve": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts retrieve",
+    "ask": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts ask",
+    "evaluate": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts evaluate"
+  }
+}

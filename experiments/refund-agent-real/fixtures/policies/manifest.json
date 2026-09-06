@@ -1,0 +1,7 @@
+[
+  {"id":"headphones-v1","file":"headphones-v1.md","title":"澄音实验商城：耳罩式耳机退货政策","version":"v1","category":"headphones","channel":"official","publishedAt":"2026-01-01","effectiveFrom":"2026-01-01","effectiveUntil":"2026-09-01"},
+  {"id":"headphones-v2","file":"headphones-v2.md","title":"澄音实验商城：耳罩式耳机退货政策","version":"v2","category":"headphones","channel":"official","publishedAt":"2026-08-25","effectiveFrom":"2026-09-01","effectiveUntil":null},
+  {"id":"earbuds-v1","file":"earbuds-v1.md","title":"澄音实验商城：入耳式耳机卫生例外","version":"v1","category":"earbuds","channel":"official","publishedAt":"2026-01-01","effectiveFrom":"2026-01-01","effectiveUntil":null},
+  {"id":"headphones-partner","file":"headphones-partner.md","title":"澄音合作渠道：耳罩式耳机退货政策","version":"v1","category":"headphones","channel":"partner","publishedAt":"2026-01-01","effectiveFrom":"2026-01-01","effectiveUntil":null},
+  {"id":"profile-help","file":"profile-help.md","title":"澄音实验商城：账号资料修改","version":"v1","category":"account","channel":"official","publishedAt":"2026-01-01","effectiveFrom":"2026-01-01","effectiveUntil":null}
+]

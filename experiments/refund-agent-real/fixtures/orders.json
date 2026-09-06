@@ -1,0 +1,7 @@
+[
+  {"id":"H1001","userId":"demo-user","product":"澄音 Studio 黑色耳罩式耳机","category":"headphones","channel":"official","purchasedAt":"2026-09-02","deliveredAt":"2026-09-04","opened":true,"accessoriesComplete":true,"damaged":false,"qualityIssue":false},
+  {"id":"H1002","userId":"demo-user","product":"澄音 Studio 白色耳罩式耳机","category":"headphones","channel":"official","purchasedAt":"2026-08-20","deliveredAt":"2026-08-25","opened":true,"accessoriesComplete":true,"damaged":false,"qualityIssue":false},
+  {"id":"B1003","userId":"demo-user","product":"澄音 Trail 骨传导耳机","category":"bone-conduction","channel":"official","purchasedAt":"2026-09-02","deliveredAt":"2026-09-04","opened":true,"accessoriesComplete":true,"damaged":false,"qualityIssue":false},
+  {"id":"E1004","userId":"demo-user","product":"澄音 Buds 入耳式耳机（卫生封条已拆）","category":"earbuds","channel":"official","purchasedAt":"2026-09-02","deliveredAt":"2026-09-04","opened":true,"accessoriesComplete":true,"damaged":false,"qualityIssue":false},
+  {"id":"PRIVATE-2001","userId":"other-user","product":"其他用户耳机","category":"headphones","channel":"official","purchasedAt":"2026-09-02","deliveredAt":"2026-09-04","opened":false,"accessoriesComplete":true,"damaged":false,"qualityIssue":false}
+]

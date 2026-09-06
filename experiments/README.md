@@ -15,3 +15,4 @@
 - [最小 Agent（TypeScript）](./minimal-agent-ts/README.md)
 - [上下文压缩最小对照实验](./context-compression-minimal/README.md)
 - [RAG 检索与重排序最小对照实验](./rag-retrieval-minimal/README.md)
+- [真实模型退款咨询 Agent（TypeScript）](./refund-agent-real/README.md)：第二周补充实战，固定 RAG 与 Agent 两种入口；含分步带学指南。代码与离线测试完成，真实 API 验收待配置。
