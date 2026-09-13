@@ -27,6 +27,7 @@ export async function loadDocuments(directory = resolve(PROJECT_ROOT, "fixtures/
   return documents.sort((a, b) => a.id.localeCompare(b.id));
 }
 
+// 分块：按小节和完整段落整理，不是每 600 字硬切
 // 学习入口 2：按 Markdown 小节分块，保留完整段落；元数据随每个块进入索引。
 // 政策文件先被切成“知识块”
 export function chunkDocument(document: PolicyDocument, maxChars = MAX_CHUNK_CHARS): Chunk[] {
@@ -55,8 +56,11 @@ export function chunkDocument(document: PolicyDocument, maxChars = MAX_CHUNK_CHA
     };
     for (const paragraph of section.lines.join("\n").split(/\n\s*\n/).map(x => x.trim()).filter(Boolean)) {
       // Refuse silent loss of conditions; long paragraphs need explicit restructuring.
+      // 单个段落超过上限：报错，要求人工整理，不能直接截掉后面的政策条件。
       if (paragraph.length > maxChars) throw new Error(`Paragraph exceeds ${maxChars} characters in ${document.file}; split it explicitly.`);
+      // 已有段落加上新段落会超限：先调用 flush()，把已有段落保存成一个块。
       if ([...paragraphs, paragraph].join("\n\n").length > maxChars) flush();
+      // 再把新段落放进暂存区，继续组装下一块。
       paragraphs.push(paragraph);
     }
     flush();
