@@ -8,3 +8,4 @@
 - [RAG 故障定位与分阶段 Trace](./rag-failure-diagnosis.md)
 - [退款咨询：用户记忆、工具与 RAG 综合验收](./refund-rag-integration-review.md)
 - [真实退款 Agent：第二周实践收尾](./refund-agent-real-review.md)
+- [用户记忆最小闭环：两小时学习计划（尚未执行）](./user-memory-two-hour-plan.md)
