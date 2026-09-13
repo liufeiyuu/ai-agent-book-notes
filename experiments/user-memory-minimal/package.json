@@ -1,0 +1,11 @@
+{
+  "name": "user-memory-minimal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "memory": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts",
+    "test": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs --test tests/*.test.ts",
+    "typecheck": "../minimal-agent-ts/node_modules/.bin/tsc --noEmit"
+  }
+}
