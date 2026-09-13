@@ -28,6 +28,7 @@ export async function loadDocuments(directory = resolve(PROJECT_ROOT, "fixtures/
 }
 
 // 学习入口 2：按 Markdown 小节分块，保留完整段落；元数据随每个块进入索引。
+// 政策文件先被切成“知识块”
 export function chunkDocument(document: PolicyDocument, maxChars = MAX_CHUNK_CHARS): Chunk[] {
   if (!Number.isInteger(maxChars) || maxChars < 1) throw new Error("Invalid chunk size.");
   const sections: Array<{ heading: string; lines: string[] }> = [];

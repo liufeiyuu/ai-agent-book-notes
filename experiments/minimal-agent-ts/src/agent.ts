@@ -207,6 +207,7 @@ export async function runAgent(
           result: structuredClone(result),
           timestamp: timestamp(),
         });
+        // Agent Loop 把工具结果加入对话
         // 把 ToolResult 写回 message
         messages.push(toolResultToMessage(result));
 

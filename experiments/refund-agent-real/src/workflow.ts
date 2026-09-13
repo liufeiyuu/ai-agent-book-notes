@@ -31,6 +31,7 @@ export function createWorkflow(state: ToolState, selectedOrderId?: string) {
     }
     if (candidates.length !== 1) return { stage: "clarify", candidateOrderIds: [...candidates] };
     const targetOrderId = candidates[0]!;
+    // 如果已经成功搜索过目标订单的政策，就进入允许回答的阶段；否则，仍处于必须搜索政策的阶段。
     return { stage: state.policyOrderIds.has(targetOrderId) ? "answer" : "search_policy",
       targetOrderId, candidateOrderIds: [targetOrderId] };
   }

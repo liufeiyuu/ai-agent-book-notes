@@ -61,9 +61,12 @@ export function createTools(options: { orders: Order[]; userId: string; today: s
       let trace = cache.get(key);
       const cacheHit = trace !== undefined;
       if (!trace) {
+        // 执行检索
         trace = await retrieve(args.query, scopeForOrder(order), options.index, options.embedder, options.topK, signal);
         cache.set(key, trace);
       }
+      // 模型不会自动看见项目里的文件，程序必须把内容送给它。检索工具把政策原文放进返回结果
+      // evidence: evidencePayload(trace.hits) 把检索选中的块，整理成工具返回的 evidence。
       const output = { orderId: order.id, scope: trace.scope, cacheHit, evidence: evidencePayload(trace.hits),
         applicableCandidateCount: trace.ranking.length,
         missingEvidence: trace.hits.length === 0,
@@ -71,7 +74,9 @@ export function createTools(options: { orders: Order[]; userId: string; today: s
           ? "业务范围内不存在政策候选。改变 query 不会产生适用条款；应停止搜索并说明缺少此范围的政策。"
           : "结果来自按订单适用范围过滤后的知识库；核对条款，证据已覆盖所需条件时直接回答，不重复查证同一事实。" };
       signal?.throwIfAborted();
+      // 保存检索记录
       searches.push(trace);
+      // 记录这笔订单的政策已搜索过。
       policyOrderIds.add(order.id); // A successful empty result counts; a thrown error does not.
       return output;
     },

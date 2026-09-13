@@ -1,6 +1,8 @@
 import { validDate, type Chunk, type Embedder, type IndexArtifact, type SearchScope, type SearchTrace } from "./types";
 import { validateVector } from "./provider";
 
+// 在计算相似度之前，排除不适用的版本
+// 程序根据订单事实限定了适用范围。
 export function exclusionReason(chunk: Chunk, scope: SearchScope): string | null {
   if (!validDate(scope.policyDate)) throw new Error("Invalid policy date.");
   if (chunk.category !== scope.category) return "category_mismatch";

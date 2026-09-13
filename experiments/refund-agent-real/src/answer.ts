@@ -17,6 +17,8 @@ export const ANSWER_SCHEMA = {
 
 const nonempty = (value: unknown): value is string => typeof value === "string" && Boolean(value.trim());
 // Validate even with provider-side structured output. Never extract a convenient JSON suffix.
+// 用 JSON.parse 把字符串转换成对象。
+// 检查有没有规定的字段、字段类型是否正确等。
 export function parseAnswer(raw: string): Answer {
   const value: unknown = JSON.parse(raw);
   if (!record(value) || Object.keys(value).length !== 5 ||

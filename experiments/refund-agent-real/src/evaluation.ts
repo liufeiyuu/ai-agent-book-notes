@@ -30,9 +30,19 @@ export function evaluateAnswer(raw: string, hits: SearchHit[], knownOrderIds: st
   checks.push({ name: "answer_schema", passed: true });
   const evidence = new Map(hits.map(hit => [hit.chunk.id, hit.chunk]));
   checks.push({ name: "known_orders_only", passed: answer.orderIds.every(id => knownOrderIds.includes(id)) });
+  // c.chunkId：这条引用声称来自哪个块。
+  // evidence.get(...)：从本次实际检索到的证据里找到那个块。
+  // .text.includes(c.quote)：检查引用文字是否出现在该块原文中。
+  // 字符串匹配发现引用对不上原文。 找不到对应的块，也不会通过。
   checks.push({ name: "citation_ids_and_quotes", passed: answer.citations.every(c => evidence.get(c.chunkId)?.text.includes(c.quote) === true) });
+  // 确定性的退货判断，是否带有证据？
   const decisive = answer.status === "eligible" || answer.status === "ineligible";
+  // 如果回答不是 eligible 或 ineligible，这一项不强求引用。
+  // 如果回答是 eligible 或 ineligible，必须同时满足：至少一条引用，而且明确针对一笔订单。
+  // 不过，这项检查也只是检查“有没有引用”，并不能单独证明引用真正支持结论。
   checks.push({ name: "decision_has_evidence", passed: !decisive || (answer.citations.length > 0 && answer.orderIds.length === 1) });
+  // 如果是确定结论，这一项不要求填写缺失信息；如果是不确定结论，missingInformation 至少要有一项。
+  // 注意代码实际只看了数组里有没有内容，并没有核对内容是否符合实际。
   checks.push({ name: "uncertainty_has_explanation", passed: decisive || answer.missingInformation.length > 0 });
   if (expected) {
     checks.push({ name: "expected_decision", passed: answer.status === expected.expectedStatus });

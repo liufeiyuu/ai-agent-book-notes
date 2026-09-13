@@ -61,6 +61,7 @@ export async function runConsultation(options: RunOptions) {
     workflow = createWorkflow(state, options.orderId);
     const result = await runAgent({
       model: options.model, registry: new ToolRegistry(state.tools), systemPrompt: SYSTEM_PROMPT,
+      // 这里构造模型收到的用户输入。
       userInput: JSON.stringify({ task: options.question, businessDate: options.today,
         ...(options.orderId ? { selectedOrderId: options.orderId } : {}) }),
       maxTurns: 6, timeoutMs: 150_000,
@@ -68,6 +69,9 @@ export async function runConsultation(options: RunOptions) {
       validateFinal: response => workflow!.validateFinal(response.message.content ?? ""),
     });
     execution = result;
+    // result 是刚才 runAgent(...) 返回的运行结果。
+    // 这行把其中的最终答案取出来，放进 rawAnswer。如果没有最终答案，就用空字符串。
+    // 此时，rawAnswer 仍然是一段字符串，里面写着 JSON 格式的退款判断。
     rawAnswer = result.finalAnswer ?? "";
     completed = result.completed;
     knownOrderIds = [...state.queriedOrders.keys()];
@@ -100,6 +104,10 @@ export async function runConsultation(options: RunOptions) {
   // Recovery may change the JSON answer, but it cannot bypass business prerequisites.
   const workflowError = workflow?.validateFinal(rawAnswer);
   if (workflowError) completed = false;
+  // 这里拿答案、实际检索证据、已知订单等进行检查；后面还会补充流程检查。
+  // 评测函数是在生成检查报告，不是在替模型重新决定能不能退。
+  // 模型回答之后，评测才使用参考答案，最后一个参数 options.expected，才是给评测函数使用的案例参考信息。
+  // 给模型问题和可用工具 → 模型取得事实、生成答案 → 程序拿参考答案检查它。
   const evaluation = evaluateAnswer(rawAnswer, hits, knownOrderIds, options.expected);
   if (evaluation.answer?.status === "eligible" || evaluation.answer?.status === "ineligible") {
     const order = visibleOrders(options.orders, options.userId, evaluation.answer.orderIds[0])[0];
