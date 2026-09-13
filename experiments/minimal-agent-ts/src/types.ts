@@ -41,6 +41,7 @@ export type ToolDefinition = {
 export type ModelInput = {
   messages: Message[];
   tools: ToolDefinition[];
+  toolChoice?: "auto" | "required" | "none";
   signal?: AbortSignal;
 };
 
@@ -102,11 +103,17 @@ export type TraceEvent =
       turn: number;
       messages: Message[];
       tools: ToolDefinition[];
+      toolChoice?: ModelInput["toolChoice"];
     }>
   | Timestamped<{
       type: "model_response";
       turn: number;
       response: ModelResponse;
+    }>
+  | Timestamped<{
+      type: "final_rejected";
+      turn: number;
+      reason: string;
     }>
   | Timestamped<{
       type: "tool_start";

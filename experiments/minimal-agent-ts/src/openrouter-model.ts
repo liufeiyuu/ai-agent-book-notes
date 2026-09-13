@@ -105,7 +105,7 @@ export type OpenRouterRequest = {
   model: string;
   messages: OpenRouterMessage[];
   tools?: OpenRouterTool[];
-  tool_choice?: "auto";
+  tool_choice?: "auto" | "required" | "none";
 };
 
 type OpenRouterMessage =
@@ -138,7 +138,7 @@ type OpenRouterTool = {
 // 内部格式转换成 openrouter 请求
 export function toOpenRouterRequest(
   model: string,
-  input: Pick<ModelInput, "messages" | "tools">,
+  input: Pick<ModelInput, "messages" | "tools" | "toolChoice">,
 ): OpenRouterRequest {
   const messages = input.messages.map(toOpenRouterMessage);
   const tools = input.tools.map(toOpenRouterTool);
@@ -146,7 +146,10 @@ export function toOpenRouterRequest(
   return {
     model,
     messages,
-    ...(tools.length === 0 ? {} : { tools, tool_choice: "auto" as const }),
+    ...(tools.length === 0 ? {} : { tools }),
+    ...(input.toolChoice !== undefined
+      ? { tool_choice: input.toolChoice }
+      : tools.length === 0 ? {} : { tool_choice: "auto" as const }),
   };
 }
 

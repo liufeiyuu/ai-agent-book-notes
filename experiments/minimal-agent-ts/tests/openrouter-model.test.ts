@@ -5,6 +5,7 @@ import {
   OpenRouterApiError,
   OpenRouterModel,
   parseOpenRouterResponse,
+  toOpenRouterRequest,
 } from "../src/openrouter-model";
 import type { ModelInput } from "../src/types";
 
@@ -84,6 +85,33 @@ test("keeps malformed argument JSON untrusted for Tool validation", () => {
   const response = parseOpenRouterResponse(toolCallApiResponse("{bad-json"));
 
   assert.equal(response.message.toolCalls[0]?.arguments, "{bad-json");
+});
+
+test("transmits required and none tool choices without silently reverting to auto", async () => {
+  for (const toolChoice of ["required", "none"] as const) {
+    let capturedBody: Record<string, unknown> | undefined;
+    const model = new OpenRouterModel({
+      apiKey: "test-key",
+      model: "test/model",
+      fetch: async (_url, init) => {
+        capturedBody = JSON.parse(String(init?.body)) as Record<string, unknown>;
+        return jsonResponse(toolCallApiResponse());
+      },
+    });
+
+    await model.generate({ ...modelInput(), toolChoice });
+
+    assert.equal(capturedBody?.tool_choice, toolChoice);
+    assert.equal(model.exchanges[0]?.request.tool_choice, toolChoice);
+  }
+});
+
+test("keeps tool-free requests backward compatible and preserves explicit none", () => {
+  const input = { ...modelInput(), tools: [] };
+  const defaultRequest = toOpenRouterRequest("test/model", input);
+  assert.equal("tools" in defaultRequest, false);
+  assert.equal("tool_choice" in defaultRequest, false);
+  assert.equal(toOpenRouterRequest("test/model", { ...input, toolChoice: "none" }).tool_choice, "none");
 });
 
 test("converts a final OpenRouter response to an internal final response", () => {

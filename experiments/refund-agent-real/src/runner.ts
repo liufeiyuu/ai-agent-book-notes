@@ -7,6 +7,7 @@ import { parseAnswer } from "./answer";
 import { visibleOrders, scopeForOrder } from "./orders";
 import { exclusionReason, retrieve } from "./retrieval";
 import { createTools } from "./tools";
+import { createWorkflow } from "./workflow";
 import type { Embedder, IndexArtifact, Order, SearchHit, SearchTrace } from "./types";
 
 export interface RunOptions {
@@ -32,6 +33,8 @@ export async function runConsultation(options: RunOptions) {
   let rawAnswer = "";
   let completed = false;
   let orderQueryCount = 0;
+  let workflow: ReturnType<typeof createWorkflow> | undefined;
+  let toolState: ReturnType<typeof createTools> | undefined;
   let execution: unknown;
   if (options.mode === "rag") {
     // Fixed RAG requires a caller-selected order; ambiguous input passes all candidates for clarification.
@@ -54,11 +57,15 @@ export async function runConsultation(options: RunOptions) {
     }
   } else {
     const state = createTools(options);
+    toolState = state;
+    workflow = createWorkflow(state, options.orderId);
     const result = await runAgent({
       model: options.model, registry: new ToolRegistry(state.tools), systemPrompt: SYSTEM_PROMPT,
       userInput: JSON.stringify({ task: options.question, businessDate: options.today,
         ...(options.orderId ? { selectedOrderId: options.orderId } : {}) }),
       maxTurns: 6, timeoutMs: 150_000,
+      prepareRequest: workflow.prepareRequest,
+      validateFinal: response => workflow!.validateFinal(response.message.content ?? ""),
     });
     execution = result;
     rawAnswer = result.finalAnswer ?? "";
@@ -90,6 +97,9 @@ export async function runConsultation(options: RunOptions) {
       }
     }
   }
+  // Recovery may change the JSON answer, but it cannot bypass business prerequisites.
+  const workflowError = workflow?.validateFinal(rawAnswer);
+  if (workflowError) completed = false;
   const evaluation = evaluateAnswer(rawAnswer, hits, knownOrderIds, options.expected);
   if (evaluation.answer?.status === "eligible" || evaluation.answer?.status === "ineligible") {
     const order = visibleOrders(options.orders, options.userId, evaluation.answer.orderIds[0])[0];
@@ -101,11 +111,15 @@ export async function runConsultation(options: RunOptions) {
   evaluation.checks.push({ name: "execution_completed", passed: completed });
   if (options.mode === "agent") {
     evaluation.checks.push({ name: "orders_actually_queried", passed: orderQueryCount > 0 });
-    if (knownOrderIds.length > 0 && evaluation.answer?.status !== "needs_clarification") {
-      evaluation.checks.push({ name: "policy_search_attempted", passed: searches.length > 0 });
+    evaluation.checks.push({ name: "workflow_complete", passed: workflowError === undefined });
+    const target = workflow!.progress().targetOrderId;
+    if (target) {
+      evaluation.checks.push({ name: "policy_search_attempted", passed: toolState!.policyOrderIds.has(target) });
     }
   }
   evaluation.automatedPassed = evaluation.checks.every(check => check.passed);
   return { mode: options.mode, question: options.question, businessDate: options.today,
-    elapsedMs: Date.now() - started, rawAnswer, knownOrderIds, searches, execution, formatRecovery, evaluation };
+    elapsedMs: Date.now() - started, rawAnswer, knownOrderIds, searches, execution, formatRecovery,
+    workflow: workflow ? { ...workflow.progress(), orderQueries: toolState!.orderQueries,
+      policyOrderIds: [...toolState!.policyOrderIds], error: workflowError ?? null } : null, evaluation };
 }

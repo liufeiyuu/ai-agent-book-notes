@@ -67,9 +67,10 @@ export class OpenRouterEmbedder implements Embedder {
   }
 }
 
-export function chatParameters(model: string, maxOutputTokens: number) {
+export function chatParameters(model: string, maxOutputTokens: number, requiresTool = false) {
   return { max_tokens: maxOutputTokens, temperature: 0,
-    response_format: { type: "json_schema", json_schema: { name: "refund_consultation", strict: true, schema: ANSWER_SCHEMA } },
+    // Tool stages request arguments, not a final-answer object. Restore strict JSON for answers.
+    ...(requiresTool ? {} : { response_format: { type: "json_schema", json_schema: { name: "refund_consultation", strict: true, schema: ANSWER_SCHEMA } } }),
     provider: { require_parameters: true },
     // Week-one messages do not round-trip reasoning blocks. Use V4's supported non-thinking mode.
     // This also leaves the small output budget available for a final answer/tool arguments.
@@ -86,7 +87,7 @@ export function createChatModel(apiKey: string, model: string, budget: CallBudge
       init?.signal?.throwIfAborted();
       budget.take();
       const body: Record<string, unknown> = JSON.parse(String(init?.body));
-      Object.assign(body, chatParameters(model, maxOutputTokens));
+      Object.assign(body, chatParameters(model, maxOutputTokens, body.tool_choice === "required"));
       transportRequests.push(structuredClone(body)); // Exact sent payload, never authorization headers.
       return fetch_(url, { ...init, body: JSON.stringify(body),
         signal: init?.signal ? AbortSignal.any([init.signal, AbortSignal.timeout(60_000)]) : AbortSignal.timeout(60_000) });

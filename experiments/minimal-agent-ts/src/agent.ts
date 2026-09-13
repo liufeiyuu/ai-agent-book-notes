@@ -4,6 +4,8 @@ import type {
   AgentRunResult,
   Message,
   Model,
+  ModelInput,
+  ModelResponse,
   StopReason,
   TraceEvent,
 } from "./types";
@@ -17,6 +19,9 @@ export type RunAgentOptions = {
   timeoutMs?: number;
   signal?: AbortSignal;
   now?: () => string;
+  // Task-specific constraints stay outside the reusable loop.
+  prepareRequest?: (input: ModelInput) => ModelInput;
+  validateFinal?: (response: ModelResponse) => string | undefined;
 };
 
 // runAgent 是 Harness，也是 Agent Loop 的核心。
@@ -76,11 +81,28 @@ export async function runAgent(
       // experiments/minimal-agent-ts/src/tool-registry.ts Line 13
       const toolDefinitions = structuredClone(options.registry.definitions());
 
+      let request: ModelInput;
+      try {
+        const input: ModelInput = {
+          messages: requestMessages,
+          tools: toolDefinitions,
+          signal: runAbort.signal,
+        };
+        const prepared = options.prepareRequest?.(input) ?? input;
+        // A request hook may transform context and tools, but not detach cancellation.
+        request = { ...prepared, signal: runAbort.signal };
+      } catch (error) {
+        return stop(false, "model_error", {
+          error: `prepareRequest failed: ${errorMessage(error)}`,
+        });
+      }
+
       trace.push({
         type: "model_request",
         turn,
-        messages: requestMessages,
-        tools: toolDefinitions,
+        messages: structuredClone(request.messages),
+        tools: structuredClone(request.tools),
+        ...(request.toolChoice === undefined ? {} : { toolChoice: request.toolChoice }),
         timestamp: timestamp(),
       });
 
@@ -91,11 +113,7 @@ export async function runAgent(
           // experiments/minimal-agent-ts/src/openrouter-demo.ts
           // experiments/minimal-agent-ts/src/mock-model.ts - L32
           // experiments/minimal-agent-ts/src/types.ts - L21
-          options.model.generate({
-            messages: requestMessages,
-            tools: toolDefinitions,
-            signal: runAbort.signal,
-          }),
+          options.model.generate(request),
           runAbort.signal,
         );
       } catch (error) {
@@ -131,6 +149,25 @@ export async function runAgent(
           return stop(false, "model_error", {
             error: "Model returned neither text nor tool calls.",
           });
+        }
+
+        let rejection: string | undefined;
+        try {
+          rejection = options.validateFinal?.(structuredClone(response));
+        } catch (error) {
+          return stop(false, "model_error", {
+            error: `validateFinal failed: ${errorMessage(error)}`,
+          });
+        }
+        if (rejection !== undefined) {
+          trace.push({
+            type: "final_rejected",
+            turn,
+            reason: rejection,
+            timestamp: timestamp(),
+          });
+          messages.push({ role: "system", content: rejection });
+          continue;
         }
 
         // This is a protocol-level completion, not proof that the task is correct.

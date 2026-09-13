@@ -274,7 +274,9 @@ test("model guessing an answer without tool evidence fails even if decision matc
   const result = await runConsultation({ mode: "agent", question: CASES[0]!.question, today: DEMO_TODAY,
     userId: "demo-user", orders, index: indexFor(), embedder: testEmbedder(), model, topK: 3, expected: CASES[0]! });
   assert.equal(result.evaluation.automatedPassed, false);
-  assert.ok(result.evaluation.checks.some(c => c.name === "expected_decision" && c.passed));
+  assert.equal(result.rawAnswer, "");
+  assert.equal(result.formatRecovery, null);
+  assert.equal((result.execution as { stopReason: string }).stopReason, "max_turns");
   assert.ok(result.evaluation.checks.some(c => c.name === "orders_actually_queried" && !c.passed));
 });
 
