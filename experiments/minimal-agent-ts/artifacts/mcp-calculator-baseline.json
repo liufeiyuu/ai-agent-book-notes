@@ -1,0 +1,298 @@
+{
+  "recordedAt": "2026-09-14T23:26:09.824Z",
+  "modelCalls": 0,
+  "transport": "stdio",
+  "sdkVersion": "2.0.0",
+  "tools": [
+    {
+      "name": "calculator",
+      "description": "Perform one arithmetic operation on two finite numbers.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "add",
+              "subtract",
+              "multiply",
+              "divide"
+            ]
+          },
+          "left": {
+            "type": "number"
+          },
+          "right": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "operation",
+          "left",
+          "right"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      }
+    }
+  ],
+  "results": [
+    {
+      "label": "valid",
+      "input": {
+        "operation": "divide",
+        "left": 6,
+        "right": 3
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "2"
+          }
+        ]
+      }
+    },
+    {
+      "label": "invalid-type",
+      "input": {
+        "operation": "divide",
+        "left": 6,
+        "right": "3"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Input validation error: Invalid arguments for tool calculator: right: Invalid input: expected number, received string"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "label": "divide-by-zero",
+      "input": {
+        "operation": "divide",
+        "left": 6,
+        "right": 0
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Cannot divide by zero."
+          }
+        ],
+        "isError": true
+      }
+    }
+  ],
+  "messages": [
+    {
+      "direction": "client → server",
+      "message": {
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-11-25",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "calculator-lesson-client",
+            "version": "1.0.0"
+          }
+        },
+        "jsonrpc": "2.0",
+        "id": 0
+      }
+    },
+    {
+      "direction": "server → client",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 0,
+        "result": {
+          "protocolVersion": "2025-11-25",
+          "capabilities": {
+            "tools": {
+              "listChanged": true
+            }
+          },
+          "serverInfo": {
+            "name": "calculator-lab",
+            "version": "1.0.0"
+          }
+        }
+      }
+    },
+    {
+      "direction": "client → server",
+      "message": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized"
+      }
+    },
+    {
+      "direction": "client → server",
+      "message": {
+        "method": "tools/list",
+        "jsonrpc": "2.0",
+        "id": 1
+      }
+    },
+    {
+      "direction": "server → client",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {
+          "tools": [
+            {
+              "name": "calculator",
+              "description": "Perform one arithmetic operation on two finite numbers.",
+              "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "add",
+                      "subtract",
+                      "multiply",
+                      "divide"
+                    ]
+                  },
+                  "left": {
+                    "type": "number"
+                  },
+                  "right": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "operation",
+                  "left",
+                  "right"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "client → server",
+      "message": {
+        "method": "tools/call",
+        "params": {
+          "name": "calculator",
+          "arguments": {
+            "operation": "divide",
+            "left": 6,
+            "right": 3
+          }
+        },
+        "jsonrpc": "2.0",
+        "id": 2
+      }
+    },
+    {
+      "direction": "server → client",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "direction": "client → server",
+      "message": {
+        "method": "tools/call",
+        "params": {
+          "name": "calculator",
+          "arguments": {
+            "operation": "divide",
+            "left": 6,
+            "right": "3"
+          }
+        },
+        "jsonrpc": "2.0",
+        "id": 3
+      }
+    },
+    {
+      "direction": "server → client",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: Invalid arguments for tool calculator: right: Invalid input: expected number, received string"
+            }
+          ],
+          "isError": true
+        }
+      }
+    },
+    {
+      "direction": "client → server",
+      "message": {
+        "method": "tools/call",
+        "params": {
+          "name": "calculator",
+          "arguments": {
+            "operation": "divide",
+            "left": 6,
+            "right": 0
+          }
+        },
+        "jsonrpc": "2.0",
+        "id": 4
+      }
+    },
+    {
+      "direction": "server → client",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Cannot divide by zero."
+            }
+          ],
+          "isError": true
+        }
+      }
+    }
+  ],
+  "executed": [
+    {
+      "stage": "calculator.execute",
+      "arguments": {
+        "operation": "divide",
+        "left": 6,
+        "right": 3
+      }
+    },
+    {
+      "stage": "calculator.execute",
+      "arguments": {
+        "operation": "divide",
+        "left": 6,
+        "right": 0
+      }
+    }
+  ]
+}

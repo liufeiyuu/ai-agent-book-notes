@@ -10,9 +10,12 @@ export type CalculatorArguments = {
   right: number;
 };
 
+// 这个项目只把工具名称、描述和 Schema 交给模型；校验函数和执行函数留在本地。
 export const calculator: Tool<CalculatorArguments> = {
+  // 告诉模型工具叫什么、有什么用途
   name: "calculator",
   description: "Perform one arithmetic operation on two finite numbers.",
+  // 描述参数名称、类型和约束
   inputSchema: {
     type: "object",
     properties: {
@@ -34,6 +37,7 @@ export const calculator: Tool<CalculatorArguments> = {
     additionalProperties: false,
   },
 
+  // 本地程序检查收到的参数
   parseArguments(input: unknown): CalculatorArguments {
     if (!isRecord(input)) {
       throw new TypeError("Calculator arguments must be an object.");
@@ -54,6 +58,7 @@ export const calculator: Tool<CalculatorArguments> = {
     return { operation, left, right };
   },
 
+  // 本地程序执行实际运算
   async execute(arguments_, signal): Promise<number> {
     signal?.throwIfAborted();
 
