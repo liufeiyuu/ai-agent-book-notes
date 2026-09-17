@@ -16,7 +16,7 @@ flowchart LR
 
 在完整 Agent 应用中，应用管理模型对话，并使用 MCP Client 访问 Server；模型根据提供的工具定义生成调用请求，应用负责转交。MCP Client 不是模型，MCP Server 也不负责替模型决定何时调用。Function Calling 描述模型输出工具调用这一侧；MCP 规定应用与工具服务如何交互，两者可以配合。
 
-## 实际实现与结果
+## 首轮实际实现与结果
 
 - [Server](../../experiments/minimal-agent-ts/src/mcp/calculator-server.ts)：注册 calculator 的描述与参数 Schema；SDK 校验后复用 calculator.parseArguments 和 execute；把结果包装为 MCP content，错误设置 isError。
 - [Client](../../experiments/minimal-agent-ts/src/mcp/calculator-client.ts)：启动 Server、初始化、发现和调用，旁路记录实际协议消息，并在 finally 关闭连接。断言同时核对结果和计算器是否实际进入执行。
@@ -40,7 +40,7 @@ flowchart LR
 
 本轮成功结果是 `{"content":[{"type":"text","text":"2"}]}`。与已有工具执行器的 `{"ok":true,"output":2,...}` 形状不同，MCP 不会自动替应用转换成仓库内部 ToolResult。
 
-## 运行与验证边界
+## 首轮运行与验证边界
 
 在 experiments/minimal-agent-ts 目录执行：
 
@@ -57,7 +57,7 @@ npm run demo:mcp
 
 ## 接续位置
 
-先由学习者观察 Client → Server → calculator 的职责和两种错误发生位置，再讨论结果映射：本轮只返回 text 块，下一步为成功结果增加结构化数值并明确怎样接回已有 ToolResult。修改由助手完成，保留基线与修改后结果；B 的映射解释与验收仍待完成，不因助手接通就标记整个 B 通过。
+结构化结果和 Loop 适配现已按下节完成。接下来结合第二轮输入讨论：若 Server 已算出结果，但下一轮模型没有收到工具消息，应检查应用中的适配、ToolResult 包装与消息写入哪一段。学习者映射解释已在文末记录，B 已按原标准收尾。
 
 ## 官方依据
 
@@ -65,3 +65,58 @@ npm run demo:mcp
 - [MCP 生命周期](https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle)：初始化、能力协商与 initialized 通知。
 - [MCP 工具规范](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)：发现、调用与结果结构。
 - [Server 入门](https://modelcontextprotocol.io/docs/2026-07-28/develop/build-server)：stdio 的 stdout 专用于协议消息，日志走 stderr。
+
+## 第二轮：结构化结果接回 Agent Loop（2026-09-15）
+
+本轮助手完成代码、运行及验证；没有真实 LLM API 调用。官方规范中的 structuredContent 是 Server 返回的结构化数据，可配合 outputSchema 校验，并在文本块中返回序列化 JSON；它不是模型的结构化生成能力。[规范依据](https://modelcontextprotocol.io/specification/2025-11-25/server/tools#structured-content)
+
+### 改了什么
+
+Server 现在声明输出 `{ value: number }`，成功时返回：
+
+```json
+{
+  "content": [{ "type": "text", "text": "{\"value\":2}" }],
+  "structuredContent": { "value": 2 }
+}
+```
+
+相比基线，文本从 `"2"` 变为序列化对象字符串；程序读取明确的 structuredContent.value，不从自然语言猜数值。文本与结构化内容来自同一个 output 对象。
+
+新增[计算器适配层](../../experiments/minimal-agent-ts/src/mcp/calculator-adapter.ts)，将 tools/list 得到的名称、描述和参数 Schema 注册到原 ToolRegistry。参数复用本地 calculator 校验；execute 改为通过 Client 发出 MCP 请求，先检查 isError，再检查结构化 value 为有限数值，最后返回该数值。原 executeToolCall 将其包装为 ToolResult，原 Loop 写入 tool 消息，两者实现均未改动。
+
+```text
+MCP structuredContent.value = 2
+    → 适配层返回数字 2
+    → executeToolCall 包装 { ok: true, toolCallId, toolName, output: 2 }
+    → toolResultToMessage 生成 role: tool 消息
+    → runAgent 在下一轮 model.generate 的输入中带上它
+```
+
+模型侧调用 ID 沿用 `loop-valid` / `loop-error`；MCP JSON-RPC 请求 ID 由 Client 管理，两种 ID 不混用。MCP isError 会在适配层抛错，再由现有执行器包装为 execution_error；这是一种本课最小映射，未实现所有远端错误码、重试分类或通用多媒体映射。
+
+### 实际验证证据
+
+- `npm run typecheck`：通过。首次检查要求对 SDK 返回的 structuredContent 做运行时类型收窄，助手补齐后通过。
+- `node --import tsx --test tests/mcp-calculator-adapter.test.ts`：[3 项测试](../../experiments/minimal-agent-ts/tests/mcp-calculator-adapter.test.ts)通过，覆盖数值 0、错误优先于数值、拒绝缺失/字符串/非有限结果。
+- `npm run demo:mcp`：通过。原三组协议案例复验，额外两组通过现有 runAgent 和 MockModel 验证成功及除零链路。
+- [首轮基线](../../experiments/minimal-agent-ts/artifacts/mcp-calculator-baseline.json)保持不变；[改后完整记录](../../experiments/minimal-agent-ts/artifacts/mcp-calculator-latest.json)保留 SDK 收发、四次计算器执行、两组 Loop Trace 和 MockModel 实际收到的请求；[Server/Client 修改对照](../../experiments/minimal-agent-ts/artifacts/mcp-structured-result.patch)供后续审查，新增适配层与测试按上方源码链接阅读。
+
+| 路径 | MockModel 第二轮实际收到的 ToolResult | 脚本化最终回答 |
+| --- | --- | --- |
+| 6 ÷ 3 | ok: true，output: 2，toolCallId: loop-valid | 计算结果：2 |
+| 6 ÷ 0 | ok: false，execution_error，Cannot divide by zero.，toolCallId: loop-error | 计算失败：Cannot divide by zero. |
+
+每组 Loop 均有两轮 MockModel.generate。回答由脚本依据实际 tool 消息生成，不是真实模型推理。除零案例的 run.completed 表示循环正常结束并报告失败，不表示计算业务成功。已验证结果进入离线模型接口输入；尚未验证真实模型请求或模型自主选工具。
+
+本轮实际协议调用为 initialize ×1、tools/list ×1、tools/call ×5，另有 initialized 通知；其中四次进入原计算器，字符串参数在 SDK 层被拒绝。本课程累计 initialize ×2、tools/list ×2、tools/call ×8，真实 LLM API 调用仍为 0。
+
+## 学习者反馈与 B 收尾（2026-09-15）
+
+学习者判断：应检查 MCP 结果返回给 Agent，以及 Agent Loop 中信息构造这一段。该回答正确定位了计算完成之后的回传、适配和上下文写入职责，满足 B 原有的映射解释要求。
+
+助手补充检查顺序：Client 是否收到实际响应；适配层是否正确读取成功或错误并交给执行器包装 ToolResult；Loop 是否写入对应 toolCallId 的 tool 消息，并实际携带到下一轮请求。Server 日志只能证明计算在服务端发生，不能替代接收端和模型输入证据。
+
+发现与按需加载的范围补充：tools/list 是让应用知道可用工具；应用可以根据当前任务选择向模型提供哪些工具定义。工具多时筛选相关定义可以减少上下文占用和无关选项，本实验只有一个工具，不建设搜索或动态加载平台。
+
+B 已具备真实发现/调用记录、接入图、助手结果映射修改、成功/失败验证及学习者解释，按既有标准完成。真实 LLM API 调用仍为 0，MockModel 证据只证明离线接口链路。本轮仅反馈与归档，没有新增运行；下一步进入 C 的需求说明、修改、diff 与验证审查，不再追加 MCP 作业。

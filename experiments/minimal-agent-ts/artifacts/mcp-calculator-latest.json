@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-09-14T23:26:09.824Z",
+  "recordedAt": "2026-09-15T00:57:58.608Z",
   "modelCalls": 0,
   "transport": "stdio",
   "sdkVersion": "2.0.0",
@@ -33,6 +33,19 @@
         ],
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
       }
     }
   ],
@@ -48,9 +61,12 @@
         "content": [
           {
             "type": "text",
-            "text": "2"
+            "text": "{\"value\":2}"
           }
-        ]
+        ],
+        "structuredContent": {
+          "value": 2
+        }
       }
     },
     {
@@ -175,6 +191,19 @@
                   "right"
                 ],
                 "additionalProperties": false
+              },
+              "outputSchema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "value"
+                ],
+                "additionalProperties": false
               }
             }
           ]
@@ -206,9 +235,12 @@
           "content": [
             {
               "type": "text",
-              "text": "2"
+              "text": "{\"value\":2}"
             }
-          ]
+          ],
+          "structuredContent": {
+            "value": 2
+          }
         }
       }
     },
@@ -275,6 +307,72 @@
           "isError": true
         }
       }
+    },
+    {
+      "direction": "client → server",
+      "message": {
+        "method": "tools/call",
+        "params": {
+          "name": "calculator",
+          "arguments": {
+            "operation": "divide",
+            "left": 6,
+            "right": 3
+          }
+        },
+        "jsonrpc": "2.0",
+        "id": 5
+      }
+    },
+    {
+      "direction": "server → client",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"value\":2}"
+            }
+          ],
+          "structuredContent": {
+            "value": 2
+          }
+        }
+      }
+    },
+    {
+      "direction": "client → server",
+      "message": {
+        "method": "tools/call",
+        "params": {
+          "name": "calculator",
+          "arguments": {
+            "operation": "divide",
+            "left": 6,
+            "right": 0
+          }
+        },
+        "jsonrpc": "2.0",
+        "id": 6
+      }
+    },
+    {
+      "direction": "server → client",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Cannot divide by zero."
+            }
+          ],
+          "isError": true
+        }
+      }
     }
   ],
   "executed": [
@@ -292,6 +390,710 @@
         "operation": "divide",
         "left": 6,
         "right": 0
+      }
+    },
+    {
+      "stage": "calculator.execute",
+      "arguments": {
+        "operation": "divide",
+        "left": 6,
+        "right": 3
+      }
+    },
+    {
+      "stage": "calculator.execute",
+      "arguments": {
+        "operation": "divide",
+        "left": 6,
+        "right": 0
+      }
+    }
+  ],
+  "loopRuns": [
+    {
+      "callId": "loop-valid",
+      "modelKind": "MockModel (offline)",
+      "modelRequests": [
+        {
+          "messages": [
+            {
+              "role": "system",
+              "content": "离线 MCP 链路测试。"
+            },
+            {
+              "role": "user",
+              "content": "计算 6 / 3"
+            }
+          ],
+          "tools": [
+            {
+              "name": "calculator",
+              "description": "Perform one arithmetic operation on two finite numbers.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "add",
+                      "subtract",
+                      "multiply",
+                      "divide"
+                    ]
+                  },
+                  "left": {
+                    "type": "number"
+                  },
+                  "right": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "operation",
+                  "left",
+                  "right"
+                ],
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false
+              }
+            }
+          ]
+        },
+        {
+          "messages": [
+            {
+              "role": "system",
+              "content": "离线 MCP 链路测试。"
+            },
+            {
+              "role": "user",
+              "content": "计算 6 / 3"
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "toolCalls": [
+                {
+                  "id": "loop-valid",
+                  "name": "calculator",
+                  "arguments": {
+                    "operation": "divide",
+                    "left": 6,
+                    "right": 3
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "toolCallId": "loop-valid",
+              "content": "{\"ok\":true,\"toolCallId\":\"loop-valid\",\"toolName\":\"calculator\",\"output\":2}"
+            }
+          ],
+          "tools": [
+            {
+              "name": "calculator",
+              "description": "Perform one arithmetic operation on two finite numbers.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "add",
+                      "subtract",
+                      "multiply",
+                      "divide"
+                    ]
+                  },
+                  "left": {
+                    "type": "number"
+                  },
+                  "right": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "operation",
+                  "left",
+                  "right"
+                ],
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false
+              }
+            }
+          ]
+        }
+      ],
+      "run": {
+        "completed": true,
+        "stopReason": "final_response",
+        "turns": 2,
+        "finalAnswer": "计算结果：2",
+        "messages": [
+          {
+            "role": "system",
+            "content": "离线 MCP 链路测试。"
+          },
+          {
+            "role": "user",
+            "content": "计算 6 / 3"
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "toolCalls": [
+              {
+                "id": "loop-valid",
+                "name": "calculator",
+                "arguments": {
+                  "operation": "divide",
+                  "left": 6,
+                  "right": 3
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "toolCallId": "loop-valid",
+            "content": "{\"ok\":true,\"toolCallId\":\"loop-valid\",\"toolName\":\"calculator\",\"output\":2}"
+          },
+          {
+            "role": "assistant",
+            "toolCalls": [],
+            "content": "计算结果：2"
+          }
+        ],
+        "trace": [
+          {
+            "type": "model_request",
+            "turn": 1,
+            "messages": [
+              {
+                "role": "system",
+                "content": "离线 MCP 链路测试。"
+              },
+              {
+                "role": "user",
+                "content": "计算 6 / 3"
+              }
+            ],
+            "tools": [
+              {
+                "name": "calculator",
+                "description": "Perform one arithmetic operation on two finite numbers.",
+                "inputSchema": {
+                  "type": "object",
+                  "properties": {
+                    "operation": {
+                      "type": "string",
+                      "enum": [
+                        "add",
+                        "subtract",
+                        "multiply",
+                        "divide"
+                      ]
+                    },
+                    "left": {
+                      "type": "number"
+                    },
+                    "right": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "operation",
+                    "left",
+                    "right"
+                  ],
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "timestamp": "2026-09-15T00:57:58.599Z"
+          },
+          {
+            "type": "model_response",
+            "turn": 1,
+            "response": {
+              "finishReason": "tool_calls",
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "toolCalls": [
+                  {
+                    "id": "loop-valid",
+                    "name": "calculator",
+                    "arguments": {
+                      "operation": "divide",
+                      "left": 6,
+                      "right": 3
+                    }
+                  }
+                ]
+              }
+            },
+            "timestamp": "2026-09-15T00:57:58.600Z"
+          },
+          {
+            "type": "tool_start",
+            "turn": 1,
+            "call": {
+              "id": "loop-valid",
+              "name": "calculator",
+              "arguments": {
+                "operation": "divide",
+                "left": 6,
+                "right": 3
+              }
+            },
+            "timestamp": "2026-09-15T00:57:58.600Z"
+          },
+          {
+            "type": "tool_end",
+            "turn": 1,
+            "result": {
+              "ok": true,
+              "toolCallId": "loop-valid",
+              "toolName": "calculator",
+              "output": 2
+            },
+            "timestamp": "2026-09-15T00:57:58.601Z"
+          },
+          {
+            "type": "model_request",
+            "turn": 2,
+            "messages": [
+              {
+                "role": "system",
+                "content": "离线 MCP 链路测试。"
+              },
+              {
+                "role": "user",
+                "content": "计算 6 / 3"
+              },
+              {
+                "role": "assistant",
+                "content": null,
+                "toolCalls": [
+                  {
+                    "id": "loop-valid",
+                    "name": "calculator",
+                    "arguments": {
+                      "operation": "divide",
+                      "left": 6,
+                      "right": 3
+                    }
+                  }
+                ]
+              },
+              {
+                "role": "tool",
+                "toolCallId": "loop-valid",
+                "content": "{\"ok\":true,\"toolCallId\":\"loop-valid\",\"toolName\":\"calculator\",\"output\":2}"
+              }
+            ],
+            "tools": [
+              {
+                "name": "calculator",
+                "description": "Perform one arithmetic operation on two finite numbers.",
+                "inputSchema": {
+                  "type": "object",
+                  "properties": {
+                    "operation": {
+                      "type": "string",
+                      "enum": [
+                        "add",
+                        "subtract",
+                        "multiply",
+                        "divide"
+                      ]
+                    },
+                    "left": {
+                      "type": "number"
+                    },
+                    "right": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "operation",
+                    "left",
+                    "right"
+                  ],
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "timestamp": "2026-09-15T00:57:58.601Z"
+          },
+          {
+            "type": "model_response",
+            "turn": 2,
+            "response": {
+              "finishReason": "stop",
+              "message": {
+                "role": "assistant",
+                "toolCalls": [],
+                "content": "计算结果：2"
+              }
+            },
+            "timestamp": "2026-09-15T00:57:58.601Z"
+          },
+          {
+            "type": "run_stop",
+            "reason": "final_response",
+            "timestamp": "2026-09-15T00:57:58.601Z"
+          }
+        ]
+      }
+    },
+    {
+      "callId": "loop-error",
+      "modelKind": "MockModel (offline)",
+      "modelRequests": [
+        {
+          "messages": [
+            {
+              "role": "system",
+              "content": "离线 MCP 链路测试。"
+            },
+            {
+              "role": "user",
+              "content": "计算 6 / 0"
+            }
+          ],
+          "tools": [
+            {
+              "name": "calculator",
+              "description": "Perform one arithmetic operation on two finite numbers.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "add",
+                      "subtract",
+                      "multiply",
+                      "divide"
+                    ]
+                  },
+                  "left": {
+                    "type": "number"
+                  },
+                  "right": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "operation",
+                  "left",
+                  "right"
+                ],
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false
+              }
+            }
+          ]
+        },
+        {
+          "messages": [
+            {
+              "role": "system",
+              "content": "离线 MCP 链路测试。"
+            },
+            {
+              "role": "user",
+              "content": "计算 6 / 0"
+            },
+            {
+              "role": "assistant",
+              "content": null,
+              "toolCalls": [
+                {
+                  "id": "loop-error",
+                  "name": "calculator",
+                  "arguments": {
+                    "operation": "divide",
+                    "left": 6,
+                    "right": 0
+                  }
+                }
+              ]
+            },
+            {
+              "role": "tool",
+              "toolCallId": "loop-error",
+              "content": "{\"ok\":false,\"toolCallId\":\"loop-error\",\"toolName\":\"calculator\",\"error\":{\"code\":\"execution_error\",\"message\":\"Cannot divide by zero.\",\"retryable\":false}}"
+            }
+          ],
+          "tools": [
+            {
+              "name": "calculator",
+              "description": "Perform one arithmetic operation on two finite numbers.",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "add",
+                      "subtract",
+                      "multiply",
+                      "divide"
+                    ]
+                  },
+                  "left": {
+                    "type": "number"
+                  },
+                  "right": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "operation",
+                  "left",
+                  "right"
+                ],
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "additionalProperties": false
+              }
+            }
+          ]
+        }
+      ],
+      "run": {
+        "completed": true,
+        "stopReason": "final_response",
+        "turns": 2,
+        "finalAnswer": "计算失败：Cannot divide by zero.",
+        "messages": [
+          {
+            "role": "system",
+            "content": "离线 MCP 链路测试。"
+          },
+          {
+            "role": "user",
+            "content": "计算 6 / 0"
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "toolCalls": [
+              {
+                "id": "loop-error",
+                "name": "calculator",
+                "arguments": {
+                  "operation": "divide",
+                  "left": 6,
+                  "right": 0
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "toolCallId": "loop-error",
+            "content": "{\"ok\":false,\"toolCallId\":\"loop-error\",\"toolName\":\"calculator\",\"error\":{\"code\":\"execution_error\",\"message\":\"Cannot divide by zero.\",\"retryable\":false}}"
+          },
+          {
+            "role": "assistant",
+            "toolCalls": [],
+            "content": "计算失败：Cannot divide by zero."
+          }
+        ],
+        "trace": [
+          {
+            "type": "model_request",
+            "turn": 1,
+            "messages": [
+              {
+                "role": "system",
+                "content": "离线 MCP 链路测试。"
+              },
+              {
+                "role": "user",
+                "content": "计算 6 / 0"
+              }
+            ],
+            "tools": [
+              {
+                "name": "calculator",
+                "description": "Perform one arithmetic operation on two finite numbers.",
+                "inputSchema": {
+                  "type": "object",
+                  "properties": {
+                    "operation": {
+                      "type": "string",
+                      "enum": [
+                        "add",
+                        "subtract",
+                        "multiply",
+                        "divide"
+                      ]
+                    },
+                    "left": {
+                      "type": "number"
+                    },
+                    "right": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "operation",
+                    "left",
+                    "right"
+                  ],
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "timestamp": "2026-09-15T00:57:58.601Z"
+          },
+          {
+            "type": "model_response",
+            "turn": 1,
+            "response": {
+              "finishReason": "tool_calls",
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "toolCalls": [
+                  {
+                    "id": "loop-error",
+                    "name": "calculator",
+                    "arguments": {
+                      "operation": "divide",
+                      "left": 6,
+                      "right": 0
+                    }
+                  }
+                ]
+              }
+            },
+            "timestamp": "2026-09-15T00:57:58.601Z"
+          },
+          {
+            "type": "tool_start",
+            "turn": 1,
+            "call": {
+              "id": "loop-error",
+              "name": "calculator",
+              "arguments": {
+                "operation": "divide",
+                "left": 6,
+                "right": 0
+              }
+            },
+            "timestamp": "2026-09-15T00:57:58.601Z"
+          },
+          {
+            "type": "tool_end",
+            "turn": 1,
+            "result": {
+              "ok": false,
+              "toolCallId": "loop-error",
+              "toolName": "calculator",
+              "error": {
+                "code": "execution_error",
+                "message": "Cannot divide by zero.",
+                "retryable": false
+              }
+            },
+            "timestamp": "2026-09-15T00:57:58.602Z"
+          },
+          {
+            "type": "model_request",
+            "turn": 2,
+            "messages": [
+              {
+                "role": "system",
+                "content": "离线 MCP 链路测试。"
+              },
+              {
+                "role": "user",
+                "content": "计算 6 / 0"
+              },
+              {
+                "role": "assistant",
+                "content": null,
+                "toolCalls": [
+                  {
+                    "id": "loop-error",
+                    "name": "calculator",
+                    "arguments": {
+                      "operation": "divide",
+                      "left": 6,
+                      "right": 0
+                    }
+                  }
+                ]
+              },
+              {
+                "role": "tool",
+                "toolCallId": "loop-error",
+                "content": "{\"ok\":false,\"toolCallId\":\"loop-error\",\"toolName\":\"calculator\",\"error\":{\"code\":\"execution_error\",\"message\":\"Cannot divide by zero.\",\"retryable\":false}}"
+              }
+            ],
+            "tools": [
+              {
+                "name": "calculator",
+                "description": "Perform one arithmetic operation on two finite numbers.",
+                "inputSchema": {
+                  "type": "object",
+                  "properties": {
+                    "operation": {
+                      "type": "string",
+                      "enum": [
+                        "add",
+                        "subtract",
+                        "multiply",
+                        "divide"
+                      ]
+                    },
+                    "left": {
+                      "type": "number"
+                    },
+                    "right": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "operation",
+                    "left",
+                    "right"
+                  ],
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "additionalProperties": false
+                }
+              }
+            ],
+            "timestamp": "2026-09-15T00:57:58.602Z"
+          },
+          {
+            "type": "model_response",
+            "turn": 2,
+            "response": {
+              "finishReason": "stop",
+              "message": {
+                "role": "assistant",
+                "toolCalls": [],
+                "content": "计算失败：Cannot divide by zero."
+              }
+            },
+            "timestamp": "2026-09-15T00:57:58.602Z"
+          },
+          {
+            "type": "run_stop",
+            "reason": "final_response",
+            "timestamp": "2026-09-15T00:57:58.602Z"
+          }
+        ]
       }
     }
   ]

@@ -43,6 +43,10 @@ export const calculator: Tool<CalculatorArguments> = {
       throw new TypeError("Calculator arguments must be an object.");
     }
 
+    if (Object.keys(input).some((key) => !["operation", "left", "right"].includes(key))) {
+      throw new TypeError("Only operation, left and right are allowed in calculator arguments.");
+    }
+
     const { operation, left, right } = input;
 
     if (!isCalculatorOperation(operation)) {

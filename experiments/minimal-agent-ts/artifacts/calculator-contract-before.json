@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "--import",
+    "tsx",
+    "--test",
+    "tests/calculator-contract.test.ts"
+  ],
+  "exitCode": 1,
+  "stdout": "TAP version 13\n# Subtest: extra JSON fields are rejected before calculator execution\nnot ok 1 - extra JSON fields are rejected before calculator execution\n  ---\n  duration_ms: 1.476625\n  location: 'file:///Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/minimal-agent-ts/tests/calculator-contract.test.ts:1:213'\n  failureType: 'testCodeFailure'\n  error: '{\"result\":{\"ok\":true,\"toolCallId\":\"extra-field-case\",\"toolName\":\"calculator\",\"output\":2},\"executions\":1}'\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: false\n  actual: true\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/minimal-agent-ts/tests/calculator-contract.test.ts:20:10)\n    async Test.run (node:internal/test_runner/test:632:9)\n    async startSubtest (node:internal/test_runner/harness:216:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 215.243417\n",
+  "stderr": ""
+}

@@ -12,13 +12,18 @@ server.registerTool(calculator.name, {
     left: z.number(),
     right: z.number(),
   }).strict(),
+  outputSchema: z.object({ value: z.number() }),
 }, async (input) => {
   // SDK 先校验协议参数；这里复用原工具的校验和计算逻辑。
   const args = calculator.parseArguments(input);
   console.error(JSON.stringify({ stage: "calculator.execute", arguments: args }));
   try {
     const value = await calculator.execute(args);
-    return { content: [{ type: "text", text: String(value) }] };
+    const output = { value };
+    return {
+      content: [{ type: "text", text: JSON.stringify(output) }],
+      structuredContent: output,
+    };
   } catch (error) {
     return {
       isError: true,

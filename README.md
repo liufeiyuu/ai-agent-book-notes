@@ -35,8 +35,8 @@
 | 1 | Agent 基础知识 | 已完成 | [进入笔记](notes/01-agent-basics/README.md) |
 | 2 | 上下文工程 | 已完成 | [进入笔记](notes/02-context-engineering/README.md) |
 | 3 | 用户记忆和知识库 | 已完成 | [进入笔记](notes/03-memory-and-knowledge/README.md) |
-| 4 | 工具 | 待读 | [进入笔记](notes/04-tools/README.md) |
-| 5 | Coding Agent 与代码生成 | 待读 | [进入笔记](notes/05-coding-agent/README.md) |
+| 4 | 工具 | 已完成 | [进入笔记](notes/04-tools/README.md) |
+| 5 | Coding Agent 与代码生成 | 阅读中 | [进入笔记](notes/05-coding-agent/README.md) |
 | 6 | Agent 的评估 | 待读 | [进入笔记](notes/06-evaluation/README.md) |
 | 7 | 模型后训练 | 待读 | [进入笔记](notes/07-post-training/README.md) |
 | 8 | Agent 的持续进化 | 待读 | [进入笔记](notes/08-continuous-evolution/README.md) |

@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exitCode": 2,
+    "stdout": "\n> minimal-agent-ts@0.1.0 typecheck\n> tsc --noEmit\n\ntests/calculator-contract.test.ts(13,33): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'CalculatorArguments'.\n  Type 'Record<string, unknown>' is missing the following properties from type 'CalculatorArguments': operation, left, right\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "tests/calculator-contract.test.ts",
+      "tests/calculator.test.ts",
+      "tests/tool-executor.test.ts",
+      "tests/agent.test.ts",
+      "tests/mcp-calculator-adapter.test.ts"
+    ],
+    "exitCode": 0,
+    "stdout": "TAP version 13\n# Subtest: runs a tool call, writes its result into context, and returns final text\nok 1 - runs a tool call, writes its result into context, and returns final text\n  ---\n  duration_ms: 2.384334\n  ...\n# Subtest: writes an unknown-tool failure back and lets the model recover\nok 2 - writes an unknown-tool failure back and lets the model recover\n  ---\n  duration_ms: 0.333958\n  ...\n# Subtest: lets the model correct invalid arguments on the next turn\nok 3 - lets the model correct invalid arguments on the next turn\n  ---\n  duration_ms: 0.675875\n  ...\n# Subtest: stops after maxTurns when the model keeps requesting tools\nok 4 - stops after maxTurns when the model keeps requesting tools\n  ---\n  duration_ms: 0.869583\n  ...\n# Subtest: reports model errors without pretending the run completed\nok 5 - reports model errors without pretending the run completed\n  ---\n  duration_ms: 0.364167\n  ...\n# Subtest: honors an already-aborted user signal\nok 6 - honors an already-aborted user signal\n  ---\n  duration_ms: 0.122333\n  ...\n# Subtest: enforces timeout even when the model ignores AbortSignal\nok 7 - enforces timeout even when the model ignores AbortSignal\n  ---\n  duration_ms: 10.752625\n  ...\n# Subtest: accepts an immediate final answer when no task-specific hooks are supplied\nok 8 - accepts an immediate final answer when no task-specific hooks are supplied\n  ---\n  duration_ms: 0.345709\n  ...\n# Subtest: rejects premature final text, retains the draft, and continues with corrective context\nok 9 - rejects premature final text, retains the draft, and continues with corrective context\n  ---\n  duration_ms: 0.634459\n  ...\n# Subtest: keeps repeated final-answer rejections within the original maxTurns budget\nok 10 - keeps repeated final-answer rejections within the original maxTurns budget\n  ---\n  duration_ms: 0.35625\n  ...\n# Subtest: prepares every request and traces the same transformed context, tools, and choice\nok 11 - prepares every request and traces the same transformed context, tools, and choice\n  ---\n  duration_ms: 0.506\n  ...\n# Subtest: reports request and final-validation hook exceptions as model errors\nok 12 - reports request and final-validation hook exceptions as model errors\n  ---\n  duration_ms: 0.341125\n  ...\n# Subtest: does not turn truncated or empty responses into final-answer retries\nok 13 - does not turn truncated or empty responses into final-answer retries\n  ---\n  duration_ms: 0.209167\n  ...\n# Subtest: extra JSON fields are rejected before calculator execution\nok 14 - extra JSON fields are rejected before calculator execution\n  ---\n  duration_ms: 0.589833\n  ...\n# Subtest: parses and executes supported operations\nok 15 - parses and executes supported operations\n  ---\n  duration_ms: 0.455667\n  ...\n# Subtest: rejects malformed arguments before execution\nok 16 - rejects malformed arguments before execution\n  ---\n  duration_ms: 0.216541\n  ...\n# Subtest: rejects division by zero during execution\nok 17 - rejects division by zero during execution\n  ---\n  duration_ms: 0.182042\n  ...\n# Subtest: honors an already-aborted signal\nok 18 - honors an already-aborted signal\n  ---\n  duration_ms: 0.131541\n  ...\n# Subtest: structured numeric value is read directly, including zero\nok 19 - structured numeric value is read directly, including zero\n  ---\n  duration_ms: 1.057959\n  ...\n# Subtest: an MCP tool failure cannot become a successful numeric result\nok 20 - an MCP tool failure cannot become a successful numeric result\n  ---\n  duration_ms: 0.597292\n  ...\n# Subtest: missing or malformed structured results are rejected instead of guessed from text\nok 21 - missing or malformed structured results are rejected instead of guessed from text\n  ---\n  duration_ms: 0.393792\n  ...\n# Subtest: executes a valid tool call\nok 22 - executes a valid tool call\n  ---\n  duration_ms: 1.03925\n  ...\n# Subtest: returns tool_not_found instead of throwing\nok 23 - returns tool_not_found instead of throwing\n  ---\n  duration_ms: 0.122708\n  ...\n# Subtest: returns invalid_arguments when parsing fails\nok 24 - returns invalid_arguments when parsing fails\n  ---\n  duration_ms: 0.081\n  ...\n# Subtest: returns execution_error when a tool throws\nok 25 - returns execution_error when a tool throws\n  ---\n  duration_ms: 0.195917\n  ...\n# Subtest: returns cancelled for an aborted signal\nok 26 - returns cancelled for an aborted signal\n  ---\n  duration_ms: 0.330333\n  ...\n# Subtest: serializes a tool result into a correlated tool message\nok 27 - serializes a tool result into a correlated tool message\n  ---\n  duration_ms: 0.096667\n  ...\n1..27\n# tests 27\n# suites 0\n# pass 27\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 237.448459\n",
+    "stderr": ""
+  }
+]
