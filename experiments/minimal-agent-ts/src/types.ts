@@ -1,3 +1,4 @@
+// Record<string, unknown> 表示一个对象：键是字符串，值的类型暂不限定。
 export type JsonSchema = Record<string, unknown>;
 
 // 工具调用的类型
@@ -33,9 +34,11 @@ export type ModelResponse = {
   finishReason: "stop" | "tool_calls" | "length";
 };
 
+// 工具的使用说明。
 export type ToolDefinition = {
   name: string;
   description: string;
+  // 参数叫什么、是什么类型、哪些必填、有什么约束。
   inputSchema: JsonSchema;
 };
 
@@ -50,6 +53,9 @@ export interface Model {
   generate(input: ModelInput): Promise<ModelResponse>;
 }
 
+// 一次调用结束后的统一反馈。
+// 计算器的 execute 成功时只返回数字 2，外面的执行器再把它包装成整个 ToolResult。
+// 同样，计算器抛出的除零异常，会由执行器捕获并整理成上述失败结果。
 export type ToolResult =
   | {
       ok: true;
@@ -78,9 +84,12 @@ export interface Tool<TArguments = Record<string, unknown>> {
   description: string;
   inputSchema: JsonSchema; // model-facing: describes valid tool arguments.
 
+  // 检查收到的参数，返回经过校验的参数
+  // 接收尚未验证的数据；如果校验通过，返回这个工具需要的参数类型。
   parseArguments(input: unknown): TArguments;
 
-  // harness-facing: performs the real operation after argument validation.
+  // 使用这些参数，执行实际操作
+  // 接收已经符合该参数类型的数据，异步执行并返回结果。
   execute(
     arguments_: TArguments,
     signal?: AbortSignal,

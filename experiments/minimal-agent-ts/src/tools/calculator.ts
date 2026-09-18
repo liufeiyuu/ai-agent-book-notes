@@ -35,6 +35,7 @@ export const calculator: Tool<CalculatorArguments> = {
       },
     },
     required: ["operation", "left", "right"],
+    // 不接受其他字段
     additionalProperties: false,
   },
 
@@ -64,6 +65,7 @@ export const calculator: Tool<CalculatorArguments> = {
   },
 
   // 本地程序执行实际运算
+  // 这里虽然没有耗时操作，仍使用 async，让计算器符合统一的异步工具接口。async 不表示另开一个线程；这里的运算仍直接完成。
   async execute(arguments_, signal): Promise<number> {
     signal?.throwIfAborted();
 
