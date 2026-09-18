@@ -10,6 +10,7 @@ export class ToolNotFoundError extends Error {
   }
 }
 
+// 管理工具的注册表
 export class ToolRegistry {
   private readonly tools = new Map<string, Tool>();
 

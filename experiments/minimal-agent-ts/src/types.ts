@@ -1,5 +1,6 @@
 export type JsonSchema = Record<string, unknown>;
 
+// 工具调用的类型
 export type ToolCall = {
   id: string;
   name: string;

@@ -10,6 +10,7 @@ export type CalculatorArguments = {
   right: number;
 };
 
+// 计算器实现
 // 这个项目只把工具名称、描述和 Schema 交给模型；校验函数和执行函数留在本地。
 export const calculator: Tool<CalculatorArguments> = {
   // 告诉模型工具叫什么、有什么用途

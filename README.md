@@ -36,12 +36,14 @@
 | 2 | 上下文工程 | 已完成 | [进入笔记](notes/02-context-engineering/README.md) |
 | 3 | 用户记忆和知识库 | 已完成 | [进入笔记](notes/03-memory-and-knowledge/README.md) |
 | 4 | 工具 | 已完成 | [进入笔记](notes/04-tools/README.md) |
-| 5 | Coding Agent 与代码生成 | 阅读中 | [进入笔记](notes/05-coding-agent/README.md) |
+| 5 | Coding Agent 与代码生成 | 待读 | [进入笔记](notes/05-coding-agent/README.md) |
 | 6 | Agent 的评估 | 待读 | [进入笔记](notes/06-evaluation/README.md) |
 | 7 | 模型后训练 | 待读 | [进入笔记](notes/07-post-training/README.md) |
 | 8 | Agent 的持续进化 | 待读 | [进入笔记](notes/08-continuous-evolution/README.md) |
 | 9 | 多模态与实时交互 | 待读 | [进入笔记](notes/09-multimodal-interaction/README.md) |
 | 10 | 多 Agent 协作 | 待读 | [进入笔记](notes/10-multi-agent/README.md) |
+
+第四章的“已完成”仅指原文阅读；原有实验与代码带读尚未完成，当前继续第四章代码学习，第五章暂停。具体缺口与代码停点见[当前计划的执行进度](notes/week-03-plan.md#执行进度)。
 
 状态统一使用：`待读`、`阅读中`、`已完成`、`需复习`。
 

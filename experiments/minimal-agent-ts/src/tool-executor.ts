@@ -5,6 +5,7 @@ export type ToolExecutionOptions = {
   signal?: AbortSignal;
 };
 
+// 执行工具的函数
 export async function executeToolCall(
   registry: ToolRegistry,
   call: ToolCall,
