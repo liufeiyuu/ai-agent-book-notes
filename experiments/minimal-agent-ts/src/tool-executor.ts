@@ -5,11 +5,15 @@ export type ToolExecutionOptions = {
   signal?: AbortSignal;
 };
 
+// 串起来 ToolCall → 查找工具 → 校验参数 → 执行工具 → 包装成 ToolResult
 // 执行工具的函数
 export async function executeToolCall(
+  // 到哪里找工具。
   registry: ToolRegistry,
+  // 这次调用的 ID、工具名和参数。
   call: ToolCall,
   options: ToolExecutionOptions = {},
+  // 返回的是完整 ToolResult。
 ): Promise<ToolResult> {
   if (options.signal?.aborted) {
     return failure(call, "cancelled", "Tool execution was cancelled.", false);
@@ -17,10 +21,11 @@ export async function executeToolCall(
 
   let tool;
 
-  // 根据 name 查找工具
+  // 根据 name 查找工具，找到就从注册表取出工具对象。
   try {
     tool = registry.require(call.name);
   } catch (error) {
+    // 这里每个错误分支都有 return，所以查找失败就结束本次调用。
     if (error instanceof ToolNotFoundError) {
       return failure(call, "tool_not_found", error.message, false);
     }

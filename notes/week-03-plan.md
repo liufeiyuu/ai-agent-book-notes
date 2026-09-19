@@ -3,7 +3,7 @@ title: 第三周学习计划：第 4–5 章工具与 Coding Agent
 chapters: [4, 5]
 type: plan
 status: in_progress
-updated: 2026-09-18
+updated: 2026-09-19
 ---
 
 # 第三周学习计划：第 4–5 章工具与 Coding Agent
@@ -203,7 +203,7 @@ A 复用已有 `minimal-agent-ts`，create_draft 也放在该项目；后续是�
 
 | 项目 | 当前记录 |
 | --- | --- |
-| 状态 | 用户明确将方式改为从头到尾重新带读，并选择我们已有的 calculator、create_draft、MCP 这套实验，不是原书全部配套项目。入口讲解已提供；2026-09-18 用户引用上次停点，明确要求从 types.ts 工具类型继续。已提供 JsonSchema、ToolDefinition、ToolCall、ToolResult 讲解；随后已提供 Tool 接口及计算器参数类型和对象声明讲解；已带读 calculator.ts 的 inputSchema、parseArguments 及其三个校验辅助函数；已提供 execute 与 calculator.test.ts 首个正常运算测试讲解；用户再次同意继续，本轮接续非法参数、除零、已取消信号三个测试；之前被打断的 readCalculatorValue 讲解只完成助手源码/记录读取，未交付讲解、未记为学习者完成 |
+| 状态 | 按用户选定的 calculator、create_draft、MCP 实验从头到尾带读。入口、工具相关类型、计算器实现与测试、注册表及执行器实现与测试均已逐段提供讲解；2026-09-19 本轮接续 create-draft.ts 工具工厂，草稿实现各部分已提供讲解，本轮反馈待补。草稿演示与测试尚待带读；第五章与 C 仍暂停 |
 | 原文阅读进度 | 第四章原文全部读完（学习者确认），不重复布置；这不代表实验源码阅读完成。第五章仅由助手提前提供阅读地图和导言，学习者未确认阅读，现暂停 |
 | 助手已完成 | 完整重读计划；实现 parseContent、create_draft 内存保存、演示入口和两项行为测试；类型检查、测试和五组演示均通过。同步 AGENTS 与第三、四周分工；本轮补充参数保真、专用工具/通用执行器/Skill 职责及返回信息量的对照讲解；记录见[工具设计笔记](./04-tools/tool-design.md)；2026-09-15 新增官方 SDK v2 stdio Server/Client，类型检查和三组调用断言通过，记录见[MCP 本地计算器](./04-tools/mcp-local-calculator.md)；本轮完成 structuredContent/outputSchema、专用适配层、三项映射测试及两组 MockModel Loop 验证，保留基线与改后记录；C 已复现并修复本地计算器忽略额外字段的问题，类型检查与 27 项相关测试通过，记录见[契约修复](./05-coding-agent/calculator-contract-fix.md) |
 | 学习者已完成 | 已提交 calculator 初稿并完成 case-2 输入修改、三组运行反馈；已提交 create_draft 初稿，明确用途和成功返回 ID，正文参数和空白处理由助手补充；工具由助手实现，不记为学习者独立编写，也不再要求补写；2026-09-15 已说明自动修正后应返回最终正文或修正前后对照，以便比较改动；已指出结果丢失应检查 MCP 回传给 Agent 及 Loop 消息构造；这是一条局部理解证据，不能据此认定 B 源码已读完；2026-09-16 明确反馈已读完第四章工具的分类、工具设计的通用原则、工具生态三部分；随后明确反馈“层次化组织与按需加载”也已读完，记为阅读完成，不据此新增实验验收；随后确认主动工具发现的当前选读内容及 Skills 按需查阅也已读完；2026-09-17 先反馈已读到“多模态感知”，随后明确确认第四章全部读完 |
@@ -213,7 +213,7 @@ A 复用已有 `minimal-agent-ts`，create_draft 也放在该项目；后续是�
 | 本单元真实模型调用 | 真实 LLM API 为 0 次；本轮为 4 次 MockModel.generate（两组离线 Loop）；MCP 本轮 initialize ×1、tools/list ×1、tools/call ×5，累计分别 ×2、×2、×8，另有 initialized 通知累计 ×2；B 收尾未新增运行；C 本轮仅本地测试和类型检查；2026-09-16 仅原文检索、导航与带读，无新增实验模型或 MCP 协议调用；2026-09-17 仅阅读范围核对、第五章导读与记录，无新增实验调用 |
 | 第四章纠偏 | 撤回上一轮“无必补缺口、代码只需选看”的判断。用户不是要求加练，而是要求完成原有实验和代码带读；分段读取新实验建议已取消，不实现、不运行。未完成带读是原任务欠项，不是新增课程 |
 | 当前缺口 | 本次完整源码重读尚未完成；按下方顺序记录实际讲解与学习者反馈。历史局部阅读停点未知，但用户已明确要求重新从头读，无须再猜原停点。助手运行、学习者原文阅读和本次代码阅读分开记录；第五章与 C 暂停 |
-| 唯一下一步 | 本轮提供 tests/calculator.test.ts 当前第 22–57 行三个测试带读：同步参数异常用 assert.throws，异步执行失败用 await assert.rejects，取消检查用 AbortController 和错误谓词。该文件全部测试均已提供讲解，本轮理解反馈待补。接着完整读 tests/calculator-contract.test.ts，解释额外字段为何必须在执行前被拒绝，以及 executions 计数证明了什么；随后进入注册与执行块 |
+| 唯一下一步 | 本轮提供 src/tools/create-draft.ts 当前第 19–54 行完整带读：createDraftTool 接收程序提供的 Map 并返回工具、名称/用途/Schema、parseArguments 对象与字段校验、execute 取消检查/生成 ID/保存/返回；区分工厂参数 drafts 与调用参数 content。本轮理解反馈待补。下一步完整读 src/create-draft-demo.ts，沿五组输入观察结果与草稿数量，然后读 tests/create-draft.test.ts |
 
 ### 第四章已有实验完整代码带读（2026-09-17 用户明确选择）
 
@@ -226,15 +226,15 @@ A 复用已有 `minimal-agent-ts`，create_draft 也放在该项目；后续是�
 | 顺序 | 文件与内容（相对 experiments/minimal-agent-ts） | 本次完整重读进度 |
 | --- | --- | --- |
 | 1. 运行入口 | package.json 的 demo:calculator；src/calculator-cases.ts 全文件 | 完整入口讲解已提供；2026-09-18 用户明确指定从入口之后继续，按该停点向前推进，不据此推定整套代码已掌握 |
-| 2. 工具契约与计算器 | src/types.ts 中工具相关类型；src/tools/calculator.ts；tests/calculator.test.ts、calculator-contract.test.ts | 2026-09-18 工具相关类型、calculator.ts 全部实现与 calculator.test.ts 全部测试已逐段提供讲解；本轮为测试文件当前第 22–57 行。calculator-contract.test.ts 仍待带读，本轮理解反馈待补，本块未标完成；C 审查仍暂停 |
-| 3. 注册与执行 | src/tool-registry.ts、src/tool-executor.ts；对应两个测试文件 | 待带读 |
-| 4. 草稿工具 | src/tools/create-draft.ts、src/create-draft-demo.ts、tests/create-draft.test.ts | 待带读 |
+| 2. 工具契约与计算器 | src/types.ts 中工具相关类型；src/tools/calculator.ts；tests/calculator.test.ts、calculator-contract.test.ts | 工具相关类型、计算器实现及两个测试文件均已逐段提供讲解；2026-09-19 本轮为 calculator-contract.test.ts 第 1–24 行。本轮理解反馈待补，未据讲解交付标为学习者整块验收通过；C 审查仍暂停 |
+| 3. 注册与执行 | src/tool-registry.ts、src/tool-executor.ts；对应两个测试文件 | 注册表、执行器及对应两个测试文件均已逐段提供讲解；2026-09-19 本轮为 tool-executor.test.ts 第 62–105 行。本轮理解反馈待补，未据讲解交付标为学习者整块验收通过 |
+| 4. 草稿工具 | src/tools/create-draft.ts、src/create-draft-demo.ts、tests/create-draft.test.ts | create-draft.ts 全部实现已逐段提供讲解；2026-09-19 本轮为当前第 19–54 行工具工厂、Schema、参数校验及保存，理解反馈待补。演示入口与测试尚待完整带读 |
 | 5. 操作范围 | src/tools/read-file.ts、tests/read-file.test.ts 及其使用的 fixture | 待带读；原 A 内容，不增加分页实现 |
 | 6. MCP Server/Client | src/mcp/calculator-server.ts、calculator-client.ts；结合基线与结构化结果记录，并对照 package.json/tsconfig.json | 待带读；Client 中 Loop 接线先定位，完整机制接第 8 块 |
 | 7. MCP 适配 | src/mcp/calculator-adapter.ts、tests/mcp-calculator-adapter.test.ts；结构化结果修改对照 | 待带读 |
 | 8. 接入 Agent Loop | src/types.ts 剩余模型/消息/Trace 类型、src/mock-model.ts、src/agent.ts、tests/agent.test.ts；返回 Client 对照两组已有 Loop 记录 | 待带读；区分脚本模型与真实 LLM，串完调用、结果消息和下一轮请求 |
 
-学习者反馈记录：2026-09-18 用户从标记的入口文件末尾要求接续，随后在工具数据类型、Tool 接口与计算器声明、Schema/参数校验讲解后均同意继续。按这些停点逐段向前推进，不重复入口或原文；继续指令不自动等同于整块验收通过。用户在 execute 与首个正常运算测试讲解后再次同意继续，本轮带读余下三个测试；尚无新的具体理解反馈或运行证据。
+学习者反馈记录：2026-09-18 用户从标记的入口文件末尾要求接续，随后在工具数据类型、Tool 接口与计算器声明、Schema/参数校验讲解后均同意继续。按这些停点逐段向前推进，不重复入口或原文；继续指令不自动等同于整块验收通过。用户在 execute 与首个正常运算测试讲解后再次同意继续，本轮带读余下三个测试；尚无新的具体理解反馈或运行证据。 2026-09-19 用户同意继续，按最后已交付停点进入契约测试；中断的继续请求未产生新的已交付讲解，不重复计算进度。 契约测试讲解后用户同意继续，本轮进入注册表实现，未新增独立验收或运行证据。 注册表实现讲解后用户同意继续，本轮接续注册表测试，未新增独立验收或运行证据。 注册表测试讲解后用户要求继续，本轮进入执行器主流程；未新增具体理解反馈或运行证据。 执行器主流程讲解后用户要求继续，本轮接续消息转换与辅助函数，未新增独立验收或运行证据。 执行器辅助函数讲解后用户同意继续，本轮进入执行器测试前半部分；未新增独立验收或运行证据。 执行器测试前半部分讲解后用户要求继续，本轮读完剩余三个测试；未新增独立验收或运行证据。 执行器测试全部讲解后用户同意继续，本轮进入草稿工具正文校验；未新增独立验收或运行证据。 草稿正文校验讲解后用户同意继续，本轮带读工具工厂和保存逻辑；未新增独立验收或运行证据。
 
 恢复学习时读本计划及进度；暂停时记录证据、实际困难、调用情况与下一步。时间和节奏在后续互动中调整，不由旧日期倒推必须赶完的内容。
 
@@ -247,3 +247,21 @@ A 复用已有 `minimal-agent-ts`，create_draft 也放在该项目；后续是�
 2026-09-18 执行与正常测试带读：解释 execute 的 Promise 返回、入口取消检查、四则运算与除零异常；带读 calculator.test.ts 第 1–18 行，区分直接测试工具与执行器包装。仅更新计划，保留源码现有改动，未重新运行测试，无新增模型/MCP 调用；本轮实际用时未完整计时，学习者阅读用时未知。
 
 2026-09-18 错误与取消测试带读：覆盖 calculator.test.ts 当前第 22–57 行，解释预期异常意味着测试成功、函数回调与 Promise 的区别、错误消息匹配及取消错误类型检查；取消测试仅覆盖调用前已取消。只更新计划，保留用户源码注释，未重新运行测试，无新增模型/MCP 调用；本轮实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-19 契约测试带读：完整说明 calculator-contract.test.ts 的注册、调用与四项断言；用 executions === 0 区分执行前拒绝和执行后失败。仅更新计划，未修改源码或重跑测试，无新增 LLM、MockModel 或 MCP 调用；本轮实际用时未完整计时，学习者阅读用时未知，跨日等待不计学习时长。
+
+2026-09-19 注册表带读：完整覆盖 tool-registry.ts，区分注册/查找与执行、get 缺失返回 undefined 与 require 抛错，以及完整 Tool 与模型侧 ToolDefinition；名称正则为本实验规则。仅更新计划，保留现有文件改动，未重跑测试，无新增模型或 MCP 调用；实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-19 注册表测试带读：完整覆盖 tool-registry.test.ts 三个测试，解释 strict assert 的引用比较与深度比较、非空断言不提供运行时保护、重复名称与未知工具两类错误。本轮只更新计划，保留用户现有注释与其他改动，未重新运行测试，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-19 执行器主流程带读：覆盖 tool-executor.ts 第 1–57 行，按失败发生阶段区分 tool_not_found、invalid_arguments、execution_error 与 cancelled；说明参数校验失败的提前 return 如何阻止执行，以及工具原始输出如何包装为 ToolResult。仅更新计划，未修改源码或重跑实验，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-19 消息转换与辅助函数带读：覆盖 tool-executor.ts 当前第 64–101 行，对照计算器结果对象与 ToolMessage 的字符串 content，强调生成消息本身不等于已发送给模型；解释失败包装、Extract 错误码类型、错误文本提取和 AbortError 名称检查。仅更新计划，保留源码已有注释，未运行实验或测试，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-19 执行器测试前半部分：带读 tool-executor.test.ts 的共用注册表、call 辅助函数及成功/缺工具/非法参数三个测试，区分返回失败结果与 Promise 拒绝，说明 retryable 标记不代表已发生重试。仅更新计划，保留现有源码改动，未重新运行测试，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-19 执行器测试后半部分：覆盖 tool-executor.test.ts 第 62–105 行，解释除零错误码与消息匹配、入口取消返回、JSON.parse 后与原结果深度比较。明确本例序列化检查不证明模型已收到或使用结果，取消案例只检查已取消信号的返回类别。仅更新计划，保留现有源码改动，未重新运行测试，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-19 草稿正文校验带读：覆盖 create-draft.ts 第 1–15 行，结合空字符串、纯空白、非字符串及带首尾空白的有效正文说明分支；说明 trim 返回的新字符串仅用于判空，return input 保留原正文。本轮仅更新计划，未修改源码或运行实验，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-19 草稿工具工厂带读：覆盖 create-draft.ts 当前第 19–54 行，解释 Map 的 ID→正文关系及闭包、content Schema、对象与额外字段检查、类型断言和实际校验的区别、生成草稿 ID 并保存原正文。工具创建本身不保存草稿，数据仅在当前进程内存中；本轮仅更新计划，保留已有源码注释，未运行实验，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
