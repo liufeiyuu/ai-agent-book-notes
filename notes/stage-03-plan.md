@@ -205,7 +205,7 @@ Stage 3 保留工具本身需要的参数校验、操作范围、错误反馈和
 
 | 项目 | 当前记录 |
 | --- | --- |
-| 状态 | 按用户选定的 calculator、create_draft、MCP 实验从头到尾带读。入口、工具相关类型、计算器实现与测试、注册表及执行器实现与测试均已逐段提供讲解；2026-09-19 本轮接续 create-draft.ts 工具工厂，草稿实现各部分已提供讲解，本轮反馈待补。草稿演示与测试尚待带读；第五章与 C 仍暂停 |
+| 状态 | 按用户选定的 calculator、create_draft、MCP 实验从头到尾带读。入口、工具相关类型、计算器实现与测试、注册表及执行器实现与测试均已逐段提供讲解；草稿实现各部分已提供讲解；2026-09-20 本轮完整带读 create-draft-demo.ts 第 1–23 行，覆盖共用 Map、注册、五组输入、顺序执行和结果打印，理解反馈待补。草稿测试尚待带读；第五章与 C 仍暂停 |
 | 原文阅读进度 | 第四章原文全部读完（学习者确认），不重复布置；这不代表实验源码阅读完成。第五章仅由助手提前提供阅读地图和导言，学习者未确认阅读，现暂停 |
 | 助手已完成 | 完整重读计划；实现 parseContent、create_draft 内存保存、演示入口和两项行为测试；类型检查、测试和五组演示均通过。同步 AGENTS 与 Stage 3、Stage 4 分工；本轮补充参数保真、专用工具/通用执行器/Skill 职责及返回信息量的对照讲解；记录见[工具设计笔记](./04-tools/tool-design.md)；2026-09-15 新增官方 SDK v2 stdio Server/Client，类型检查和三组调用断言通过，记录见[MCP 本地计算器](./04-tools/mcp-local-calculator.md)；本轮完成 structuredContent/outputSchema、专用适配层、三项映射测试及两组 MockModel Loop 验证，保留基线与改后记录；C 已复现并修复本地计算器忽略额外字段的问题，类型检查与 27 项相关测试通过，记录见[契约修复](./05-coding-agent/calculator-contract-fix.md) |
 | 学习者已完成 | 已提交 calculator 初稿并完成 case-2 输入修改、三组运行反馈；已提交 create_draft 初稿，明确用途和成功返回 ID，正文参数和空白处理由助手补充；工具由助手实现，不记为学习者独立编写，也不再要求补写；2026-09-15 已说明自动修正后应返回最终正文或修正前后对照，以便比较改动；已指出结果丢失应检查 MCP 回传给 Agent 及 Loop 消息构造；这是一条局部理解证据，不能据此认定 B 源码已读完；2026-09-16 明确反馈已读完第四章工具的分类、工具设计的通用原则、工具生态三部分；随后明确反馈“层次化组织与按需加载”也已读完，记为阅读完成，不据此新增实验验收；随后确认主动工具发现的当前选读内容及 Skills 按需查阅也已读完；2026-09-17 先反馈已读到“多模态感知”，随后明确确认第四章全部读完 |
@@ -215,7 +215,7 @@ Stage 3 保留工具本身需要的参数校验、操作范围、错误反馈和
 | 本单元真实模型调用 | 真实 LLM API 为 0 次；本轮为 4 次 MockModel.generate（两组离线 Loop）；MCP 本轮 initialize ×1、tools/list ×1、tools/call ×5，累计分别 ×2、×2、×8，另有 initialized 通知累计 ×2；B 收尾未新增运行；C 本轮仅本地测试和类型检查；2026-09-16 仅原文检索、导航与带读，无新增实验模型或 MCP 协议调用；2026-09-17 仅阅读范围核对、第五章导读与记录，无新增实验调用 |
 | 第四章纠偏 | 撤回上一轮“无必补缺口、代码只需选看”的判断。用户不是要求加练，而是要求完成原有实验和代码带读；分段读取新实验建议已取消，不实现、不运行。未完成带读是原任务欠项，不是新增课程 |
 | 当前缺口 | 本次完整源码重读尚未完成；按下方顺序记录实际讲解与学习者反馈。历史局部阅读停点未知，但用户已明确要求重新从头读，无须再猜原停点。助手运行、学习者原文阅读和本次代码阅读分开记录；第五章与 C 暂停 |
-| 唯一下一步 | 本轮提供 src/tools/create-draft.ts 当前第 19–54 行完整带读：createDraftTool 接收程序提供的 Map 并返回工具、名称/用途/Schema、parseArguments 对象与字段校验、execute 取消检查/生成 ID/保存/返回；区分工厂参数 drafts 与调用参数 content。本轮理解反馈待补。下一步完整读 src/create-draft-demo.ts，沿五组输入观察结果与草稿数量，然后读 tests/create-draft.test.ts |
+| 唯一下一步 | 本轮提供 src/create-draft-demo.ts 第 1–23 行完整带读：共用 Map 与注册、五组输入、entries 索引、顺序 await、调用 ID 与草稿 ID、结果及保存内容打印；理解反馈待补。下一步完整读 tests/create-draft.test.ts，核对原样保存、两次创建的不同 ID、非法输入被拒绝及已有草稿保持不变的断言 |
 
 ### 第四章已有实验完整代码带读（2026-09-17 用户明确选择）
 
@@ -230,7 +230,7 @@ Stage 3 保留工具本身需要的参数校验、操作范围、错误反馈和
 | 1. 运行入口 | package.json 的 demo:calculator；src/calculator-cases.ts 全文件 | 完整入口讲解已提供；2026-09-18 用户明确指定从入口之后继续，按该停点向前推进，不据此推定整套代码已掌握 |
 | 2. 工具契约与计算器 | src/types.ts 中工具相关类型；src/tools/calculator.ts；tests/calculator.test.ts、calculator-contract.test.ts | 工具相关类型、计算器实现及两个测试文件均已逐段提供讲解；2026-09-19 本轮为 calculator-contract.test.ts 第 1–24 行。本轮理解反馈待补，未据讲解交付标为学习者整块验收通过；C 审查仍暂停 |
 | 3. 注册与执行 | src/tool-registry.ts、src/tool-executor.ts；对应两个测试文件 | 注册表、执行器及对应两个测试文件均已逐段提供讲解；2026-09-19 本轮为 tool-executor.test.ts 第 62–105 行。本轮理解反馈待补，未据讲解交付标为学习者整块验收通过 |
-| 4. 草稿工具 | src/tools/create-draft.ts、src/create-draft-demo.ts、tests/create-draft.test.ts | create-draft.ts 全部实现已逐段提供讲解；2026-09-19 本轮为当前第 19–54 行工具工厂、Schema、参数校验及保存，理解反馈待补。演示入口与测试尚待完整带读 |
+| 4. 草稿工具 | src/tools/create-draft.ts、src/create-draft-demo.ts、tests/create-draft.test.ts | create-draft.ts 全部实现已逐段提供讲解；2026-09-20 本轮提供 create-draft-demo.ts 第 1–23 行完整讲解，结合已有运行记录核对五组输入、草稿数量和保存内容，理解反馈待补。tests/create-draft.test.ts 尚待完整带读 |
 | 5. 操作范围 | src/tools/read-file.ts、tests/read-file.test.ts 及其使用的 fixture | 待带读；原 A 内容，不增加分页实现 |
 | 6. MCP Server/Client | src/mcp/calculator-server.ts、calculator-client.ts；结合基线与结构化结果记录，并对照 package.json/tsconfig.json | 待带读；Client 中 Loop 接线先定位，完整机制接第 8 块 |
 | 7. MCP 适配 | src/mcp/calculator-adapter.ts、tests/mcp-calculator-adapter.test.ts；结构化结果修改对照 | 待带读 |
@@ -267,3 +267,5 @@ Stage 3 保留工具本身需要的参数校验、操作范围、错误反馈和
 2026-09-19 草稿正文校验带读：覆盖 create-draft.ts 第 1–15 行，结合空字符串、纯空白、非字符串及带首尾空白的有效正文说明分支；说明 trim 返回的新字符串仅用于判空，return input 保留原正文。本轮仅更新计划，未修改源码或运行实验，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
 
 2026-09-19 草稿工具工厂带读：覆盖 create-draft.ts 当前第 19–54 行，解释 Map 的 ID→正文关系及闭包、content Schema、对象与额外字段检查、类型断言和实际校验的区别、生成草稿 ID 并保存原正文。工具创建本身不保存草稿，数据仅在当前进程内存中；本轮仅更新计划，保留已有源码注释，未运行实验，无新增模型/MCP 调用；实际用时未完整计时，学习者阅读用时未知。
+
+2026-09-20 草稿演示入口带读：用户标注上次的下一步并要求继续，按该停点完整带读 create-draft-demo.ts 第 1–23 行。解释同一个 Map 在五次调用间保留记录、调用 ID 与生成的草稿 ID 的区别、await 顺序执行、校验错误包装成结果后继续下一例、JSON.stringify 排版以及 entries 展开。复用工具设计笔记的既有运行证据：有效正文原样保存，其余四例均为 invalid_arguments，数量保持 1；本轮未重新运行实验、未修改源码，无新增 LLM、MockModel 或 MCP 调用。只据讲解交付记录停点，不标记学习者整块验收通过；无新增具体理解反馈。实际用时未完整计时，学习者阅读用时未知，不纳入既有用时小计。
