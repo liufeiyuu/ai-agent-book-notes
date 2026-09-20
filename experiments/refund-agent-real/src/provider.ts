@@ -72,13 +72,13 @@ export function chatParameters(model: string, maxOutputTokens: number, requiresT
     // Tool stages request arguments, not a final-answer object. Restore strict JSON for answers.
     ...(requiresTool ? {} : { response_format: { type: "json_schema", json_schema: { name: "refund_consultation", strict: true, schema: ANSWER_SCHEMA } } }),
     provider: { require_parameters: true },
-    // Week-one messages do not round-trip reasoning blocks. Use V4's supported non-thinking mode.
+    // Stage 1 messages do not round-trip reasoning blocks. Use V4's supported non-thinking mode.
     // This also leaves the small output budget available for a final answer/tool arguments.
     ...(model.startsWith("deepseek/deepseek-v4-") ? { reasoning: { enabled: false } } : {}),
   };
 }
 
-// Reuse week-one request conversion and response parsing. Limit each paid request here.
+// Reuse Stage 1 request conversion and response parsing. Limit each paid request here.
 export function createChatModel(apiKey: string, model: string, budget: CallBudget, maxOutputTokens: number, fetch_: FetchLike = fetch) {
   const transportRequests: Record<string, unknown>[] = [];
   const adapter = new OpenRouterModel({

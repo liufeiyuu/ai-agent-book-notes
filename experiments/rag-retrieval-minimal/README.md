@@ -147,4 +147,4 @@ npm test
 
 学习者恢复公式后确认五个测试全部通过，实验结束。2026-09-06 整理复盘时，源码已恢复而保存的 Trace 仍是消融结果，因此重新运行 `npm run demo`，编译通过并刷新基线：C 的 Recall@2 为 100%、MRR 为 1.000、时效检查通过。消融观察保留在本节，`latest-typescript.json` 用于当前基线。
 
-结课收获与延后事项见[第二周复盘](../../notes/week-02-review.md)。
+结课收获与延后事项见[Stage 2 复盘](../../notes/stage-02-review.md)。

@@ -4,6 +4,6 @@
 
 ## 本章笔记
 
-- [第三周学习计划：第 4–5 章工具与 Coding Agent](../week-03-plan.md)（原文带读与实际协作修改、验证结合）
+- [Stage 3 学习计划：第 4–5 章工具与 Coding Agent](../stage-03-plan.md)（原文带读与实际协作修改、验证结合）
 - [Coding 协作：计算器参数契约修复](calculator-contract-fix.md)
 - [第五章原文带读地图](chapter-05-reading-guide.md)

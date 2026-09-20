@@ -1,16 +1,16 @@
-# 第一周复盘：Agent 基础与最小实现
+# Stage 1 复盘：Agent 基础与最小实现
 
-> 周期：2026-08-17 ～ 2026-08-23
+> 学习记录覆盖：2026-08-17 ～ 2026-08-23
 >
 > 阶段验收：2026-08-22
 >
 > 实现语言：TypeScript
 
-## 本周结论
+## 本阶段结论
 
-第一周目标验收通过。
+Stage 1 目标验收通过。
 
-本周不是只阅读 Agent 概念，而是完成了“理解 → 实验 → 实现 → 真实模型运行 → 失败分析 → 口头讲解”的闭环。当前已经能够结合代码和 Trace 说明 Model、Harness、Environment 的职责，解释 Tool Call 与 Tool Result 如何推动 Agent Loop，并识别协议完成与任务正确完成的区别。
+本阶段不是只阅读 Agent 概念，而是完成了“理解 → 实验 → 实现 → 真实模型运行 → 失败分析 → 口头讲解”的闭环。当前已经能够结合代码和 Trace 说明 Model、Harness、Environment 的职责，解释 Tool Call 与 Tool Result 如何推动 Agent Loop，并识别协议完成与任务正确完成的区别。
 
 ## 完成成果
 
@@ -105,7 +105,7 @@ Environment 不负责决策，但不等于“什么都不做”。Tool 会在 Ha
 
 当前实现中，Model 返回未被截断的最终文本且没有 Tool Call 时，Harness 会以 `final_response` 停止并返回 `completed: true`。这只是协议级终态，不证明答案正确。业务目标是否真的完成，需要独立 Evaluator、确定性校验或用户确认。
 
-## 本周形成的最小心智模型
+## 本阶段形成的最小心智模型
 
 ```text
 调用方提交任务
@@ -146,7 +146,7 @@ maxTurns / timeout / cancelled / model_error
 - Trace 使用固定文件名，重复运行会覆盖；
 - `read_file` 有基础路径与大小限制，但不能直接视为生产级文件沙箱。
 
-这些限制是刻意保留的。第一周的目标是掌握 Agent 应用工程的底层循环，而不是提前引入复杂框架。
+这些限制是刻意保留的。Stage 1 的目标是掌握 Agent 应用工程的底层循环，而不是提前引入复杂框架。
 
 ## 下阶段入口
 

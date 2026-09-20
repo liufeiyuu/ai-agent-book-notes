@@ -1,15 +1,15 @@
 # 真实模型退款咨询 Agent（TypeScript）
 
-第二周补充实战：复用第一周 Agent Loop，接通 **真实 Embedding → 本地向量检索 → 真实模型回答/工具调用 → 引用与行为检查**。业务数据是虚构的，模型接口不是模拟的。
+Stage 2 补充实战：复用 Stage 1 Agent Loop，接通 **真实 Embedding → 本地向量检索 → 真实模型回答/工具调用 → 引用与行为检查**。业务数据是虚构的，模型接口不是模拟的。
 
 目标不是做一个可上线客服，而是让你亲自追踪：模型究竟看到什么、工具是谁调用的、证据从哪里来、错误在哪一层发生。
 
 ## 当前验证状态
 
 - 已实现全部 CLI 入口、真实接口适配、索引缓存、两种运行模式和分阶段 Trace。
-- 2026-09-13：TypeScript 检查通过；退款项目离线测试 **42/42**、共用第一周组件测试 **39/39** 通过。业务数据仍为 5 份政策、14 个块。
+- 2026-09-13：TypeScript 检查通过；退款项目离线测试 **42/42**、共用 Stage 1 组件测试 **39/39** 通过。业务数据仍为 5 份政策、14 个块。
 - 当前模型：`qwen/qwen3-embedding-8b` + `deepseek/deepseek-v4-flash-0731`。14 个块的 4096 维真实索引、查询向量化、聊天及 Agent 工具调用均已运行；先前 OpenAI/Gemini 的 403 记录保留在[真实运行记录](./LIVE-RUN.md)。
-- DeepSeek V4 使用非思考模式（`reasoning.enabled=false`），适配本项目小输出预算和未实现 reasoning 回传的第一周协议。首次未显式关闭思考时，输出因 `length` 截断且无最终答案；该失败也已归档。
+- DeepSeek V4 使用非思考模式（`reasoning.enabled=false`），适配本项目小输出预算和未实现 reasoning 回传的 Stage 1 协议。首次未显式关闭思考时，输出因 `length` 截断且无最终答案；该失败也已归档。
 - 历史验收（2026-09-06）：当时 30 个离线测试通过，真实固定 RAG **6/6**、Agent **6/6**，分别使用 10/40、31/40 次请求；固定 RAG 两轮均 6/6。这些是当时的样本结果，不代表以后每次运行都通过。
 - 历史修复包括补齐 Qwen 查询指令；没有扩大 Top-K、塞入全部政策或修改金标。9 月 6 日的 Agent 六例均使用了一次格式恢复。原始失败及完整 Trace 保留在[真实运行记录](./LIVE-RUN.md)。
 - 2026-09-13 复测发现 Agent 可能在调用任何工具前直接结束。现已增加程序层面的流程检查：成功查单、成功搜索目标订单政策后才接受最终回答；提前结束会被拒绝，并受原有轮数与时间上限约束。
@@ -25,14 +25,14 @@
 | 文档与查询向量 | OpenRouter Embedding API；同一模型，真实返回的向量 |
 | 检索 | 订单范围过滤后，计算真实向量余弦相似度，选择 Top-K |
 | 固定 RAG | 程序确定订单、检索并组装上下文；真实聊天模型生成回答 |
-| Agent | 程序约束必需的查单/检索阶段；真实模型生成工具调用和查询内容，第一周 Harness 执行循环 |
+| Agent | 程序约束必需的查单/检索阶段；真实模型生成工具调用和查询内容，Stage 1 Harness 执行循环 |
 | 检查 | 测试标签只供评测，检查订单、目标证据块、引用原文、状态、工具执行及终止 |
 
 先用真实稠密检索建立基线，没有同时加入 BM25、融合和神经重排。小型索引直接保存在 JSON 中，不需要数据库。耳罩式耳机每个适用版本有 5 个块，默认取 3 个，不是把所有适用内容直接交给模型。
 
 ## 配置与启动
 
-环境：Node.js 20.11+。本目录复用第一周的 `typescript`、`tsx`、`@types/node` 依赖和源码，不需要再引入 Agent 框架。如果第一周依赖尚未安装，在仓库根目录运行 `npm ci --prefix experiments/minimal-agent-ts`。
+环境：Node.js 20.11+。本目录复用 Stage 1 的 `typescript`、`tsx`、`@types/node` 依赖和源码，不需要再引入 Agent 框架。如果 Stage 1 依赖尚未安装，在仓库根目录运行 `npm ci --prefix experiments/minimal-agent-ts`。
 
 在本目录 `.env` 中填写：
 
@@ -46,7 +46,7 @@ MAX_OUTPUT_TOKENS=1500
 
 当前默认 Embedding 已改为 [Qwen3 Embedding 8B](https://openrouter.ai/qwen/qwen3-embedding-8b)。文档和查询使用同一模型；更换模型后必须重新建索引，不能混用旧向量。模型列在平台目录中不保证当前账户或地区可访问，需以实际调用为准。
 
-可复用第一周 `.env`：加载顺序是第一周文件 → 本目录文件 → shell 环境变量，空值不会覆盖已有配置。不要把密钥发到聊天里。`.env`、`data/`、`runs/` 均被 Git 忽略。配置示例按用户要求选用 DeepSeek V4 Flash 0731；代码仍要求显式配置聊天模型，不提供隐式回退。
+可复用 Stage 1 `.env`：加载顺序是 Stage 1 文件 → 本目录文件 → shell 环境变量，空值不会覆盖已有配置。不要把密钥发到聊天里。`.env`、`data/`、`runs/` 均被 Git 忽略。配置示例按用户要求选用 DeepSeek V4 Flash 0731；代码仍要求显式配置聊天模型，不提供隐式回退。
 
 聊天模型和 Embedding 模型不要求同一厂商。当前 DeepSeek 官方模型目录与 OpenRouter Embedding 列表未提供 DeepSeek Embedding 模型，不能把 V4 聊天模型 ID 填进 Embedding 配置；因此保留 Qwen 向量模型。核对来源：[DeepSeek 模型目录](https://api-docs.deepseek.com/quick_start/pricing/)、[OpenRouter Embedding 列表](https://openrouter.ai/api/v1/embeddings/models)、[V4 Flash 0731](https://openrouter.ai/deepseek/deepseek-v4-flash-0731)。
 
@@ -111,7 +111,7 @@ CLI 每次启动一个新会话。若模型请你澄清，下一条命令显式�
 | 2 | `src/corpus.ts` → `src/provider.ts` → `src/index-store.ts` | 原文如何变成可回溯的真实向量索引？ |
 | 3 | `src/retrieval.ts` 的 `retrieve` | 业务过滤、语义排序、Top-K 各负责什么？ |
 | 4 | `src/context.ts` 的 `buildContext` | 最终模型看到的是原文还是向量？规则和证据如何分开？ |
-| 5 | `src/tools.ts` + 第一周 `src/agent.ts`，再看 `src/workflow.ts` | 谁决定搜什么，谁执行，结果如何回到下一轮；谁检查能否结束？ |
+| 5 | `src/tools.ts` + Stage 1 `src/agent.ts`，再看 `src/workflow.ts` | 谁决定搜什么，谁执行，结果如何回到下一轮；谁检查能否结束？ |
 | 6 | `src/evaluation.ts` + 一份真实 `runs/*.json` | 怎么区分检索失败、工具失败、生成错误和评测漏洞？ |
 
 ## Trace：运行后看什么
@@ -131,7 +131,7 @@ Agent 的 `workflow.ts` 根据工具**成功返回的结果**检查进度，而�
 回答 Trace 重点：
 
 - `cases[i].requests`：真正发给聊天 API 的 body，包括实际 messages/tools、`tool_choice`、该阶段是否带 JSON Schema、reasoning、temperature 和 max_tokens，不包含认证头。
-- `cases[i].exchanges`：第一周适配器记录的响应体及 HTTP 状态；其中 request 是注入 token 限制之前的副本，实际 payload 以 `requests` 为准。
+- `cases[i].exchanges`：Stage 1 适配器记录的响应体及 HTTP 状态；其中 request 是注入 token 限制之前的副本，实际 payload 以 `requests` 为准。
 - `cases[i].searches`：原始/向量化查询、业务过滤范围、排除原因、完整候选排名、最终 hits 和查询 usage。
 - `cases[i].execution`：固定 RAG 的请求/响应，或 Agent 每轮事件及 tool_call_id；`final_rejected` 记录哪些最终回答因流程/目标检查未通过而被拒绝。
 - `cases[i].workflow`：Agent 的阶段、目标订单、候选 ID、成功查单的 `orderQueries`（含 `returnedOrderIds`）、成功检索的 `policyOrderIds` 和最终检查错误；RAG 为 null。它记录流程依据，不是语义正确性的保证。
@@ -159,4 +159,4 @@ Agent 的 `workflow.ts` 根据工具**成功返回的结果**检查进度，而�
 
 BM25/混合检索/神经重排、向量数据库、Embedding 数学推导、自动压缩、长期记忆持久化、生产鉴权、真实退款写操作、服务部署与全量性能优化。先完成一次真实端到端运行和一次有证据的改动。
 
-接口依据：[OpenRouter Embeddings](https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request)、[OpenRouter RAG 示例](https://openrouter.ai/docs/cookbook/evaluate-and-optimize/rag)。聊天协议复用本仓库第一周实现。
+接口依据：[OpenRouter Embeddings](https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request)、[OpenRouter RAG 示例](https://openrouter.ai/docs/cookbook/evaluate-and-optimize/rag)。聊天协议复用本仓库 Stage 1 实现。

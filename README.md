@@ -21,7 +21,9 @@
 
 ## 当前学习计划
 
-**当前计划：[第三周：第 4–5 章工具与 Coding Agent](notes/week-03-plan.md)**
+学习计划统一按 **Stage（阶段）** 推进：每个 Stage 对应一组学习内容与验收标准，不对应一个自然周。预计用时用于安排投入，实际完成节奏随学习情况调整。
+
+**当前计划：[Stage 3：第 4–5 章工具与 Coding Agent](notes/stage-03-plan.md)**
 
 本节是当前计划的唯一定位入口。每次带学按[协作指引](AGENTS.md)完整读取上方计划正文及其“执行进度”；详细状态、完成证据和下一步只在该计划内维护。
 
@@ -43,18 +45,18 @@
 | 9 | 多模态与实时交互 | 待读 | [进入笔记](notes/09-multimodal-interaction/README.md) |
 | 10 | 多 Agent 协作 | 待读 | [进入笔记](notes/10-multi-agent/README.md) |
 
-第四章的“已完成”仅指原文阅读；原有实验与代码带读尚未完成，当前继续第四章代码学习，第五章暂停。具体缺口与代码停点见[当前计划的执行进度](notes/week-03-plan.md#执行进度)。
+第四章的“已完成”仅指原文阅读；原有实验与代码带读尚未完成，当前继续第四章代码学习，第五章暂停。具体缺口与代码停点见[当前计划的执行进度](notes/stage-03-plan.md#执行进度)。
 
 状态统一使用：`待读`、`阅读中`、`已完成`、`需复习`。
 
-第 2、3 章的“已完成”指第二周选定的知识主干、教学实验、真实模型带学实践与场景验收，已于 2026-09-13 收尾，不代表全章细节和生产实现均已完成。业务 Prompt 独立实践等补验及延后事项见[第二周复盘](notes/week-02-review.md)与[延后学习清单](notes/learning-backlog.md)，不阻塞进入第三周。
+第 2、3 章的“已完成”指 Stage 2 选定的知识主干、教学实验、真实模型带学实践与场景验收，已于 2026-09-13 收尾，不代表全章细节和生产实现均已完成。业务 Prompt 独立实践等补验及延后事项见[Stage 2 复盘](notes/stage-02-review.md)与[延后学习清单](notes/learning-backlog.md)，不阻塞进入 Stage 3。
 
 阶段计划按当前原书编号分组，上方章节目录保留历史编号；各阶段内容和依赖见[全栈能力路线](notes/agent-fullstack-roadmap.md)。章节阅读状态不代替当前计划的执行进度。
 
 ## 阶段复盘
 
-- [第一周：Agent 基础与最小实现](notes/01-agent-basics/week-01-review.md)
-- [第二周：上下文、用户记忆与 RAG](notes/week-02-review.md)
+- [Stage 1：Agent 基础与最小实现](notes/01-agent-basics/stage-01-review.md)
+- [Stage 2：上下文、用户记忆与 RAG](notes/stage-02-review.md)
 
 ## 仓库结构
 

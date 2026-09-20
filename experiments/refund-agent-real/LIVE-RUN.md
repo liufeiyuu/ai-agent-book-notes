@@ -59,7 +59,7 @@ API 调用计数记录的是尝试次数，不代表计费成功；费用以平�
 2. 为 V4 显式设置 `reasoning.enabled=false` 后，`runs/2026-09-06T03-16-28-880Z-ask-47479bd8.json` 返回合法 JSON、状态 `insufficient_evidence`。仍为 Top-3 的 #2/#3/#4，缺少 #1 期限与拆封条款，`expected_decision`、`relevant_chunk_retrieved`、`expected_chunk_cited` 失败。正常案例的最终业务目标未完成；缺证据时停止判断的行为可观察。
 3. `runs/2026-09-06T03-16-51-662Z-ask-efca8e2f.json`：Agent 实际执行 `query_orders` 和 `search_policy`，拿到了 `headphones-v2#1`，在最终输出中给出 eligible 及对应原文。但 JSON 前夹带说明文字，严格 JSON 解析失败。`execution_completed`、`orders_actually_queried`、`policy_search_attempted` 通过，`answer_schema` 失败；未自动提取末尾 JSON 来规避失败。
 
-非思考配置依据：[OpenRouter Reasoning 参数](https://openrouter.ai/docs/guides/best-practices/reasoning-tokens)。该设置还避免第一周协议未回传 reasoning blocks 时的多轮兼容问题；不表示已实现思考模式下的工具循环。新增参数回归测试，编译和 22 个离线测试通过。
+非思考配置依据：[OpenRouter Reasoning 参数](https://openrouter.ai/docs/guides/best-practices/reasoning-tokens)。该设置还避免 Stage 1 协议未回传 reasoning blocks 时的多轮兼容问题；不表示已实现思考模式下的工具循环。新增参数回归测试，编译和 22 个离线测试通过。
 
 当前结论：真实 Embedding、聊天和工具循环已打通；固定 RAG 检索质量及 Agent 输出格式仍待诊断，六案例评测尚未运行。这里只验证更换后的模型接入，没有同时修改 Top-K、检索算法、业务 Prompt 或评测标准。
 
@@ -114,7 +114,7 @@ API 调用计数记录的是尝试次数，不代表计费成功；费用以平�
 
 ### 修复机制
 
-- 共用第一周 Loop 新增可选 `prepareRequest` / `validateFinal`，未使用这些钩子的原调用方行为不变。实际准备后的 messages、tools、toolChoice 写入请求 Trace。
+- 共用 Stage 1 Loop 新增可选 `prepareRequest` / `validateFinal`，未使用这些钩子的原调用方行为不变。实际准备后的 messages、tools、toolChoice 写入请求 Trace。
 - 退款项目的 `src/workflow.ts` 根据成功工具结果确定当前阶段。先要求 `query_orders`；确认单一目标后要求该 ID 的 `search_policy`。调用者显式选中的订单不能被另一个订单的查单/搜索替代。
 - 必需阶段只暴露对应工具、发送 `tool_choice: required`，不同时要求最终回答 JSON Schema。完成必要步骤后恢复 `auto` 和严格答案 Schema；模型仍生成检索词，也可在有新线索时补查。[OpenRouter Tool Calling 文档](https://openrouter.ai/docs/guides/features/tool-calling)说明了工具选择参数；动态请求已由真实 Trace 核对。
 - 即使供应商忽略工具要求，提前最终响应也会记录为 `final_rejected`，保留原稿，加入程序纠正信息，在原有最多 6 轮、150 秒内继续。不添加无限重试，也不把这个失败交给格式恢复。
@@ -126,7 +126,7 @@ API 调用计数记录的是尝试次数，不代表计费成功；费用以平�
 
 ### 本次验证
 
-两个项目类型检查通过；退款项目 `npm test` 为 42/42；第一周使用等价的 `node --import ./node_modules/tsx/dist/loader.mjs --test tests/*.test.ts` 为 39/39（沙箱内 `tsx` CLI 的 IPC 不可用）。离线新增覆盖：原故障 JSON 重放、纯文字提前结束、持续拒绝到 6 轮、错误目标、查询/检索失败、候选歧义、格式恢复换目标、精确传输参数和旧调用方兼容。
+两个项目类型检查通过；退款项目 `npm test` 为 42/42；Stage 1 使用等价的 `node --import ./node_modules/tsx/dist/loader.mjs --test tests/*.test.ts` 为 39/39（沙箱内 `tsx` CLI 的 IPC 不可用）。离线新增覆盖：原故障 JSON 重放、纯文字提前结束、持续拒绝到 6 轮、错误目标、查询/检索失败、候选歧义、格式恢复换目标、精确传输参数和旧调用方兼容。
 
 | 真实运行 | 结果 | Chat + Embedding 请求数 | Trace |
 | --- | --- | --- | --- |

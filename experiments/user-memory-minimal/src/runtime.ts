@@ -26,7 +26,7 @@ export function redact(text: string, key = ""): string {
   return (key ? text.split(key).join("[REDACTED]") : text).replace(/sk-or-[A-Za-z0-9_-]+/g, "[REDACTED]");
 }
 
-// 基础设施：复用第一周适配器，记录最终传输的请求，但从不记录 Authorization。
+// 基础设施：复用 Stage 1 适配器，记录最终传输的请求，但从不记录 Authorization。
 export function createMemoryModel(options: {
   apiKey: string; model: string; kind: "remember" | "ask"; userId: string;
   budgetDirectory: string; fetch?: typeof fetch;
