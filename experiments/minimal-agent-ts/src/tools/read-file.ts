@@ -1,23 +1,33 @@
+// readFile：读取文件内容
+// realpath：得到解析符号链接后的真实路径
+// stat：查询文件类型、大小等信息
 import { readFile, realpath, stat } from "node:fs/promises";
+// isAbsolute：判断是否为绝对路径
+// relative：计算目标相对于根目录的位置
+// resolve：根据根目录和输入路径计算目标路径
 import { isAbsolute, relative, resolve } from "node:path";
 
 import type { Tool } from "../types";
 
+// 每次调用传什么，这里只有文件路径 path。
 export type ReadFileArguments = {
   path: string;
 };
 
+// 成功读取后返回什么，包括路径、字节数和正文。
 export type ReadFileOutput = {
   path: string;
   bytes: number;
   content: string;
 };
 
+// 程序创建工具时设定的规则，包括允许读取的根目录和文件大小上限。
 export type ReadFileToolOptions = {
   rootDirectory: string;
   maxBytes?: number;
 };
 
+// 工具工厂
 export function createReadFileTool(
   options: ReadFileToolOptions,
 ): Tool<ReadFileArguments> {
@@ -26,6 +36,7 @@ export function createReadFileTool(
     throw new TypeError("read_file maxBytes must be a positive integer.");
   }
 
+  // 返回工具定义
   return {
     name: "read_file",
     description:
@@ -42,6 +53,7 @@ export function createReadFileTool(
       additionalProperties: false,
     },
 
+    // 检查输入
     parseArguments(input: unknown): ReadFileArguments {
       if (!isRecord(input)) {
         throw new TypeError("read_file arguments must be an object.");
@@ -58,7 +70,9 @@ export function createReadFileTool(
       return { path: input.path };
     },
 
+    // 执行函数
     async execute(arguments_, signal): Promise<ReadFileOutput> {
+      // 有取消信号且已经取消，就抛出异常，停止往下执行；没有传入信号，就跳过。
       signal?.throwIfAborted();
 
       const root = await realpath(options.rootDirectory);
