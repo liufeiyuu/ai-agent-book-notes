@@ -16,10 +16,6 @@ export type MockModelResponder = (
   requestIndex: number,
 ) => ModelResponse | Promise<ModelResponse>;
 
-/**
- * A deterministic model double. It lets us test the Harness without calling
- * a real LLM or depending on a model making the same decision twice.
- */
 
 // MockModel 跳过了“真实 API + Adapter”，直接返回内部格式。
 // Adapter 负责把服务商格式转换为 model 与 harness 约定通信的内部格式。

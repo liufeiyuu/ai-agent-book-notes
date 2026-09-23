@@ -137,6 +137,7 @@ try {
   })]);
 
   // 用这个注册表的两组 Agent Loop 测试。
+  // 这段代码验证：Agent 提出计算请求后，MCP 的成功结果或错误，能否进入下一轮模型输入。
   const loopRuns = [];
   for (const right of [3, 0]) {
     const callId = right === 3 ? "loop-valid" : "loop-error";

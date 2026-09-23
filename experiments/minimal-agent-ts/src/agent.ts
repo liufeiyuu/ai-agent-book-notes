@@ -76,9 +76,11 @@ export async function runAgent(
 
       turns = turn;
       // 这一轮传给 model 的 message
+      // messages 是运行过程中累计的对话历史。这里复制一份，供本轮请求使用。
       const requestMessages = structuredClone(messages);
       // experiments/minimal-agent-ts/src/demo.ts Line 33
       // experiments/minimal-agent-ts/src/tool-registry.ts Line 13
+      // 注册表的 definitions() 返回工具名称、说明和输入 Schema，再复制一份；实际执行方法仍留在注册表中。
       const toolDefinitions = structuredClone(options.registry.definitions());
 
       let request: ModelInput;

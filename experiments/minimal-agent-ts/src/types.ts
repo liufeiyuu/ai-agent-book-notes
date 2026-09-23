@@ -49,6 +49,7 @@ export type ModelInput = {
   signal?: AbortSignal;
 };
 
+// 这段规定：任何符合 Model 接口的对象，都必须提供 generate 方法，接收上述输入，异步返回一个 ModelResponse。
 export interface Model {
   generate(input: ModelInput): Promise<ModelResponse>;
 }
@@ -107,6 +108,10 @@ type Timestamped<TEvent> = TEvent & {
   timestamp: string;
 };
 
+// 轮数按循环中的模型交互计算，工具事件不会单独增加一轮。
+// messages 保存对话内容；
+// trace 还记录请求、执行、拒绝、停止等过程，方便核对程序做过什么。
+// 本实现不会把整份 Trace 自动作为对话发给模型。
 export type TraceEvent =
   | Timestamped<{
       type: "model_request";
@@ -141,6 +146,8 @@ export type TraceEvent =
       error?: string;
     }>;
 
+// runAgent 返回给调用方的整次运行结果。
+// 注意是返回给调用方，不是返回给模型。
 export type AgentRunResult = {
   completed: boolean;
   taskSuccess?: boolean; // evaluator-facing: unavailable without a task-specific rubric.
