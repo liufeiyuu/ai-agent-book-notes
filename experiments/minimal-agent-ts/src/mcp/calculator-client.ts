@@ -122,13 +122,21 @@ try {
     results.push({ label, input, result });
   }
 
+  // 先取出发现的工具定义。
+  // discovered 是 Server 提供的计算器说明，包含名称、描述、输入 Schema、输出 Schema 等数据。
+  // 这里并没有把 Server 的计算器函数传过来。发现工具得到的是说明，执行时仍要通过 Client 发请求。
   const discovered = listed.tools[0]!;
   assert.ok(discovered.outputSchema);
+
+  // 先创建符合我们本地 Tool 接口的工具对象，再把它交给注册表。
+  // 执行到 new ToolRegistry(...) 时，只是完成注册，还没有发起一次新的计算请求。
   const registry = new ToolRegistry([createMcpCalculatorTool(client, {
     name: discovered.name,
     description: discovered.description ?? "",
     inputSchema: discovered.inputSchema,
   })]);
+
+  // 用这个注册表的两组 Agent Loop 测试。
   const loopRuns = [];
   for (const right of [3, 0]) {
     const callId = right === 3 ? "loop-valid" : "loop-error";
@@ -173,13 +181,20 @@ try {
     assert.equal(model.requests.length, 2);
     loopRuns.push({ callId, modelKind: "MockModel (offline)", modelRequests: model.requests, run });
   }
+
+  // 程序等待 Client 关闭连接
   await client.close();
+
+  // 从完整消息记录中提取发出的方法名。
+  // 只看 Client 发给 Server 的消息。 && 消息中存在 method 字段，才提取它。
+  // 检查 messages、serverLog 是否符合预期
   const sentMethods = messages.flatMap(({ direction, message }) =>
     direction === "client → server" && "method" in message ? [message.method] : []);
   assert.deepEqual(sentMethods.slice(0, 3), ["initialize", "notifications/initialized", "tools/list"]);
   const executed = serverLog.trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
   assert.deepEqual(executed.map((event) => event.arguments.right), [3, 0, 3, 0]);
 
+  // 前面已经完成调用和检查，现在要把证据保存下来，再清理资源。
   const record = {
     recordedAt: new Date().toISOString(),
     modelCalls: 0,
