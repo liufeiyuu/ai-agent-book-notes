@@ -23,7 +23,7 @@
 
 学习计划统一按 **Stage（阶段）** 推进：每个 Stage 对应一组学习内容与验收标准，不对应一个自然周。预计用时用于安排投入，实际完成节奏随学习情况调整。
 
-**当前计划：[Stage 3：第 4–5 章工具与 Coding Agent](notes/stage-03-plan.md)**
+**当前计划：[Stage 4：第 6–7 章异步 Agent、交互与评估](notes/stage-04-plan.md)**
 
 本节是当前计划的唯一定位入口。每次带学按[协作指引](AGENTS.md)完整读取上方计划正文及其“执行进度”；详细状态、完成证据和下一步只在该计划内维护。
 
@@ -38,14 +38,14 @@
 | 2 | 上下文工程 | 已完成 | [进入笔记](notes/02-context-engineering/README.md) |
 | 3 | 用户记忆和知识库 | 已完成 | [进入笔记](notes/03-memory-and-knowledge/README.md) |
 | 4 | 工具 | 已完成 | [进入笔记](notes/04-tools/README.md) |
-| 5 | Coding Agent 与代码生成 | 待读 | [进入笔记](notes/05-coding-agent/README.md) |
+| 5 | Coding Agent 与代码生成 | 已完成 | [进入笔记](notes/05-coding-agent/README.md) |
 | 6 | Agent 的评估 | 待读 | [进入笔记](notes/06-evaluation/README.md) |
 | 7 | 模型后训练 | 待读 | [进入笔记](notes/07-post-training/README.md) |
 | 8 | Agent 的持续进化 | 待读 | [进入笔记](notes/08-continuous-evolution/README.md) |
 | 9 | 多模态与实时交互 | 待读 | [进入笔记](notes/09-multimodal-interaction/README.md) |
 | 10 | 多 Agent 协作 | 待读 | [进入笔记](notes/10-multi-agent/README.md) |
 
-第四章的“已完成”仅指原文阅读；原有实验与代码带读尚未完成，当前继续第四章代码学习，第五章暂停。具体缺口与代码停点见[当前计划的执行进度](notes/stage-03-plan.md#执行进度)。
+第四、五章的“已完成”指学习者已确认原文读完；对应主线收尾与证据边界见 [Stage 3 复盘](notes/stage-03-review.md)。当前已进入原书第六章《交互：观察与动作空间的扩展》，详细状态和下一步见[当前计划的执行进度](notes/stage-04-plan.md#执行进度)。
 
 状态统一使用：`待读`、`阅读中`、`已完成`、`需复习`。
 
@@ -57,6 +57,7 @@
 
 - [Stage 1：Agent 基础与最小实现](notes/01-agent-basics/stage-01-review.md)
 - [Stage 2：上下文、用户记忆与 RAG](notes/stage-02-review.md)
+- [Stage 3：工具、MCP 与 Coding 协作](notes/stage-03-review.md)
 
 ## 仓库结构
 
