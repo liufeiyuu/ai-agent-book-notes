@@ -42,10 +42,10 @@
 | 6 | Agent 的评估 | 待读 | [进入笔记](notes/06-evaluation/README.md) |
 | 7 | 模型后训练 | 待读 | [进入笔记](notes/07-post-training/README.md) |
 | 8 | Agent 的持续进化 | 待读 | [进入笔记](notes/08-continuous-evolution/README.md) |
-| 9 | 多模态与实时交互 | 待读 | [进入笔记](notes/09-multimodal-interaction/README.md) |
+| 9 | 多模态与实时交互 | 已完成 | [进入笔记](notes/09-multimodal-interaction/README.md) |
 | 10 | 多 Agent 协作 | 待读 | [进入笔记](notes/10-multi-agent/README.md) |
 
-第四、五章的“已完成”指学习者已确认原文读完；对应主线收尾与证据边界见 [Stage 3 复盘](notes/stage-03-review.md)。当前已进入原书第六章《交互：观察与动作空间的扩展》，详细状态和下一步见[当前计划的执行进度](notes/stage-04-plan.md#执行进度)。
+第四、五章的“已完成”指学习者已确认原文读完；对应主线收尾与证据边界见 [Stage 3 复盘](notes/stage-03-review.md)。上表历史编号 9 对应当前原书第六章《交互：观察与动作空间的扩展》，“已完成”指重点段落读完、其余原文略读，未代替代码理解与实验验收；详细状态和下一步见[当前计划的执行进度](notes/stage-04-plan.md#执行进度)。
 
 状态统一使用：`待读`、`阅读中`、`已完成`、`需复习`。
 

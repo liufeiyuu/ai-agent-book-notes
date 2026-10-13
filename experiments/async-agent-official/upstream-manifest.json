@@ -1,0 +1,33 @@
+{
+  "repository": "https://github.com/bojieli/ai-agent-book",
+  "commit": "dbc046eb896ac4e39aa19c7774c8bf49583b89a6",
+  "retrieved_at": "2026-10-11",
+  "upstream_files_unmodified": true,
+  "files": [
+    {
+      "path": "upstream/events.py",
+      "upstream_path": "chapter6/async-agent/events.py",
+      "sha256": "e878c9021d9c9f39dd03055b6aae28857b663348b532aa96e333aa071e3ececd"
+    },
+    {
+      "path": "upstream/tasks.py",
+      "upstream_path": "chapter6/async-agent/tasks.py",
+      "sha256": "ee472b9620c71ebb7f4923a12677da9293ef117ea25dffef20d7382865b83b2e"
+    },
+    {
+      "path": "upstream/runtime.py",
+      "upstream_path": "chapter6/async-agent/runtime.py",
+      "sha256": "46af0deba37ad39c1e01052dadba1f3f64db0db793b898c745e02310faa4e2fc"
+    },
+    {
+      "path": "upstream/analysis_worker.py",
+      "upstream_path": "chapter6/async-agent/analysis_worker.py",
+      "sha256": "2f1aa9ed7a45c0b1771e12dc38525a33ef130b787821efcf94c6858afd74fefa"
+    },
+    {
+      "path": "upstream/LICENSE",
+      "upstream_path": "LICENSE",
+      "sha256": "2a9d82c7f37caadf72436764de67e4042942b8dea2ec9456ed5c43daf7eba074"
+    }
+  ]
+}

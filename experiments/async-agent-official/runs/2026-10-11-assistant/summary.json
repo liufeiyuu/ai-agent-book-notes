@@ -1,0 +1,33 @@
+{
+  "python": "3.9.6 (default, May  7 2023, 23:32:44) \n[Clang 14.0.3 (clang-1403.0.22.14.1)]",
+  "upstream_commit": "dbc046eb896ac4e39aa19c7774c8bf49583b89a6",
+  "source_hashes_verified": true,
+  "real_llm_calls": 0,
+  "scripted_client_calls": 16,
+  "scenarios": [
+    {
+      "scenario": "complete",
+      "passed": true,
+      "task_id": "T1",
+      "status": "completed",
+      "progress": 100.0,
+      "elapsed_s": 3.976
+    },
+    {
+      "scenario": "cancel",
+      "passed": true,
+      "task_id": "T1",
+      "status": "cancelled",
+      "progress": 40.5,
+      "elapsed_s": 1.761
+    },
+    {
+      "scenario": "late-cancel",
+      "passed": true,
+      "task_id": "T1",
+      "status": "completed",
+      "progress": 100.0,
+      "elapsed_s": 3.967
+    }
+  ]
+}

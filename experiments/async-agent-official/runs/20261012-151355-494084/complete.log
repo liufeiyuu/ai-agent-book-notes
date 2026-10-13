@@ -1,0 +1,32 @@
+[ 0.000s] USER   | (immediate) 请分析样本文件，完成后给我统计。
+[ 0.000s] TRAJ   | + user.input         用户消息（immediate）：请分析样本文件，完成后给我统计。
+[ 0.011s] SYSTEM | LLM 调用耗时 0.01s（2 条消息）
+[ 0.011s] TRAJ   | + agent.tool_call    调用工具 run_terminal_command
+[ 0.012s] TASK   | 启动真实子进程任务 T1: `python analyze_logs.py` (速度 4%/逻辑秒)
+[ 0.012s] TRAJ   | + tool.result        工具结果 run_terminal_command
+[ 0.022s] SYSTEM | LLM 调用耗时 0.01s（4 条消息）
+[ 0.022s] TRAJ   | + agent.output       回复用户
+[ 0.022s] AGENT  | [脚本回复] 命令已在后台【异步】启动。task_id=T1，命令=`python analyze_logs.py`。我不会阻塞等待；任务完成后其结果会以系统事件形式返回。可用 query_task('T1') 查询进度或 cancel_task('T1') 取消。
+[ 0.897s] TASK   | T1 `python analyze_logs.py` 进度 22% (pid=9290)
+[ 0.909s] USER   | (deferred) 最终只列行数和标题数。
+[ 0.909s] SYSTEM | 事件进入排队缓冲（当前积压 1 条）
+[ 0.920s] USER   | (immediate) 现在进度多少？
+[ 0.920s] TRAJ   | + user.input         用户消息（immediate）：现在进度多少？
+[ 0.931s] SYSTEM | LLM 调用耗时 0.01s（6 条消息）
+[ 0.931s] TRAJ   | + agent.tool_call    调用工具 query_task
+[ 0.931s] TOOL   | query_task(T1) -> running 22%
+[ 0.932s] TRAJ   | + tool.result        工具结果 query_task
+[ 0.943s] SYSTEM | LLM 调用耗时 0.01s（8 条消息）
+[ 0.943s] TRAJ   | + agent.output       回复用户
+[ 0.943s] AGENT  | [脚本回复] task_id=T1 命令=`python analyze_logs.py` 状态=running 进度=22%。
+[ 1.506s] TASK   | T1 `python analyze_logs.py` 进度 40% (pid=9290)
+[ 2.281s] TASK   | T1 `python analyze_logs.py` 进度 63% (pid=9290)
+[ 2.900s] TASK   | T1 `python analyze_logs.py` 进度 81% (pid=9290)
+[ 3.664s] TASK   | T1 `python analyze_logs.py` 进度 100% (pid=9290)
+[ 3.678s] TASK   | T1 完成 ✅ (pid=9290, returncode=0)
+[ 3.679s] SYSTEM | 异步结果到达，批量处理 1 条积压的非紧急事件
+[ 3.679s] TRAJ   | + async.result       异步完成 T1
+[ 3.679s] TRAJ   | + user.input         用户消息（deferred）：最终只列行数和标题数。
+[ 3.690s] SYSTEM | LLM 调用耗时 0.01s（11 条消息）
+[ 3.690s] TRAJ   | + agent.output       回复用户
+[ 3.690s] AGENT  | [脚本最终结果] T1：行数=5；标题数=2。

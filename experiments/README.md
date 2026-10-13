@@ -12,6 +12,7 @@
 
 ## 实验列表
 
+- [官方 async-agent 离线最小路径](./async-agent-official/README.md)：Stage 4 A2；复用官方 Python 运行时，脚本化决策驱动真实子进程，记录中途补充、查询及完成/取消时机对照。
 - [最小 Agent（TypeScript）](./minimal-agent-ts/README.md)
 - [上下文压缩最小对照实验](./context-compression-minimal/README.md)
 - [RAG 检索与重排序最小对照实验](./rag-retrieval-minimal/README.md)
