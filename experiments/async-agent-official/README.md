@@ -5,9 +5,9 @@
 ## 来源与本地改动边界
 
 - 来源：[Bojie Li / ai-agent-book，chapter6/async-agent](https://github.com/bojieli/ai-agent-book/tree/dbc046eb896ac4e39aa19c7774c8bf49583b89a6/chapter6/async-agent)，固定提交 `dbc046eb896ac4e39aa19c7774c8bf49583b89a6`，2026-10-11 获取。
-- `upstream/` 下 `events.py`、`tasks.py`、`runtime.py`、`analysis_worker.py` 均为未修改的官方源文件。保留上游 [Apache 2.0 LICENSE](upstream/LICENSE)（Copyright 2025 Bojie Li）；[来源清单与 SHA-256](upstream-manifest.json)在每次运行前核对。
+- `upstream/` 下四个 Python 文件来自上述固定提交。获取时保留原字节，之后 `events.py`、`tasks.py`、`runtime.py` 加入了学习注释；2026-10-13 与原始快照核对，差异仅为注释和空行，Python AST 一致，执行逻辑未改。`analysis_worker.py` 和许可证保持原字节。保留上游 [Apache 2.0 LICENSE](upstream/LICENSE)（Copyright 2025 Bojie Li）；[来源清单](upstream-manifest.json)的 `sha256` 保留原始哈希，`local_sha256` 记录带注释版本，每次运行核对当前本地版本，运行汇总也保存这些来源信息。
 - 本地新增 [run_offline.py](run_offline.py)：脚本化客户端、场景输入、观察日志及结果检查。通过客户端注入复用官方 `AgentRuntime`，没有重写调度器或任务管理器；观察子类只记录日志和轨迹追加时间。
-- 本地把 `tasks.DEFAULT_INPUT` 配置为 [5 行样本](fixtures/sample.md)，把 `TICK_REAL` 配置为 `0.15` 秒。官方默认分析 `book/chapter4.md`，因此这次文件统计属于本地样本，不是第四章全文；未改动上游文件字节。
+- 本地把 `tasks.DEFAULT_INPUT` 配置为 [5 行样本](fixtures/sample.md)，把 `TICK_REAL` 配置为 `0.15` 秒。官方默认分析 `book/chapter4.md`，因此这次文件统计属于本地样本，不是第四章全文；这两项通过入口配置。
 - **真实部分**：事件队列、工具调用、子进程、文件分析、任务状态、进程退出和最终请求消息。**受控部分**：模型决策与措辞由脚本产生；进度按定时步长增长，全部进度结束后才进行文件统计，百分比不是实际文件扫描比例。
 - 没有安装依赖、读取 API key、调用模型或联网执行。上游日志中的“LLM 调用耗时”在本入口指脚本客户端及其人为等待，不能当成模型延迟。上游 README 部分旧文字称终端任务为模拟；本版本 `tasks.py` 实际使用 `create_subprocess_exec`，以源码和本次回执为准。
 
@@ -21,7 +21,16 @@ python3 experiments/async-agent-official/run_offline.py
 
 约 10 秒依次运行 `complete`、`cancel`、`late-cancel` 三组对照；每组创建独立运行时，故都会从 `T1` 开始，跨组须结合场景名/PID 区分。输入由驱动按真实任务进度提交，无需抢着键入。这里用户“亲跑”指学习者自己启动入口并核对输出；助手代跑单独记载。
 
-首次先运行上面的默认对照。之后若要亲自改变一次取消时机，只改参数：
+也可以分两次观察中途取消和完成后取消，依次执行：
+
+```bash
+python3 experiments/async-agent-official/run_offline.py --scenario cancel --cancel-at 40
+python3 experiments/async-agent-official/run_offline.py --scenario late-cancel
+```
+
+第一条在进度首次达到 40% 后提交取消，预期 `PASS cancel: cancelled; checks=8`；第二条等待最终统计输出后提交取消，预期 `PASS late-cancel: completed; checks=11`，保留行数 5、标题数 2。命令自己提交实验消息，不需要键入“取消”或按 Ctrl+C；Ctrl+C 会中断整个驱动，不是本实验的用户取消事件。
+
+若要把中途取消改到更晚，只改参数：
 
 ```bash
 python3 experiments/async-agent-official/run_offline.py --scenario cancel --cancel-at 70

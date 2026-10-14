@@ -1,0 +1,135 @@
+{
+  "mode": "offline_program_demo",
+  "realModelCalls": 0,
+  "mockModelCalls": 0,
+  "decisionSource": "test driver simulates user approval; no model provides approval",
+  "content": "项目周报：异步任务实验已完成。",
+  "checks": [
+    "stage3_valid_input_writes_without_approval",
+    "unapproved_request_does_not_write",
+    "approval_records_permission_before_execution",
+    "approved_request_saves_exact_content",
+    "rejected_request_does_not_write",
+    "model_approval_field_is_rejected"
+  ],
+  "trace": [
+    {
+      "seq": 1,
+      "event": "stage3_without_approval_gate",
+      "result": {
+        "ok": true,
+        "toolCallId": "stage3-baseline",
+        "toolName": "create_draft",
+        "output": {
+          "draftId": "5fcbac2b-f907-4a92-86b7-72050b6de153"
+        }
+      },
+      "draftCount": 1
+    },
+    {
+      "seq": 2,
+      "event": "proposed",
+      "request": {
+        "requestId": "A1",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "waiting_approval"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 3,
+      "event": "execute_before_approval",
+      "request": {
+        "requestId": "A1",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "waiting_approval"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 4,
+      "event": "user_approved",
+      "request": {
+        "requestId": "A1",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "approved"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 5,
+      "event": "execute_after_approval",
+      "request": {
+        "requestId": "A1",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "succeeded",
+        "toolResult": {
+          "ok": true,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "output": {
+            "draftId": "b9f7ccb5-7eda-4ba3-93af-3932ef2f99a5"
+          }
+        }
+      },
+      "draftCount": 1
+    },
+    {
+      "seq": 6,
+      "event": "proposed_for_rejection",
+      "request": {
+        "requestId": "A1",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "waiting_approval"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 7,
+      "event": "user_rejected",
+      "request": {
+        "requestId": "A1",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "rejected"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 8,
+      "event": "execute_after_rejection",
+      "request": {
+        "requestId": "A1",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "rejected"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 9,
+      "event": "model_supplied_approval_rejected",
+      "error": "Only content is allowed in draft arguments.",
+      "draftCount": 1
+    }
+  ]
+}

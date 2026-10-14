@@ -1,0 +1,30 @@
+[ 0.000s] USER   | (immediate) 请分析样本文件，完成后给我统计。
+[ 0.000s] TRAJ   | + user.input         用户消息（immediate）：请分析样本文件，完成后给我统计。
+[ 0.011s] SYSTEM | LLM 调用耗时 0.01s（2 条消息）
+[ 0.011s] TRAJ   | + agent.tool_call    调用工具 run_terminal_command
+[ 0.012s] TASK   | 启动真实子进程任务 T1: `python analyze_logs.py` (速度 4%/逻辑秒)
+[ 0.012s] TRAJ   | + tool.result        工具结果 run_terminal_command
+[ 0.022s] SYSTEM | LLM 调用耗时 0.01s（4 条消息）
+[ 0.022s] TRAJ   | + agent.output       回复用户
+[ 0.022s] AGENT  | [脚本回复] 命令已在后台【异步】启动。task_id=T1，命令=`python analyze_logs.py`。我不会阻塞等待；任务完成后其结果会以系统事件形式返回。可用 query_task('T1') 查询进度或 cancel_task('T1') 取消。
+[ 0.898s] TASK   | T1 `python analyze_logs.py` 进度 22% (pid=53337)
+[ 0.907s] USER   | (deferred) 最终只列行数和标题数。
+[ 0.908s] SYSTEM | 事件进入排队缓冲（当前积压 1 条）
+[ 0.919s] USER   | (immediate) 现在进度多少？
+[ 0.919s] TRAJ   | + user.input         用户消息（immediate）：现在进度多少？
+[ 0.930s] SYSTEM | LLM 调用耗时 0.01s（6 条消息）
+[ 0.930s] TRAJ   | + agent.tool_call    调用工具 query_task
+[ 0.930s] TOOL   | query_task(T1) -> running 22%
+[ 0.930s] TRAJ   | + tool.result        工具结果 query_task
+[ 0.941s] SYSTEM | LLM 调用耗时 0.01s（8 条消息）
+[ 0.941s] TRAJ   | + agent.output       回复用户
+[ 0.941s] AGENT  | [脚本回复] task_id=T1 命令=`python analyze_logs.py` 状态=running 进度=22%。
+[ 1.515s] TASK   | T1 `python analyze_logs.py` 进度 40% (pid=53337)
+[ 1.522s] USER   | (interrupt) 取消
+[ 1.522s] TRAJ   | + user.interrupt     用户打断：取消
+[ 1.522s] TRAJ   | + system.note        打断回执，取消任务 ['T1']
+[ 1.523s] TRAJ   | + user.input         用户消息（deferred）：最终只列行数和标题数。
+[ 1.524s] TASK   | T1 子进程已终止 🛑 (pid=53337, 进度 40%)
+[ 1.534s] SYSTEM | LLM 调用耗时 0.01s（12 条消息）
+[ 1.534s] TRAJ   | + agent.output       回复用户
+[ 1.534s] AGENT  | [脚本回复] 已发出取消请求；是否终止以子进程退出记录为准。

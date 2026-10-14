@@ -1,0 +1,216 @@
+{
+  "scenario": "cancel",
+  "started_at_utc": "2026-10-13T01:33:40.233954+00:00",
+  "cancel_at": 40.0,
+  "checks": {
+    "startup_returns_id_before_result": true,
+    "deferred_update_absent_from_query_request": true,
+    "query_answer_precedes_task_end": true,
+    "real_child_process_exited": true,
+    "no_pending_input_left": true,
+    "cancelled_without_result": true,
+    "no_final_analysis_after_cancel": true,
+    "interrupt_receipt_names_task": true
+  },
+  "scripted_client_calls": 5,
+  "real_llm_calls": 0,
+  "task_id": "T1",
+  "status": "cancelled",
+  "progress": 40.5,
+  "pid": 53337,
+  "returncode": -15,
+  "outputs": [
+    "[脚本回复] 命令已在后台【异步】启动。task_id=T1，命令=`python analyze_logs.py`。我不会阻塞等待；任务完成后其结果会以系统事件形式返回。可用 query_task('T1') 查询进度或 cancel_task('T1') 取消。",
+    "[脚本回复] task_id=T1 命令=`python analyze_logs.py` 状态=running 进度=22%。",
+    "[脚本回复] 已发出取消请求；是否终止以子进程退出记录为准。"
+  ],
+  "passed": true,
+  "elapsed_s": 1.725,
+  "tasks": [
+    {
+      "task_id": "T1",
+      "command": "python analyze_logs.py",
+      "rate": 4.5,
+      "progress": 40.5,
+      "status": "cancelled",
+      "result": "",
+      "pid": 53337,
+      "returncode": -15,
+      "started_at": 1791855220.2462022,
+      "completed_at": 1791855221.7577002,
+      "stdout_sha256": null,
+      "executable_receipt": {
+        "mode": "real_subprocess",
+        "shell": false,
+        "worker": "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/async-agent-official/upstream/analysis_worker.py",
+        "worker_sha256": "2f1aa9ed7a45c0b1771e12dc38525a33ef130b787821efcf94c6858afd74fefa",
+        "input": "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/async-agent-official/fixtures/sample.md",
+        "input_sha256": "3c7d1e52dc1b1edba6c90e85dcd1b48be9177a2b8ae3efa5c261e2bf0358aea4",
+        "job": "logs",
+        "rate_percent_per_logical_second": 4.5,
+        "tick_real_seconds": 0.15,
+        "argv_sha256": "a90168c0933469d853f3db3f61a9e2b4b4a74b668ed1f21b7c4b9373c5b91a33",
+        "pid": 53337,
+        "returncode": -15,
+        "cancelled": true,
+        "elapsed_seconds": 1.511
+      }
+    }
+  ],
+  "trajectory": [
+    {
+      "type": "user.input",
+      "message": {
+        "role": "user",
+        "content": "请分析样本文件，完成后给我统计。"
+      },
+      "label": "用户消息（immediate）：请分析样本文件，完成后给我统计。",
+      "task_id": null,
+      "urgency": "immediate",
+      "ts": 1791855220.234381
+    },
+    {
+      "type": "agent.tool_call",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "offline_call_1",
+            "type": "function",
+            "function": {
+              "name": "run_terminal_command",
+              "arguments": "{\"command\": \"python analyze_logs.py\"}"
+            }
+          }
+        ]
+      },
+      "label": "调用工具 run_terminal_command",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855220.2456572
+    },
+    {
+      "type": "tool.result",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "offline_call_1",
+        "content": "命令已在后台【异步】启动。task_id=T1，命令=`python analyze_logs.py`。我不会阻塞等待；任务完成后其结果会以系统事件形式返回。可用 query_task('T1') 查询进度或 cancel_task('T1') 取消。"
+      },
+      "label": "工具结果 run_terminal_command",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855220.24612
+    },
+    {
+      "type": "agent.output",
+      "message": {
+        "role": "assistant",
+        "content": "[脚本回复] 命令已在后台【异步】启动。task_id=T1，命令=`python analyze_logs.py`。我不会阻塞等待；任务完成后其结果会以系统事件形式返回。可用 query_task('T1') 查询进度或 cancel_task('T1') 取消。"
+      },
+      "label": "回复用户",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855220.256675
+    },
+    {
+      "type": "user.input",
+      "message": {
+        "role": "user",
+        "content": "现在进度多少？"
+      },
+      "label": "用户消息（immediate）：现在进度多少？",
+      "task_id": null,
+      "urgency": "immediate",
+      "ts": 1791855221.1530812
+    },
+    {
+      "type": "agent.tool_call",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "offline_call_3",
+            "type": "function",
+            "function": {
+              "name": "query_task",
+              "arguments": "{\"task_id\": \"T1\"}"
+            }
+          }
+        ]
+      },
+      "label": "调用工具 query_task",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855221.16472
+    },
+    {
+      "type": "tool.result",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "offline_call_3",
+        "content": "task_id=T1 命令=`python analyze_logs.py` 状态=running 进度=22%。"
+      },
+      "label": "工具结果 query_task",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855221.164824
+    },
+    {
+      "type": "agent.output",
+      "message": {
+        "role": "assistant",
+        "content": "[脚本回复] task_id=T1 命令=`python analyze_logs.py` 状态=running 进度=22%。"
+      },
+      "label": "回复用户",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855221.175541
+    },
+    {
+      "type": "user.interrupt",
+      "message": {
+        "role": "user",
+        "content": "[用户打断] 取消"
+      },
+      "label": "用户打断：取消",
+      "task_id": null,
+      "urgency": "interrupt",
+      "ts": 1791855221.7561889
+    },
+    {
+      "type": "system.note",
+      "message": {
+        "role": "user",
+        "content": "[系统] 已执行打断：取消了后台任务 ['T1']。请向用户简短确认已停止。"
+      },
+      "label": "打断回执，取消任务 ['T1']",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855221.756348
+    },
+    {
+      "type": "user.input",
+      "message": {
+        "role": "user",
+        "content": "最终只列行数和标题数。"
+      },
+      "label": "用户消息（deferred）：最终只列行数和标题数。",
+      "task_id": null,
+      "urgency": "deferred",
+      "ts": 1791855221.1417542
+    },
+    {
+      "type": "agent.output",
+      "message": {
+        "role": "assistant",
+        "content": "[脚本回复] 已发出取消请求；是否终止以子进程退出记录为准。"
+      },
+      "label": "回复用户",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855221.768279
+    }
+  ]
+}

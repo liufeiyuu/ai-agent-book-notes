@@ -152,6 +152,38 @@ system → user → assistant → tool → tool → tool
 5. `src/openrouter-model.ts`：供应商协议 Adapter；
 6. `runs/*.json`：用真实轨迹验证代码理解。
 
+## Stage 4 A3：草稿审批的最小对照
+
+这是学习计划中的补充实践。新增 [draft-workflow.ts](src/draft-workflow.ts)，复用 Stage 3 的 `create_draft`、注册表和执行器；审批检查放在调用执行器之前。原有直接调用工具的 Stage 3 演示仍保留，审批只由新工作流入口执行。
+
+```bash
+npm run demo:approval
+```
+
+[演示入口](src/draft-approval-demo.ts)对同一正文“项目周报：异步任务实验已完成。”展示三种行为：
+
+| 输入/动作 | 工作流状态 | 内存草稿数 |
+| --- | --- | --- |
+| 提议后尝试执行，尚未批准 | waiting_approval | 0 |
+| 用户批准 | approved | 0 |
+| 批准后执行 | succeeded | 1 |
+| 用户拒绝后尝试执行（独立集合） | rejected | 0 |
+
+调用关系：`propose → 保存待审批的动作和正文 → decideFromUser → execute 的 approved 检查 → executeToolCall → 原草稿工具保存`。未批准会保存状态并返回，应用之后可提交审批；拒绝是本次请求的终态。批准对应保存的请求编号和正文，执行时不能附带另一份正文。
+
+本演示由测试驱动模拟用户的批准/拒绝，不调用真实模型或 MockModel。`decideFromUser` 是应用侧入口，不注册为模型工具；模型参数只允许 `content`，自填 `approved: true` 会被原工具校验拒绝。返回对象为副本，修改它不会更改内部审批或待执行正文。本地函数分工不等于生产系统的身份认证；此处没有实现 Web 审批、数据库、跨进程恢复或通用权限平台。
+
+本次关键判断变化为：Stage 3 中合法正文可直接保存；新工作流只有明确 `approved` 才调用保存工具。演示保留原行为对照和修改后的轨迹，检查未批准无写入、批准后原样保存、拒绝无写入及伪造批准字段被拒绝。每次运行写入新的 `runs/approval-<UTC时间戳>/result.json`，不会覆盖已有结果。[首次助手运行记录](runs/approval-2026-10-13T01-46-46-711Z/result.json)的 6 项检查通过。
+
+相关验证命令（无需安装新依赖）：
+
+```bash
+npm run typecheck
+node --import tsx --test tests/draft-workflow.test.ts tests/create-draft.test.ts tests/tool-executor.test.ts
+```
+
+首次类型检查与 12 项相关测试通过，其中新增审批测试 4 项。这里只验证审批路径；同键重复提交、参数冲突与有界重试尚待沿同一草稿工作流补充。A2 子进程取消证据直接引用；学习状态、实际调用与下一步统一维护在 [Stage 4 执行进度](../../notes/stage-04-plan.md#执行进度)。
+
 ## 当前限制
 
 - Harness 会顺序执行同一轮的多个 Tool Call，尚未并发执行；

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Stage 4 A2: scripted decisions + unmodified official runtime + real processes.
+"""Stage 4 A2: scripted decisions + annotated official runtime + real processes.
 
 No SDK, API key, network request or model inference. Only the client, input file,
-clock speed, scenario driver and evidence checks are local teaching additions.
+clock speed, scenario driver, checks and source comments are local additions.
 """
 from __future__ import annotations
 
@@ -277,15 +277,18 @@ async def main():
     destination.mkdir(parents=True, exist_ok=False)
     manifest = json.loads((HERE / "upstream-manifest.json").read_text())
     for entry in manifest["files"]:
-        if hashlib.sha256((HERE / entry["path"]).read_bytes()).hexdigest() != entry["sha256"]:
-            raise AssertionError("Upstream source hash mismatch: " + entry["path"])
-    # Explicit local configuration; vendored source bytes remain unchanged.
+        expected = entry.get("local_sha256", entry["sha256"])
+        if hashlib.sha256((HERE / entry["path"]).read_bytes()).hexdigest() != expected:
+            raise AssertionError("Local source hash mismatch: " + entry["path"])
+    # Explicit local configuration; official execution logic is unchanged.
     tasks.DEFAULT_INPUT = HERE / "fixtures" / "sample.md"
     tasks.TICK_REAL = 0.15
     scenarios = ["complete", "cancel", "late-cancel"] if args.scenario == "all" else [args.scenario]
     results = [await run(name, args.cancel_at, destination) for name in scenarios]
     summary = {"python": sys.version, "upstream_commit": manifest["commit"],
-               "source_hashes_verified": True, "real_llm_calls": 0,
+               "source_hashes_verified": True,
+               "upstream_files_unmodified": manifest["upstream_files_unmodified"],
+               "source_files": manifest["files"], "real_llm_calls": 0,
                "scripted_client_calls": sum(r["scripted_client_calls"] for r in results),
                "scenarios": [{k: r[k] for k in ("scenario", "passed", "task_id", "status", "progress", "elapsed_s")}
                              for r in results]}

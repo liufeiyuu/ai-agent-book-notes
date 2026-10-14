@@ -1,0 +1,244 @@
+{
+  "scenario": "late-cancel",
+  "started_at_utc": "2026-10-13T01:34:24.342331+00:00",
+  "cancel_at": null,
+  "checks": {
+    "startup_returns_id_before_result": true,
+    "deferred_update_absent_from_query_request": true,
+    "query_answer_precedes_task_end": true,
+    "real_child_process_exited": true,
+    "no_pending_input_left": true,
+    "completed_with_matching_task_id": true,
+    "real_file_metrics": true,
+    "completion_and_update_share_next_request": true,
+    "received_before_finish_appended_after_finish": true,
+    "script_uses_real_result_and_format": true,
+    "late_cancel_preserves_completed_result": true
+  },
+  "scripted_client_calls": 6,
+  "real_llm_calls": 0,
+  "task_id": "T1",
+  "status": "completed",
+  "progress": 100.0,
+  "pid": 53983,
+  "returncode": 0,
+  "outputs": [
+    "[脚本回复] 命令已在后台【异步】启动。task_id=T1，命令=`python analyze_logs.py`。我不会阻塞等待；任务完成后其结果会以系统事件形式返回。可用 query_task('T1') 查询进度或 cancel_task('T1') 取消。",
+    "[脚本回复] task_id=T1 命令=`python analyze_logs.py` 状态=running 进度=22%。",
+    "[脚本最终结果] T1：行数=5；标题数=2。",
+    "[脚本回复] 当前没有运行中的任务；已有完成结果保留。"
+  ],
+  "passed": true,
+  "elapsed_s": 3.891,
+  "tasks": [
+    {
+      "task_id": "T1",
+      "command": "python analyze_logs.py",
+      "rate": 4.5,
+      "progress": 100.0,
+      "status": "completed",
+      "result": "{\"async_mentions\": 2, \"bytes\": 114, \"error_keyword_count\": 2, \"experiment_mentions\": 2, \"heading_count\": 2, \"input_path\": \"/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/async-agent-official/fixtures/sample.md\", \"input_sha256\": \"3c7d1e52dc1b1edba6c90e85dcd1b48be9177a2b8ae3efa5c261e2bf0358aea4\", \"job\": \"logs\", \"lines\": 5}",
+      "pid": 53983,
+      "returncode": 0,
+      "started_at": 1791855264.354608,
+      "completed_at": 1791855268.01182,
+      "stdout_sha256": "51336630ad95333aef99e7f71bb0fc72123c81473e25d2b027b5bb1385c004b4",
+      "executable_receipt": {
+        "mode": "real_subprocess",
+        "shell": false,
+        "worker": "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/async-agent-official/upstream/analysis_worker.py",
+        "worker_sha256": "2f1aa9ed7a45c0b1771e12dc38525a33ef130b787821efcf94c6858afd74fefa",
+        "input": "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/async-agent-official/fixtures/sample.md",
+        "input_sha256": "3c7d1e52dc1b1edba6c90e85dcd1b48be9177a2b8ae3efa5c261e2bf0358aea4",
+        "job": "logs",
+        "rate_percent_per_logical_second": 4.5,
+        "tick_real_seconds": 0.15,
+        "argv_sha256": "a90168c0933469d853f3db3f61a9e2b4b4a74b668ed1f21b7c4b9373c5b91a33",
+        "pid": 53983,
+        "returncode": 0,
+        "stdout_sha256": "51336630ad95333aef99e7f71bb0fc72123c81473e25d2b027b5bb1385c004b4",
+        "stdout_lines": 24,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "elapsed_seconds": 3.657
+      }
+    }
+  ],
+  "trajectory": [
+    {
+      "type": "user.input",
+      "message": {
+        "role": "user",
+        "content": "请分析样本文件，完成后给我统计。"
+      },
+      "label": "用户消息（immediate）：请分析样本文件，完成后给我统计。",
+      "task_id": null,
+      "urgency": "immediate",
+      "ts": 1791855264.342649
+    },
+    {
+      "type": "agent.tool_call",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "offline_call_1",
+            "type": "function",
+            "function": {
+              "name": "run_terminal_command",
+              "arguments": "{\"command\": \"python analyze_logs.py\"}"
+            }
+          }
+        ]
+      },
+      "label": "调用工具 run_terminal_command",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855264.353997
+    },
+    {
+      "type": "tool.result",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "offline_call_1",
+        "content": "命令已在后台【异步】启动。task_id=T1，命令=`python analyze_logs.py`。我不会阻塞等待；任务完成后其结果会以系统事件形式返回。可用 query_task('T1') 查询进度或 cancel_task('T1') 取消。"
+      },
+      "label": "工具结果 run_terminal_command",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855264.354518
+    },
+    {
+      "type": "agent.output",
+      "message": {
+        "role": "assistant",
+        "content": "[脚本回复] 命令已在后台【异步】启动。task_id=T1，命令=`python analyze_logs.py`。我不会阻塞等待；任务完成后其结果会以系统事件形式返回。可用 query_task('T1') 查询进度或 cancel_task('T1') 取消。"
+      },
+      "label": "回复用户",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855264.36504
+    },
+    {
+      "type": "user.input",
+      "message": {
+        "role": "user",
+        "content": "现在进度多少？"
+      },
+      "label": "用户消息（immediate）：现在进度多少？",
+      "task_id": null,
+      "urgency": "immediate",
+      "ts": 1791855265.247689
+    },
+    {
+      "type": "agent.tool_call",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "offline_call_3",
+            "type": "function",
+            "function": {
+              "name": "query_task",
+              "arguments": "{\"task_id\": \"T1\"}"
+            }
+          }
+        ]
+      },
+      "label": "调用工具 query_task",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855265.259104
+    },
+    {
+      "type": "tool.result",
+      "message": {
+        "role": "tool",
+        "tool_call_id": "offline_call_3",
+        "content": "task_id=T1 命令=`python analyze_logs.py` 状态=running 进度=22%。"
+      },
+      "label": "工具结果 query_task",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855265.259169
+    },
+    {
+      "type": "agent.output",
+      "message": {
+        "role": "assistant",
+        "content": "[脚本回复] task_id=T1 命令=`python analyze_logs.py` 状态=running 进度=22%。"
+      },
+      "label": "回复用户",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855265.269994
+    },
+    {
+      "type": "async.result",
+      "message": {
+        "role": "user",
+        "content": "[系统事件｜异步任务完成] task_id=T1 命令=`python analyze_logs.py` 结果：{\"async_mentions\": 2, \"bytes\": 114, \"error_keyword_count\": 2, \"experiment_mentions\": 2, \"heading_count\": 2, \"input_path\": \"/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/async-agent-official/fixtures/sample.md\", \"input_sha256\": \"3c7d1e52dc1b1edba6c90e85dcd1b48be9177a2b8ae3efa5c261e2bf0358aea4\", \"job\": \"logs\", \"lines\": 5}"
+      },
+      "label": "异步完成 T1",
+      "task_id": "T1",
+      "urgency": null,
+      "ts": 1791855268.0120142
+    },
+    {
+      "type": "user.input",
+      "message": {
+        "role": "user",
+        "content": "最终只列行数和标题数。"
+      },
+      "label": "用户消息（deferred）：最终只列行数和标题数。",
+      "task_id": null,
+      "urgency": "deferred",
+      "ts": 1791855265.236418
+    },
+    {
+      "type": "agent.output",
+      "message": {
+        "role": "assistant",
+        "content": "[脚本最终结果] T1：行数=5；标题数=2。"
+      },
+      "label": "回复用户",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855268.024249
+    },
+    {
+      "type": "user.interrupt",
+      "message": {
+        "role": "user",
+        "content": "[用户打断] 取消"
+      },
+      "label": "用户打断：取消",
+      "task_id": null,
+      "urgency": "interrupt",
+      "ts": 1791855268.02838
+    },
+    {
+      "type": "system.note",
+      "message": {
+        "role": "user",
+        "content": "[系统] 已执行打断：取消了后台任务 （无）。请向用户简短确认已停止。"
+      },
+      "label": "打断回执，取消任务 （无）",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855268.0285099
+    },
+    {
+      "type": "agent.output",
+      "message": {
+        "role": "assistant",
+        "content": "[脚本回复] 当前没有运行中的任务；已有完成结果保留。"
+      },
+      "label": "回复用户",
+      "task_id": null,
+      "urgency": null,
+      "ts": 1791855268.040399
+    }
+  ]
+}
