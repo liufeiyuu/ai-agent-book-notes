@@ -12,11 +12,21 @@ type DraftStatus =
 
 export type DraftRequest = {
   requestId: string;
+  idempotencyKey?: string;
   action: "create_draft";
   arguments: { content: string };
   status: DraftStatus;
   toolResult?: ToolResult;
 };
+
+export class IdempotencyConflictError extends Error {
+  readonly code = "idempotency_conflict";
+
+  constructor(readonly idempotencyKey: string, readonly requestId: string) {
+    super(`Idempotency key ${idempotencyKey} already belongs to request ${requestId} with different content.`);
+    this.name = "IdempotencyConflictError";
+  }
+}
 
 // Stage 4 的进程内补充实验：沿用 Stage 3 工具，在调用执行器前检查审批。
 // requests 保存“准备做什么、是否获批”；drafts 保存真正执行后产生的草稿。
@@ -25,6 +35,9 @@ export function createDraftWorkflow(drafts: Map<string, string>) {
   const draftTool = createDraftTool(drafts);
   const registry = new ToolRegistry([draftTool]);
   const requests = new Map<string, DraftRequest>();
+  // 调用方为同一次操作保留同一个键；重发时用它找回原请求，而不是另建 A2。
+  // 只在这个工作流实例的内存中有效，不提供跨进程或重启后的去重。
+  const requestIdByKey = new Map<string, string>();
   let nextRequest = 0;
 
   function requireRequest(requestId: string): DraftRequest {
@@ -34,18 +47,38 @@ export function createDraftWorkflow(drafts: Map<string, string>) {
   }
 
   // 提议只登记待审批操作，不调用保存工具；参数按原工具的契约校验。
-  function propose(input: unknown): DraftRequest {
+  // 键是应用侧的提交标识，独立于工具参数；省略键时保留每次新建请求的原行为。
+  function propose(input: unknown, idempotencyKey?: string): DraftRequest {
     // 原契约只允许 content；夹带 approved: true 会在此抛错，不能自行取得许可。
     const args = draftTool.parseArguments(input);
+    if (idempotencyKey !== undefined) {
+      if (typeof idempotencyKey !== "string" || idempotencyKey.trim().length === 0) {
+        throw new TypeError("Idempotency key must be a non-blank string.");
+      }
+      const existingId = requestIdByKey.get(idempotencyKey);
+      if (existingId !== undefined) {
+        const existing = requireRequest(existingId);
+        // 本工作流只有 create_draft + content，直接比较正文即可；空白也属于正文。
+        // 同键换正文必须报冲突，不能覆盖原内容或把原审批套到另一份正文上。
+        if (existing.arguments.content !== args.content) {
+          throw new IdempotencyConflictError(idempotencyKey, existingId);
+        }
+        // 同键同正文：返回原请求当前状态及已有结果，不新建请求、不重置审批。
+        return structuredClone(existing);
+      }
+    }
     const request: DraftRequest = {
       // A1 等编号标识审批请求；真正的 draftId 要等保存工具执行时才会生成。
       requestId: `A${++nextRequest}`,
+      ...(idempotencyKey === undefined ? {} : { idempotencyKey }),
       action: "create_draft",
       // 登记本次要批准的具体正文，之后执行时仍使用这份内容。
       arguments: { content: args.content },
       status: "waiting_approval",
     };
     requests.set(request.requestId, request);
+    // 首次登记就绑定键，不等执行成功才登记，因此待审批的重发也会找到同一个请求。
+    if (idempotencyKey !== undefined) requestIdByKey.set(idempotencyKey, request.requestId);
     // 返回副本；外部修改返回值的 status 或 content 不会改动内部待审批记录。
     return structuredClone(request);
   }
@@ -72,6 +105,7 @@ export function createDraftWorkflow(drafts: Map<string, string>) {
     // 核心判断：只有明确 approved 才会到达真正的保存工具。
     // waiting_approval：原样返回，保留等待状态；没有启动后台写入或在此挂起等人。
     // rejected：原样返回拒绝状态，不产生草稿；其他非 approved 状态也直接返回。
+    // succeeded：连同 toolResult 返回原结果，不再调用保存工具；running 则返回进行中状态。
     if (request.status !== "approved") return structuredClone(request);
 
     // 获批后才进入执行阶段；running 表示正在处理，不能提前当作保存成功。

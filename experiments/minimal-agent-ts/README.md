@@ -182,7 +182,32 @@ npm run typecheck
 node --import tsx --test tests/draft-workflow.test.ts tests/create-draft.test.ts tests/tool-executor.test.ts
 ```
 
-首次类型检查与 12 项相关测试通过，其中新增审批测试 4 项。这里只验证审批路径；同键重复提交、参数冲突与有界重试尚待沿同一草稿工作流补充。A2 子进程取消证据直接引用；学习状态、实际调用与下一步统一维护在 [Stage 4 执行进度](../../notes/stage-04-plan.md#执行进度)。
+首次类型检查与 12 项相关测试通过，其中新增审批测试 4 项。重复提交的后续实现见下节；有界重试与草稿写入前取消对照仍待接续。A2 子进程取消证据直接引用；学习状态、实际调用与下一步统一维护在 [Stage 4 执行进度](../../notes/stage-04-plan.md#执行进度)。
+
+### 同键重复提交与参数冲突
+
+在同一个 `draft-workflow.ts` 中，`propose({ content }, "save-001")` 可带应用侧的提交键。调用方在首次提交前确定键，并在重发同一次操作时复用；它与程序生成的审批请求编号 `A1`、保存后生成的 `draftId` 分工不同。原审批演示不传键时仍每次创建新请求。
+
+```bash
+npm run demo:idempotency
+```
+
+[演示入口](src/draft-idempotency-demo.ts)固定同一正文和键，真实执行内存保存，由驱动模拟用户批准，不调用模型。[首次助手运行记录](runs/idempotency-2026-10-14T01-21-31-092Z/result.json)的 6 项检查通过：
+
+| 操作 | 结果 | 草稿数 |
+| --- | --- | --- |
+| 首次提议 save-001 | 创建 A1，waiting_approval | 0 |
+| 未批准时同键同正文重发 | 返回原 A1，仍 waiting_approval | 0 |
+| 批准 A1 并执行 | succeeded，保存 toolResult 与草稿 ID | 1 |
+| 成功后同键同正文重发 | 返回原 A1 和同一 toolResult | 1 |
+| 对返回的 A1 再调用 execute | 返回原成功结果，不再保存 | 1 |
+| 同键换正文 | idempotency_conflict，原请求与正文保留 | 1 |
+
+关键路径：`propose → requestIdByKey 查键 → requests 取原请求 → 比较 content → 相同则返回副本 / 不同则抛冲突`；未找到键才创建请求并登记映射。登记发生在提议阶段，待审批的重发也不会另建请求。执行时复用原 `status !== "approved"` 判断，成功请求携带已有结果直接返回，避免第二次调用保存工具。
+
+本例只有固定动作 `create_draft` 和一个 `content` 参数，直接比较完整字符串，空白也算正文差异。同键同参数返回的是原请求**当前状态**：未获批仍等待，运行中仍为 running，拒绝后仍为 rejected；只有完成后才有最终结果。冲突在工作流入口抛出，由演示调用方捕获记录，不是原保存工具产生的 ToolResult 错误，也不会把原成功请求改成 failed。
+
+不同键代表不同操作，即使正文相同，也会新建请求并各自审批；幂等键不承担按内容去重或身份认证。映射仅在一个工作流实例的内存中有效，本轮未实现数据库约束、跨实例/跨进程去重、重启恢复或失败自动重试。新增 4 项测试覆盖状态与结果复用、冲突保留原记录（含空白差异）、不同键独立审批、拒绝后不能靠同键重发重新开启请求；类型检查与 16 项相关测试通过。每次演示写入独立的 `runs/idempotency-<UTC时间戳>/result.json`。
 
 ## 当前限制
 

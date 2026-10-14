@@ -1,0 +1,122 @@
+{
+  "mode": "offline_program_demo",
+  "realModelCalls": 0,
+  "mockModelCalls": 0,
+  "decisionSource": "test driver simulates user approval; no model provides approval",
+  "idempotencyKey": "save-001",
+  "content": "项目周报：异步任务实验已完成。",
+  "checks": [
+    "pending_repeat_reuses_request_without_writing",
+    "first_approved_execution_saves_once",
+    "same_key_same_content_returns_original_result",
+    "executing_replayed_success_does_not_save_again",
+    "same_key_different_content_reports_conflict",
+    "conflict_preserves_original_request_and_draft"
+  ],
+  "trace": [
+    {
+      "seq": 1,
+      "event": "first_proposal",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "waiting_approval"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 2,
+      "event": "same_key_before_approval",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "waiting_approval"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 3,
+      "event": "first_save",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "succeeded",
+        "toolResult": {
+          "ok": true,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "output": {
+            "draftId": "fd19f0a8-1d3f-4c8c-9a3d-bdd8f4435e83"
+          }
+        }
+      },
+      "draftCount": 1
+    },
+    {
+      "seq": 4,
+      "event": "same_key_after_success",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "succeeded",
+        "toolResult": {
+          "ok": true,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "output": {
+            "draftId": "fd19f0a8-1d3f-4c8c-9a3d-bdd8f4435e83"
+          }
+        }
+      },
+      "draftCount": 1
+    },
+    {
+      "seq": 5,
+      "event": "execute_replayed_request",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "succeeded",
+        "toolResult": {
+          "ok": true,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "output": {
+            "draftId": "fd19f0a8-1d3f-4c8c-9a3d-bdd8f4435e83"
+          }
+        }
+      },
+      "draftCount": 1
+    },
+    {
+      "seq": 6,
+      "event": "same_key_different_content",
+      "error": {
+        "code": "idempotency_conflict",
+        "requestId": "A1",
+        "message": "Idempotency key save-001 already belongs to request A1 with different content."
+      },
+      "draftCount": 1
+    }
+  ]
+}

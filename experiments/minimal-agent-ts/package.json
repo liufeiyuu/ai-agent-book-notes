@@ -8,6 +8,7 @@
     "demo:calculator": "node --import tsx src/calculator-cases.ts",
     "demo:draft": "node --import tsx src/create-draft-demo.ts",
     "demo:approval": "node --import tsx src/draft-approval-demo.ts",
+    "demo:idempotency": "node --import tsx src/draft-idempotency-demo.ts",
     "demo:mcp": "node --import tsx src/mcp/calculator-client.ts",
     "demo:failures": "tsx src/failure-demo.ts",
     "demo:openrouter": "tsx src/openrouter-demo.ts",
