@@ -182,7 +182,7 @@ npm run typecheck
 node --import tsx --test tests/draft-workflow.test.ts tests/create-draft.test.ts tests/tool-executor.test.ts
 ```
 
-首次类型检查与 12 项相关测试通过，其中新增审批测试 4 项。重复提交的后续实现见下节；有界重试与草稿写入前取消对照仍待接续。A2 子进程取消证据直接引用；学习状态、实际调用与下一步统一维护在 [Stage 4 执行进度](../../notes/stage-04-plan.md#执行进度)。
+首次类型检查与 12 项相关测试通过，其中新增审批测试 4 项。重复提交与草稿取消对照见下文；有界重试仍待接续。A2 子进程取消证据直接引用；学习状态、实际调用与下一步统一维护在 [Stage 4 执行进度](../../notes/stage-04-plan.md#执行进度)。
 
 ### 同键重复提交与参数冲突
 
@@ -208,6 +208,33 @@ npm run demo:idempotency
 本例只有固定动作 `create_draft` 和一个 `content` 参数，直接比较完整字符串，空白也算正文差异。同键同参数返回的是原请求**当前状态**：未获批仍等待，运行中仍为 running，拒绝后仍为 rejected；只有完成后才有最终结果。冲突在工作流入口抛出，由演示调用方捕获记录，不是原保存工具产生的 ToolResult 错误，也不会把原成功请求改成 failed。
 
 不同键代表不同操作，即使正文相同，也会新建请求并各自审批；幂等键不承担按内容去重或身份认证。映射仅在一个工作流实例的内存中有效，本轮未实现数据库约束、跨实例/跨进程去重、重启恢复或失败自动重试。新增 4 项测试覆盖状态与结果复用、冲突保留原记录（含空白差异）、不同键独立审批、拒绝后不能靠同键重发重新开启请求；类型检查与 16 项相关测试通过。每次演示写入独立的 `runs/idempotency-<UTC时间戳>/result.json`。
+
+### 写入前取消与保存后取消
+
+复用工作流、执行器和原草稿工具已有的 `AbortSignal` 传递与检查，执行逻辑不变，补充中文注释和 [取消演示](src/draft-cancellation-demo.ts)：
+
+```bash
+npm run demo:cancellation
+```
+
+两个场景各用独立的 Map、工作流和 AbortController，驱动模拟用户批准与取消，不调用模型。[首次助手运行记录](runs/cancellation-2026-10-14T02-04-16-856Z/result.json)的 6 项检查通过：
+
+| 时机 | signal.aborted | 请求状态 | 草稿数 |
+| --- | --- | --- | --- |
+| 批准后，尚未取消或执行 | false | approved | 0 |
+| 先 abort，尚未把信号交给执行器 | true | approved | 0 |
+| 带已取消信号执行 | true | cancelled | 0 |
+| 另一场景先保存成功 | false | succeeded | 1 |
+| 保存成功后再 abort | true | succeeded | 1 |
+| 再执行这个已成功请求 | true | succeeded，返回同一草稿 ID | 1 |
+
+信号路径：`AbortController.abort() → signal.aborted → workflow.execute(id, signal) → executeToolCall(..., { signal })`。执行器入口发现已取消就返回 `ok:false / error.code:cancelled / retryable:false`，不会调用保存工具；工作流收到该结果才把状态记为 cancelled。`abort()` 本身没有修改业务请求或 Map。本次对照从已批准请求开始，不是新增“撤销待审批请求”的接口。
+
+如果入口检查通过，执行器继续把同一个 signal 传给工具。原工具在 `drafts.set` 之前调用 `signal?.throwIfAborted()`，遇到取消就抛异常，由执行器转换为取消结果。本轮提前取消的实际路径在执行器入口已返回，没有经过工具内部的抛异常分支；后者按源码说明。工具检查到 `Map.set` 之间没有 await，不演示任意一行被外部消息打断或写入中途的竞争。
+
+保存后 `abort()` 不会自动执行 `Map.delete`；若再调用 execute，工作流因状态已为 succeeded 而直接返回原结果，不重写也不撤销草稿。取消信号用于请求停止尚未完成的工作，撤销已有效果需要另行设计业务操作；本实验没有补偿、回滚或数据库事务。与 A2 已有“任务完成后取消保留结果”的证据对应，本轮不重跑 A2。
+
+新增 2 项测试验证提前取消无写入、同键重发不会重启，以及晚取消后原草稿和结果保留；类型检查与 18 项相关测试通过。三个原执行文件去除注释后的编译输出与修改前一致。每次演示写入独立的 `runs/cancellation-<UTC时间戳>/result.json`。
 
 ## 当前限制
 

@@ -127,3 +127,44 @@ test("resubmitting a rejected key cannot create a fresh approval request", async
   assert.equal((await workflow.execute(replay.requestId)).status, "rejected");
   assert.equal(drafts.size, 0);
 });
+
+test("an approved request cancelled before execution never writes or restarts on replay", async () => {
+  const drafts = new Map<string, string>();
+  const workflow = createDraftWorkflow(drafts);
+  const request = workflow.propose({ content: "正文" }, "cancel-before-write");
+  workflow.decideFromUser(request.requestId, "approve");
+  const controller = new AbortController();
+  controller.abort();
+  // abort 改变信号；执行器处理这个信号后，工作流才记录 cancelled。
+  assert.equal(controller.signal.aborted, true);
+  assert.equal(workflow.get(request.requestId).status, "approved");
+  const cancelled = await workflow.execute(request.requestId, controller.signal);
+  assert.equal(cancelled.status, "cancelled");
+  assert.equal(cancelled.toolResult?.ok, false);
+  if (cancelled.toolResult?.ok === false) {
+    assert.equal(cancelled.toolResult.error.code, "cancelled");
+    assert.equal(cancelled.toolResult.error.retryable, false);
+  }
+  assert.equal(drafts.size, 0);
+  const replay = workflow.propose({ content: "正文" }, "cancel-before-write");
+  assert.deepEqual(replay, cancelled);
+  assert.deepEqual(await workflow.execute(replay.requestId), cancelled);
+  assert.equal(drafts.size, 0);
+});
+
+test("cancellation after a successful save preserves the draft and the original result", async () => {
+  const drafts = new Map<string, string>();
+  const workflow = createDraftWorkflow(drafts);
+  const request = workflow.propose({ content: "正文" }, "cancel-after-write");
+  workflow.decideFromUser(request.requestId, "approve");
+  const controller = new AbortController();
+  const saved = await workflow.execute(request.requestId, controller.signal);
+  assert.equal(saved.status, "succeeded");
+  const originalDrafts = [...drafts.entries()];
+  assert.equal(originalDrafts.length, 1);
+  controller.abort();
+  assert.equal(controller.signal.aborted, true);
+  assert.deepEqual(workflow.get(request.requestId), saved);
+  assert.deepEqual(await workflow.execute(request.requestId, controller.signal), saved);
+  assert.deepEqual([...drafts.entries()], originalDrafts);
+});

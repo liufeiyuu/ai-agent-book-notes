@@ -100,17 +100,20 @@ export function createDraftWorkflow(drafts: Map<string, string>) {
     return structuredClone(request);
   }
 
+  // 应用持有 AbortController，把它的 signal 传进来；工作流不把模型字段当取消信号。
   async function execute(requestId: string, signal?: AbortSignal): Promise<DraftRequest> {
     const request = requireRequest(requestId);
     // 核心判断：只有明确 approved 才会到达真正的保存工具。
     // waiting_approval：原样返回，保留等待状态；没有启动后台写入或在此挂起等人。
     // rejected：原样返回拒绝状态，不产生草稿；其他非 approved 状态也直接返回。
     // succeeded：连同 toolResult 返回原结果，不再调用保存工具；running 则返回进行中状态。
+    // 已成功的请求即使收到已取消的 signal，也保留原结果；这里没有撤销草稿的动作。
     if (request.status !== "approved") return structuredClone(request);
 
     // 获批后才进入执行阶段；running 表示正在处理，不能提前当作保存成功。
     request.status = "running";
     // 复用原调用链：查找工具 → 校验参数 → createDraftTool.execute → drafts.set。
+    // 把同一个 signal 交给执行器；已取消时由执行器返回 cancelled，不调用保存工具。
     const result = await executeToolCall(registry, {
       id: `draft-${requestId}`,
       name: request.action,

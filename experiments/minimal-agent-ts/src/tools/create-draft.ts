@@ -50,11 +50,13 @@ export function createDraftTool(drafts: Map<string, string>): Tool<CreateDraftAr
     // 真正保存草稿的地方。
     // 参数中的 { content } 是解构，直接取出校验后的正文。
     async execute({ content }, signal): Promise<{ draftId: string }> {
-      // 检查取消状态
+      // 写入前的取消检查：已取消就抛出异常，下面的 ID 生成和 drafts.set 不会执行。
+      // 通过执行器调用时，预先取消通常已被入口拦下；工具也保留自己的检查。
       signal?.throwIfAborted();
       // 生成草稿 ID
       const draftId = randomUUID();
-      // 保存 ID 与正文的对应关系
+      // 保存 ID 与正文的对应关系；本段检查到写入之间没有 await。
+      // set 已执行后再 abort 不会自动 delete，撤销需要另行设计业务操作。
       drafts.set(draftId, content);
       // 返回草稿 ID
       return { draftId };

@@ -15,6 +15,7 @@ export async function executeToolCall(
   options: ToolExecutionOptions = {},
   // 返回的是完整 ToolResult。
 ): Promise<ToolResult> {
+  // 执行前已收到取消：立即返回结构化错误，后面的查找、校验和工具执行均不发生。
   if (options.signal?.aborted) {
     return failure(call, "cancelled", "Tool execution was cancelled.", false);
   }
@@ -44,6 +45,7 @@ export async function executeToolCall(
 
   // 执行工具，返回结构化 ToolResult
   try {
+    // 信号继续传给工具，由工具在自己的取消检查点响应；传入信号不会自动撤销副作用。
     const output = await tool.execute(parsedArguments, options.signal);
 
     return {

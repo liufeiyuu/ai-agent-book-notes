@@ -1,0 +1,141 @@
+{
+  "mode": "offline_program_demo",
+  "realModelCalls": 0,
+  "mockModelCalls": 0,
+  "decisionSource": "test driver simulates user approval and cancellation; no model is called",
+  "content": "项目周报：异步任务实验已完成。",
+  "checks": [
+    "abort_changes_signal_before_workflow_processes_it",
+    "pre_cancelled_execution_reports_cancelled",
+    "pre_cancelled_execution_has_no_draft",
+    "uncancelled_execution_saves_the_content",
+    "late_abort_preserves_saved_state",
+    "late_execute_preserves_original_result_and_draft"
+  ],
+  "trace": [
+    {
+      "seq": 1,
+      "event": "approved_before_cancel",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "cancel-before-write",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "approved"
+      },
+      "signalAborted": false,
+      "draftCount": 0
+    },
+    {
+      "seq": 2,
+      "event": "abort_before_execute",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "cancel-before-write",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "approved"
+      },
+      "signalAborted": true,
+      "draftCount": 0
+    },
+    {
+      "seq": 3,
+      "event": "execute_with_cancelled_signal",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "cancel-before-write",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "cancelled",
+        "toolResult": {
+          "ok": false,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "error": {
+            "code": "cancelled",
+            "message": "Tool execution was cancelled.",
+            "retryable": false
+          }
+        }
+      },
+      "signalAborted": true,
+      "draftCount": 0
+    },
+    {
+      "seq": 4,
+      "event": "saved_before_cancel",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "cancel-after-write",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "succeeded",
+        "toolResult": {
+          "ok": true,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "output": {
+            "draftId": "e5c5b8bb-2ef8-4ad6-aded-6eb200d45da3"
+          }
+        }
+      },
+      "signalAborted": false,
+      "draftCount": 1
+    },
+    {
+      "seq": 5,
+      "event": "abort_after_save",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "cancel-after-write",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "succeeded",
+        "toolResult": {
+          "ok": true,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "output": {
+            "draftId": "e5c5b8bb-2ef8-4ad6-aded-6eb200d45da3"
+          }
+        }
+      },
+      "signalAborted": true,
+      "draftCount": 1
+    },
+    {
+      "seq": 6,
+      "event": "execute_after_late_cancel",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "cancel-after-write",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "succeeded",
+        "toolResult": {
+          "ok": true,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "output": {
+            "draftId": "e5c5b8bb-2ef8-4ad6-aded-6eb200d45da3"
+          }
+        }
+      },
+      "signalAborted": true,
+      "draftCount": 1
+    }
+  ]
+}
