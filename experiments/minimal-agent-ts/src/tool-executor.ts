@@ -1,4 +1,5 @@
 import { ToolNotFoundError, ToolRegistry } from "./tool-registry";
+import { PermissionDeniedError, TemporaryToolError } from "./tool-errors";
 import type { ToolCall, ToolMessage, ToolResult } from "./types";
 
 export type ToolExecutionOptions = {
@@ -40,6 +41,7 @@ export async function executeToolCall(
   try {
     parsedArguments = tool.parseArguments(call.arguments);
   } catch (error) {
+    // 保留 Stage 3 的反馈语义：参数可修正后再调用，不表示原参数可以自动重试。
     return failure(call, "invalid_arguments", errorMessage(error), true);
   }
 
@@ -59,6 +61,13 @@ export async function executeToolCall(
       return failure(call, "cancelled", "Tool execution was cancelled.", false);
     }
 
+    if (error instanceof PermissionDeniedError) {
+      return failure(call, "permission_denied", error.message, false);
+    }
+    if (error instanceof TemporaryToolError) {
+      return failure(call, "temporary_unavailable", error.message, true);
+    }
+    // 未知异常不推定为暂时故障，避免盲目重复可能已经发生的写入。
     return failure(call, "execution_error", errorMessage(error), false);
   }
 }

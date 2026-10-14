@@ -182,7 +182,7 @@ npm run typecheck
 node --import tsx --test tests/draft-workflow.test.ts tests/create-draft.test.ts tests/tool-executor.test.ts
 ```
 
-首次类型检查与 12 项相关测试通过，其中新增审批测试 4 项。重复提交与草稿取消对照见下文；有界重试仍待接续。A2 子进程取消证据直接引用；学习状态、实际调用与下一步统一维护在 [Stage 4 执行进度](../../notes/stage-04-plan.md#执行进度)。
+首次类型检查与 12 项相关测试通过，其中新增审批测试 4 项。重复提交、草稿取消与有界重试对照见下文。A2 子进程取消证据直接引用；学习状态、实际调用与下一步统一维护在 [Stage 4 执行进度](../../notes/stage-04-plan.md#执行进度)。
 
 ### 同键重复提交与参数冲突
 
@@ -235,6 +235,42 @@ npm run demo:cancellation
 保存后 `abort()` 不会自动执行 `Map.delete`；若再调用 execute，工作流因状态已为 succeeded 而直接返回原结果，不重写也不撤销草稿。取消信号用于请求停止尚未完成的工作，撤销已有效果需要另行设计业务操作；本实验没有补偿、回滚或数据库事务。与 A2 已有“任务完成后取消保留结果”的证据对应，本轮不重跑 A2。
 
 新增 2 项测试验证提前取消无写入、同键重发不会重启，以及晚取消后原草稿和结果保留；类型检查与 18 项相关测试通过。三个原执行文件去除注释后的编译输出与修改前一致。每次演示写入独立的 `runs/cancellation-<UTC时间戳>/result.json`。
+
+### 有界重试：哪些失败再试，何时停止
+
+在同一个草稿工作流的 `execute` 中增加次数循环，审批和同键查重仍使用原入口。[重试演示](src/draft-retry-demo.ts)通过应用侧 `beforeSave` 钩子在真正写入前注入确定性故障；不接模型或真实远端服务。工具和内存保存实际执行，故障类别与时机由驱动控制。每个场景有自己的 Map 和工作流，各自的 A1 不代表同一请求。
+
+```bash
+npm run demo:retry
+```
+
+[首次助手运行记录](runs/retry-2026-10-14T02-45-51-221Z/result.json)中 6 项检查通过：
+
+| 场景 | 执行器尝试数（含首次） | 最终状态 / 停止原因 | 草稿数 |
+| --- | --- | --- | --- |
+| 写入前暂时失败两次，第三次恢复 | 3 | succeeded / succeeded | 1 |
+| 写入前一直暂时失败 | 3 | failed / attempt_limit | 0 |
+| 达到上限后同键重发并再 execute | 仍为 3，无新增尝试 | 返回原 failed / attempt_limit | 0 |
+| 权限拒绝 | 1 | failed / non_retryable | 0 |
+| 未知异常 | 1 | failed / non_retryable | 0 |
+| 正文非法 | 0 | propose 抛错，未创建请求 | 0 |
+
+调用关系：`获批的 A1 → execute 次数循环 → executeToolCall → create_draft 写入前检查/故障钩子 → ToolResult → 记录尝试 → 判断停止或再试`。重试期间保持 running，每次使用同一已批准正文、请求和 signal，不重新提议或审批。`attempts` 保留每次结果；`toolResult` 为最后一次结果；`stopReason` 解释工作流为什么结束。
+
+只允许 `temporary_unavailable` **且** `retryable:true` 自动原样重试。工具通过 [TemporaryToolError](src/tool-errors.ts) 明确报告尚未产生副作用、原样重试安全的暂时故障；执行器按错误类型分类，不按错误文案猜测。PermissionDeniedError、未知异常、取消均停止。权限拒绝来自确定性注入，未实现完整权限服务。非法正文在工作流入口就被拒绝；旧执行器的 `invalid_arguments / retryable:true` 保留“修正参数后可以再调用”的历史反馈含义，不是原参数自动重试的许可。
+
+本实验由应用配置 `maxAttempts` 为 1–3，默认 3，**包括第一次执行**，所以默认最多重试两次。每次结果先进入 attempts，再检查成功、取消、错误类别和次数；达到上限即 failed / attempt_limit，即使最后一次错误仍标记 retryable:true。失败终态的同键重发返回原状态，不能清空次数重新开始；换键是另一个需审批的新操作，不能作为绕过失败原因的重试办法。
+
+本地故障均在 Map.set 前抛出，失败尝试未产生草稿；只有恢复后的一次调用真正保存。它不能证明“远端已写入但回执丢失”时重试安全，当前内存幂等也不提供远端事务或跨进程保证。本实验限定尝试次数，未新增退避、抖动或总耗时限制；已有 Agent Loop 的超时能力单独保留。
+
+新增 [6 项重试测试](tests/draft-retry.test.ts)，覆盖成功恢复、1/2/3 次总上限与终态重发、权限及未知异常、非法/未批准/拒绝不进入循环、重试中取消和非法上限。类型检查与下面的 24 项相关测试首轮通过，无失败重跑；没有重跑前三个演示或 A2。测试中第二次尝试的钩子发出取消但不抛错，验证工具的第二个取消检查仍阻止写入。
+
+```bash
+npm run typecheck
+node --import tsx --test tests/draft-workflow.test.ts tests/draft-retry.test.ts tests/create-draft.test.ts tests/tool-executor.test.ts
+```
+
+每次演示保存新的 `runs/retry-<UTC时间戳>/result.json`；本次演示与针对性测试均无真实 LLM、MockModel、脚本模型客户端或 MCP 调用。
 
 ## 当前限制
 

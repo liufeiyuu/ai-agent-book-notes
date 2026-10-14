@@ -1,0 +1,310 @@
+{
+  "mode": "offline_program_demo",
+  "realModelCalls": 0,
+  "mockModelCalls": 0,
+  "decisionSource": "test driver simulates user approval; local pre-write fault injection; no model is called",
+  "content": "项目周报：异步任务实验已完成。",
+  "checks": [
+    "two_temporary_failures_then_one_save",
+    "temporary_failure_stops_at_three_total_attempts",
+    "same_key_replay_does_not_reset_attempt_limit",
+    "permission_denial_stops_after_one_attempt",
+    "unknown_error_stops_after_one_attempt",
+    "invalid_content_is_rejected_before_execution"
+  ],
+  "trace": [
+    {
+      "seq": 1,
+      "event": "temporary_failure_then_success",
+      "beforeWrites": [
+        {
+          "attempt": 1,
+          "draftCount": 0
+        },
+        {
+          "attempt": 2,
+          "draftCount": 0
+        },
+        {
+          "attempt": 3,
+          "draftCount": 0
+        }
+      ],
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "succeeded",
+        "maxAttempts": 3,
+        "attempts": [
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "temporary_unavailable",
+              "message": "Storage temporarily unavailable before saving.",
+              "retryable": true
+            }
+          },
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "temporary_unavailable",
+              "message": "Storage temporarily unavailable before saving.",
+              "retryable": true
+            }
+          },
+          {
+            "ok": true,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "output": {
+              "draftId": "86cc5a2e-b241-4b69-9cf7-f09bfb03a1f4"
+            }
+          }
+        ],
+        "toolResult": {
+          "ok": true,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "output": {
+            "draftId": "86cc5a2e-b241-4b69-9cf7-f09bfb03a1f4"
+          }
+        },
+        "stopReason": "succeeded"
+      },
+      "draftCount": 1
+    },
+    {
+      "seq": 2,
+      "event": "temporary_failure_hits_limit",
+      "beforeWrites": [
+        {
+          "attempt": 1,
+          "draftCount": 0
+        },
+        {
+          "attempt": 2,
+          "draftCount": 0
+        },
+        {
+          "attempt": 3,
+          "draftCount": 0
+        }
+      ],
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "failed",
+        "maxAttempts": 3,
+        "attempts": [
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "temporary_unavailable",
+              "message": "Storage remains unavailable.",
+              "retryable": true
+            }
+          },
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "temporary_unavailable",
+              "message": "Storage remains unavailable.",
+              "retryable": true
+            }
+          },
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "temporary_unavailable",
+              "message": "Storage remains unavailable.",
+              "retryable": true
+            }
+          }
+        ],
+        "toolResult": {
+          "ok": false,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "error": {
+            "code": "temporary_unavailable",
+            "message": "Storage remains unavailable.",
+            "retryable": true
+          }
+        },
+        "stopReason": "attempt_limit"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 3,
+      "event": "replay_after_attempt_limit",
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "failed",
+        "maxAttempts": 3,
+        "attempts": [
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "temporary_unavailable",
+              "message": "Storage remains unavailable.",
+              "retryable": true
+            }
+          },
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "temporary_unavailable",
+              "message": "Storage remains unavailable.",
+              "retryable": true
+            }
+          },
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "temporary_unavailable",
+              "message": "Storage remains unavailable.",
+              "retryable": true
+            }
+          }
+        ],
+        "toolResult": {
+          "ok": false,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "error": {
+            "code": "temporary_unavailable",
+            "message": "Storage remains unavailable.",
+            "retryable": true
+          }
+        },
+        "stopReason": "attempt_limit"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 4,
+      "event": "permission_denied",
+      "beforeWrites": [
+        {
+          "attempt": 1,
+          "draftCount": 0
+        }
+      ],
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "failed",
+        "maxAttempts": 3,
+        "attempts": [
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "permission_denied",
+              "message": "No write permission.",
+              "retryable": false
+            }
+          }
+        ],
+        "toolResult": {
+          "ok": false,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "error": {
+            "code": "permission_denied",
+            "message": "No write permission.",
+            "retryable": false
+          }
+        },
+        "stopReason": "non_retryable"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 5,
+      "event": "unknown_error",
+      "beforeWrites": [
+        {
+          "attempt": 1,
+          "draftCount": 0
+        }
+      ],
+      "request": {
+        "requestId": "A1",
+        "idempotencyKey": "save-001",
+        "action": "create_draft",
+        "arguments": {
+          "content": "项目周报：异步任务实验已完成。"
+        },
+        "status": "failed",
+        "maxAttempts": 3,
+        "attempts": [
+          {
+            "ok": false,
+            "toolCallId": "draft-A1",
+            "toolName": "create_draft",
+            "error": {
+              "code": "execution_error",
+              "message": "Unexpected storage failure.",
+              "retryable": false
+            }
+          }
+        ],
+        "toolResult": {
+          "ok": false,
+          "toolCallId": "draft-A1",
+          "toolName": "create_draft",
+          "error": {
+            "code": "execution_error",
+            "message": "Unexpected storage failure.",
+            "retryable": false
+          }
+        },
+        "stopReason": "non_retryable"
+      },
+      "draftCount": 0
+    },
+    {
+      "seq": 6,
+      "event": "invalid_content",
+      "error": "content must not be blank.",
+      "executionAttempts": 0,
+      "draftCount": 0
+    }
+  ]
+}

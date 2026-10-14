@@ -16,7 +16,16 @@ export type DraftRequest = {
   action: "create_draft";
   arguments: { content: string };
   status: DraftStatus;
+  // 一次尝试指一次执行器调用，包含首次执行；重发请求不会清空历史或重置上限。
+  maxAttempts: number;
+  attempts: ToolResult[];
   toolResult?: ToolResult;
+  stopReason?: "succeeded" | "cancelled" | "non_retryable" | "attempt_limit";
+};
+
+type DraftWorkflowOptions = {
+  maxAttempts?: number;
+  beforeSave?: () => void;
 };
 
 export class IdempotencyConflictError extends Error {
@@ -31,8 +40,13 @@ export class IdempotencyConflictError extends Error {
 // Stage 4 的进程内补充实验：沿用 Stage 3 工具，在调用执行器前检查审批。
 // requests 保存“准备做什么、是否获批”；drafts 保存真正执行后产生的草稿。
 // 这个门槛只保护本工作流入口，直接调用原 create_draft 工具仍沿用 Stage 3 行为。
-export function createDraftWorkflow(drafts: Map<string, string>) {
-  const draftTool = createDraftTool(drafts);
+export function createDraftWorkflow(drafts: Map<string, string>, options: DraftWorkflowOptions = {}) {
+  // 本教学实验最多总共尝试 3 次（首次 + 最多 2 次重试），上限由应用配置，不由模型决定。
+  const maxAttempts = options.maxAttempts ?? 3;
+  if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 3) {
+    throw new RangeError("maxAttempts must be an integer from 1 to 3, including the first attempt.");
+  }
+  const draftTool = createDraftTool(drafts, options.beforeSave);
   const registry = new ToolRegistry([draftTool]);
   const requests = new Map<string, DraftRequest>();
   // 调用方为同一次操作保留同一个键；重发时用它找回原请求，而不是另建 A2。
@@ -75,6 +89,8 @@ export function createDraftWorkflow(drafts: Map<string, string>) {
       // 登记本次要批准的具体正文，之后执行时仍使用这份内容。
       arguments: { content: args.content },
       status: "waiting_approval",
+      maxAttempts,
+      attempts: [],
     };
     requests.set(request.requestId, request);
     // 首次登记就绑定键，不等执行成功才登记，因此待审批的重发也会找到同一个请求。
@@ -110,20 +126,43 @@ export function createDraftWorkflow(drafts: Map<string, string>) {
     // 已成功的请求即使收到已取消的 signal，也保留原结果；这里没有撤销草稿的动作。
     if (request.status !== "approved") return structuredClone(request);
 
-    // 获批后才进入执行阶段；running 表示正在处理，不能提前当作保存成功。
+    // 一次执行内完成有限次尝试；期间保持 running，不在每次失败后重置审批。
     request.status = "running";
-    // 复用原调用链：查找工具 → 校验参数 → createDraftTool.execute → drafts.set。
-    // 把同一个 signal 交给执行器；已取消时由执行器返回 cancelled，不调用保存工具。
-    const result = await executeToolCall(registry, {
-      id: `draft-${requestId}`,
-      name: request.action,
-      // 只使用审批请求里保存的正文，执行入口不接受一份新正文。
-      arguments: structuredClone(request.arguments),
-    }, signal === undefined ? {} : { signal });
-    request.toolResult = result;
-    // 工具返回成功后才标记 succeeded；执行器报告取消或其他错误则记相应终态。
-    request.status = result.ok ? "succeeded"
-      : result.error.code === "cancelled" ? "cancelled" : "failed";
+    while (request.attempts.length < request.maxAttempts) {
+      // 每次都复用同一个操作、已批准正文和 signal，不重新 propose 或生成幂等键。
+      // 执行器每次检查取消，再校验和调用工具；失败/成功均记录为一次尝试。
+      const result = await executeToolCall(registry, {
+        id: `draft-${requestId}`,
+        name: request.action,
+        arguments: structuredClone(request.arguments),
+      }, signal === undefined ? {} : { signal });
+      request.attempts.push(result);
+      request.toolResult = result;
+
+      if (result.ok) {
+        request.status = "succeeded";
+        request.stopReason = "succeeded";
+        break;
+      }
+      if (result.error.code === "cancelled") {
+        request.status = "cancelled";
+        request.stopReason = "cancelled";
+        break;
+      }
+      // 不能只看 retryable：参数错误的 true 表示可修正，不允许原样自动再试。
+      // 仅放行明确的、写入前的暂时失败；拒绝、未知异常等立即停止。
+      if (result.error.code !== "temporary_unavailable" || !result.error.retryable) {
+        request.status = "failed";
+        request.stopReason = "non_retryable";
+        break;
+      }
+      if (request.attempts.length === request.maxAttempts) {
+        request.status = "failed";
+        request.stopReason = "attempt_limit";
+        break;
+      }
+      // 本地确定性实验直接进入下一次；未实现网络退避、抖动或总耗时限制。
+    }
     return structuredClone(request);
   }
 

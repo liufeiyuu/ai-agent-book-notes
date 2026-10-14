@@ -74,8 +74,11 @@ export type ToolResult =
           | "tool_not_found"
           | "timeout"
           | "cancelled"
+          | "temporary_unavailable"
+          | "permission_denied"
           | "execution_error";
         message: string;
+        // 历史参数错误也用 true 表示可修正后再调用；自动原样重试还须核对错误类别。
         retryable: boolean;
       };
     };

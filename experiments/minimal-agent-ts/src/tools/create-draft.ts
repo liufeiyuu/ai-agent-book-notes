@@ -19,7 +19,11 @@ export function parseContent(input: unknown): string {
 // 这个工具把正文保存到当前进程的内存中，返回草稿 ID。
 // 草稿集合由程序提供，不是模型能传入的参数；只存在于当前进程。
 // 这个函数接收一个草稿集合 drafts，返回一个符合 Tool 接口的工具对象，所以叫“工具工厂”。
-export function createDraftTool(drafts: Map<string, string>): Tool<CreateDraftArguments> {
+// beforeSave 仅供本地演示/测试在写入前注入确定性故障，不属于模型可传的参数。
+export function createDraftTool(
+  drafts: Map<string, string>,
+  beforeSave?: () => void,
+): Tool<CreateDraftArguments> {
   return {
     name: "create_draft",
     description: "Save non-blank text as a new draft in this process's memory and return its ID. Preserve the original text, including surrounding whitespace.",
@@ -52,6 +56,10 @@ export function createDraftTool(drafts: Map<string, string>): Tool<CreateDraftAr
     async execute({ content }, signal): Promise<{ draftId: string }> {
       // 写入前的取消检查：已取消就抛出异常，下面的 ID 生成和 drafts.set 不会执行。
       // 通过执行器调用时，预先取消通常已被入口拦下；工具也保留自己的检查。
+      signal?.throwIfAborted();
+      // 故障在真正写入前抛出，失败尝试不会生成草稿；没有钩子时沿用原行为。
+      beforeSave?.();
+      // 若钩子发出取消，即使没有抛错也不能继续保存。
       signal?.throwIfAborted();
       // 生成草稿 ID
       const draftId = randomUUID();
