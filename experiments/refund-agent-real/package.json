@@ -10,6 +10,7 @@
     "index": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts index",
     "retrieve": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts retrieve",
     "ask": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts ask",
-    "evaluate": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts evaluate"
+    "evaluate": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/cli.ts evaluate",
+    "evaluate:replay": "node --import ../minimal-agent-ts/node_modules/tsx/dist/loader.mjs src/replay-evaluation.ts"
   }
 }

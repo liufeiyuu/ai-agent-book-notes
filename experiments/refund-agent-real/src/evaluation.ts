@@ -1,4 +1,4 @@
-import { type Answer, type AnswerStatus, type SearchHit } from "./types";
+import { type Answer, type AnswerStatus, type SearchHit, type SearchTrace } from "./types";
 import { parseAnswer } from "./answer";
 export { parseAnswer } from "./answer";
 
@@ -20,6 +20,38 @@ export const CASES: Case[] = [
   { id: "ambiguous", question: "帮我看看上次买的那个耳机，拆封了还能退吗？", expectedStatus: "needs_clarification" },
   { id: "exception", question: "E1004 入耳式耳机卫生封条拆开了，没有质量问题，能无理由退货吗？", orderId: "E1004", expectedStatus: "ineligible", requiredDocument: "earbuds-v1", requiredChunkId: "earbuds-v1#1" },
 ];
+
+export type PolicySearchObservation = Pick<SearchTrace, "scope" | "query" | "ranking">;
+
+// B2 第 2 站：读取已保存的成功搜索，事后检查“查明无候选后是否还在搜索”。
+// 同一次咨询使用固定索引。候选由品类、渠道、购买日期决定，换搜索词不会新增候选。
+// ranking 保存全部适用候选，hits 只是 Top-K；不能把二者混为一谈。
+export function evaluatePolicySearches(searches: readonly PolicySearchObservation[]) {
+  // 每次评测新建这张表，只记本次咨询，不把上一位用户或上次运行的空结果带进来。
+  // key 是业务范围；value 是首次查到零候选的搜索序号（从 1 开始）。
+  const emptyScopes = new Map<string, number>();
+  const violations: Array<{ firstEmptySearch: number; repeatedSearch: number }> = [];
+  searches.forEach((search, index) => {
+    const { category, channel, policyDate } = search.scope;
+    // B1003 的 key 为 '["bone-conduction","official","2026-09-02"]'。
+    // 故意不包含 query：同一范围即使换搜索词，仍应查到同一条“曾经为空”的记录。
+    const key = JSON.stringify([category, channel, policyDate]);
+    const firstEmptySearch = emptyScopes.get(key);
+    // 只看成功返回的检索记录；工具异常不会进入 searches，不等同于候选为 0。
+    if (firstEmptySearch !== undefined) {
+      // 已经知道这个范围没有候选，此次仍搜索它：记下首次空查询与本次重复的序号。
+      // 旧 B1003 的第 2、3 次搜索分别产生 {1, 2}、{1, 3}；不覆盖最初的序号 1。
+      violations.push({ firstEmptySearch, repeatedSearch: index + 1 });
+    } else if (search.ranking.length === 0) {
+      // 第一次查到空结果本身合法：只登记，不记违规。index 从 0 开始，因此加 1。
+      emptyScopes.set(key, index + 1);
+    }
+    // 尚未查明该范围为空、且本次仍有候选时，不限制后续补查。
+  });
+  // 没有违规只表示通过这一项；searches 为空也会通过，必需查询是否做过由其他检查负责。
+  // 返回报告供 runner 合并，不在这里重新调用模型、重做检索或阻止已经发生的动作。
+  return { name: "no_search_after_empty_candidates", passed: violations.length === 0, violations };
+}
 
 // 学习入口 6：引用必须来自实际送给模型的块；字符串出现本身并不证明语义支持。
 export function evaluateAnswer(raw: string, hits: SearchHit[], knownOrderIds: string[], expected?: Case) {

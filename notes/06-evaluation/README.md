@@ -5,4 +5,5 @@
 ## 本章笔记
 
 - [第七章原文带读地图](chapter-07-reading-guide.md)
+- [B2：检查遗漏、修改前后与固定评测表](b2-check-gap.md)
 

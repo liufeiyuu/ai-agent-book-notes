@@ -39,13 +39,13 @@
 | 3 | 用户记忆和知识库 | 已完成 | [进入笔记](notes/03-memory-and-knowledge/README.md) |
 | 4 | 工具 | 已完成 | [进入笔记](notes/04-tools/README.md) |
 | 5 | Coding Agent 与代码生成 | 已完成 | [进入笔记](notes/05-coding-agent/README.md) |
-| 6 | Agent 的评估 | 阅读中 | [进入笔记](notes/06-evaluation/README.md) |
+| 6 | Agent 的评估 | 已完成 | [进入笔记](notes/06-evaluation/README.md) |
 | 7 | 模型后训练 | 待读 | [进入笔记](notes/07-post-training/README.md) |
 | 8 | Agent 的持续进化 | 待读 | [进入笔记](notes/08-continuous-evolution/README.md) |
 | 9 | 多模态与实时交互 | 已完成 | [进入笔记](notes/09-multimodal-interaction/README.md) |
 | 10 | 多 Agent 协作 | 待读 | [进入笔记](notes/10-multi-agent/README.md) |
 
-第四、五章的“已完成”指学习者已确认原文读完；对应主线收尾与证据边界见 [Stage 3 复盘](notes/stage-03-review.md)。上表历史编号 9 对应当前原书第六章《交互：观察与动作空间的扩展》，历史编号 6 对应当前原书第七章《Agent 的评估》；此表仅记录原文阅读，实践验收、完成证据和下一步统一见[当前计划的执行进度](notes/stage-04-plan.md#执行进度)。
+第四、五章的“已完成”指学习者已确认原文读完；对应主线收尾与证据边界见 [Stage 3 复盘](notes/stage-03-review.md)。上表历史编号 9 对应当前原书第六章《交互：观察与动作空间的扩展》，历史编号 6 对应当前原书第七章《Agent 的评估》；第七章按前段重点阅读、后续略读的约定收尾。此表仅记录原文阅读，实践验收、完成证据和下一步统一见[当前计划的执行进度](notes/stage-04-plan.md#执行进度)。
 
 状态统一使用：`待读`、`阅读中`、`已完成`、`需复习`。
 

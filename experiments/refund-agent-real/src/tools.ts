@@ -19,6 +19,8 @@ export function createTools(options: { orders: Order[]; userId: string; today: s
   const queriedOrders = new Map<string, Order>();
   // Record only successfully returned facts, not merely attempted tool calls.
   const orderQueries: Array<{ order_id?: string; keyword?: string; returnedOrderIds: string[] }> = [];
+  // B2 第 1 站：按发生顺序保留本次咨询中成功返回的搜索，供 runner 在结束后检查过程。
+  // 这是程序实际执行得到的记录，不是从模型最终回答里的“我查过了”推断出来的。
   const searches: SearchTrace[] = [];
   const policyOrderIds = new Set<string>();
   const cache = new Map<string, SearchTrace>();
@@ -61,22 +63,26 @@ export function createTools(options: { orders: Order[]; userId: string; today: s
       let trace = cache.get(key);
       const cacheHit = trace !== undefined;
       if (!trace) {
-        // 执行检索
+        // scopeForOrder 从已查到的订单生成品类、渠道、购买日期；模型只提供搜索词。
+        // B1003 没有适用政策时，retrieve 正常返回 ranking: []、hits: []，不会因此抛错。
         trace = await retrieve(args.query, scopeForOrder(order), options.index, options.embedder, options.topK, signal);
         cache.set(key, trace);
       }
       // 模型不会自动看见项目里的文件，程序必须把内容送给它。检索工具把政策原文放进返回结果
       // evidence: evidencePayload(trace.hits) 把检索选中的块，整理成工具返回的 evidence。
       const output = { orderId: order.id, scope: trace.scope, cacheHit, evidence: evidencePayload(trace.hits),
+        // ranking 是全部适用候选，hits 是 Top-K；候选为 0 时换搜索词也不会增加政策。
         applicableCandidateCount: trace.ranking.length,
         missingEvidence: trace.hits.length === 0,
         note: trace.ranking.length === 0
           ? "业务范围内不存在政策候选。改变 query 不会产生适用条款；应停止搜索并说明缺少此范围的政策。"
           : "结果来自按订单适用范围过滤后的知识库；核对条款，证据已覆盖所需条件时直接回答，不重复查证同一事实。" };
       signal?.throwIfAborted();
-      // 保存检索记录
+      // 到这里才记录成功搜索；前面检索抛错或响应取消时，不会执行这行。
+      // 空结果也要记录，才能区分“没查”与“查过但没有政策”。
+      // 命中缓存也记录一次工具调用；省掉实际检索不等于模型没有重复调用。
       searches.push(trace);
-      // 记录这笔订单的政策已搜索过。
+      // 这个 Set 只证明该订单的政策查询步骤已完成，不证明找到了政策或可以退款。
       policyOrderIds.add(order.id); // A successful empty result counts; a thrown error does not.
       return output;
     },

@@ -2,7 +2,7 @@ import { runAgent } from "../../minimal-agent-ts/src/agent";
 import { ToolRegistry } from "../../minimal-agent-ts/src/tool-registry";
 import type { Model } from "../../minimal-agent-ts/src/types";
 import { buildContext, SYSTEM_PROMPT } from "./context";
-import { evaluateAnswer, type Case } from "./evaluation";
+import { evaluateAnswer, evaluatePolicySearches, type Case } from "./evaluation";
 import { parseAnswer } from "./answer";
 import { visibleOrders, scopeForOrder } from "./orders";
 import { exclusionReason, retrieve } from "./retrieval";
@@ -76,6 +76,8 @@ export async function runConsultation(options: RunOptions) {
     completed = result.completed;
     knownOrderIds = [...state.queriedOrders.keys()];
     orderQueryCount = state.orderQueries.length;
+    // 接上 tools.ts 的第 1 站：循环结束后，按原顺序取出工具保存的成功搜索记录。
+    // 三次空查询会保留为三条记录；此处只是收集证据，不会重新搜索。
     searches.push(...state.searches);
     hits = searches.flatMap(search => search.hits);
   }
@@ -117,7 +119,12 @@ export async function runConsultation(options: RunOptions) {
     }) });
   }
   evaluation.checks.push({ name: "execution_completed", passed: completed });
+  // B2 第 3 站：调用第 2 站的检查，把 {name, passed, violations} 加入检查清单。
+  // 前面的 evaluateAnswer 主要看答案；同一句 insufficient_evidence 不能证明过程合格。
+  // 这里在运行结束后评分，不是执行前的拦截器，也不会让模型重新回答。
+  evaluation.checks.push(evaluatePolicySearches(searches));
   if (options.mode === "agent") {
+    // 没搜过当然没有“重复空查询”，但也不能因此过关；原有必需步骤检查继续保留。
     evaluation.checks.push({ name: "orders_actually_queried", passed: orderQueryCount > 0 });
     evaluation.checks.push({ name: "workflow_complete", passed: workflowError === undefined });
     const target = workflow!.progress().targetOrderId;
@@ -125,6 +132,9 @@ export async function runConsultation(options: RunOptions) {
       evaluation.checks.push({ name: "policy_search_attempted", passed: toolState!.policyOrderIds.has(target) });
     }
   }
+  // 所有检查追加完后重新计算总结果；every 表示每项 passed 都必须为 true。
+  // 旧 B1003 即使答案、查单与搜索步骤通过，新过程项为 false，整体仍应为 false。
+  // 只输出违规日志而不加入 checks，或沿用追加前的总结果，都会继续漏检。
   evaluation.automatedPassed = evaluation.checks.every(check => check.passed);
   return { mode: options.mode, question: options.question, businessDate: options.today,
     elapsedMs: Date.now() - started, rawAnswer, knownOrderIds, searches, execution, formatRecovery,

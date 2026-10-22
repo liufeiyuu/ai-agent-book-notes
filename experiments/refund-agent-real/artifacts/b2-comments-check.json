@@ -1,0 +1,31 @@
+{
+  "kind": "comments_only_verification",
+  "startedAt": "2026-10-22T01:46:49.079Z",
+  "finishedAt": "2026-10-22T01:46:50.857Z",
+  "compiler": "TypeScript 5.9.3",
+  "results": [
+    {
+      "file": "tools.ts",
+      "identicalWithoutComments": true,
+      "emittedSha256": "f147b91130d183af046586c2f0b5f1fc61d72e7d017bf0c67e09930cb5d0a50a"
+    },
+    {
+      "file": "evaluation.ts",
+      "identicalWithoutComments": true,
+      "emittedSha256": "7c70d4ed90b9b2f1f49c4b6b02ff08ad59201dde601d97c5b6365be18eacc31f"
+    },
+    {
+      "file": "runner.ts",
+      "identicalWithoutComments": true,
+      "emittedSha256": "48adad4317975e96ce1a760ccfda07c75fd873ab1e60751f6290407b683bb7bd"
+    }
+  ],
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exitCode": 0,
+    "stdout": "\n> refund-agent-real@0.1.0 typecheck\n> ../minimal-agent-ts/node_modules/.bin/tsc --noEmit\n\n",
+    "stderr": ""
+  },
+  "newExperimentCalls": 0,
+  "note": "仅补中文学习注释；逐文件核对去注释后的编译输出一致，不重跑模型、测试用例或旧记录重评。"
+}

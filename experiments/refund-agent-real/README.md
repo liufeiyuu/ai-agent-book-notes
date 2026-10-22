@@ -6,6 +6,7 @@ Stage 2 补充实战：复用 Stage 1 Agent Loop，接通 **真实 Embedding →
 
 ## 当前验证状态
 
+- 2026-10-22（Stage 4 B2）：补充 `no_search_after_empty_candidates` 过程检查并纳入总判定；同一次咨询的固定索引中，某范围候选为 0 后重复搜索会失败。类型检查和 47 项离线测试通过；8 条旧记录的新增检查回放符合预期，真实模型调用 0。行为对照、口径及固定评测表见 [B2 笔记](../../notes/06-evaluation/b2-check-gap.md)。历史成绩按原口径保留。
 - 已实现全部 CLI 入口、真实接口适配、索引缓存、两种运行模式和分阶段 Trace。
 - 2026-09-13：TypeScript 检查通过；退款项目离线测试 **42/42**、共用 Stage 1 组件测试 **39/39** 通过。业务数据仍为 5 份政策、14 个块。
 - 当前模型：`qwen/qwen3-embedding-8b` + `deepseek/deepseek-v4-flash-0731`。14 个块的 4096 维真实索引、查询向量化、聊天及 Agent 工具调用均已运行；先前 OpenAI/Gemini 的 403 记录保留在[真实运行记录](./LIVE-RUN.md)。
@@ -55,9 +56,11 @@ cd /Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/refund-ag
 npm run typecheck
 npm test
 npm run inspect
+# 离线重放 B2 新增检查，使用已保存的真实记录摘录，不调用模型。
+npm run evaluate:replay
 ```
 
-以上三条不联网。下面开始调用付费接口，**先一条一条执行**：
+以上命令不联网。下面开始调用付费接口，**先一条一条执行**：
 
 ```bash
 # 首次把 14 个文档块批量向量化并保存；缓存有效时不重复调用。

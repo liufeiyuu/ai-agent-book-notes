@@ -1,0 +1,730 @@
+{
+  "kind": "selected_fields_from_saved_real_traces",
+  "note": "保留真实记录的选定字段，不是完整 Trace；原文件及 SHA-256 可用于核对。历史检查保留原口径，重评只新增当前的空候选后停止检查。2026-09-06 的 Prompt 尚未包含后来明确添加的 applicableCandidateCount=0 停止说明，不能把重评当成当时同条件对比。",
+  "records": [
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "normal",
+      "mode": "agent",
+      "question": "订单 H1001 的耳罩式耳机外包装拆了，配件都在，没损坏，能退吗？",
+      "businessDate": "2026-09-06",
+      "rawAnswer": "{\"status\":\"eligible\",\"orderIds\":[\"H1001\"],\"answer\":\"订单 H1001（澄音 Studio 黑色耳罩式耳机）符合耳罩式耳机退货条件。该订单为官方直营渠道、购买日期 2026-09-02（适用 v2 政策），签收于 2026-09-04，至今 2 个自然日，在签收后 7 个自然日（含第 7 日）的期限内。耳罩式耳机允许外包装拆封，仅外包装拆开不构成拒绝理由；且配件齐全、无损坏，满足退货条件。可凭订单号向客服申请退货，本助手仅判断咨询条件，不执行退款。\",\"citations\":[{\"chunkId\":\"headphones-v2#1\",\"quote\":\"签收后 7 个自然日内可以申请退货退款，包含第 7 日。耳罩式耳机允许外包装拆封，但必须配件齐全、没有人为损坏。仅外包装拆封不构成拒绝理由。\"},{\"chunkId\":\"headphones-v2#2\",\"quote\":\"适用本版政策且满足条件的官方直营耳罩式耳机，可凭订单号向客服申请退货。客服需核实配件和外观。本助手只能判断咨询条件，不执行退款。\"}],\"missingInformation\":[]}",
+      "knownOrderIds": [
+        "H1001"
+      ],
+      "searches": [
+        {
+          "query": "耳罩式耳机外包装拆开 配件完整 无损坏 退货期限 拆封条件",
+          "scope": {
+            "category": "headphones",
+            "channel": "official",
+            "policyDate": "2026-09-02"
+          },
+          "ranking": [
+            {
+              "chunkId": "headphones-v2#1",
+              "score": 0.8130886959010997,
+              "rank": 1
+            },
+            {
+              "chunkId": "headphones-v2#2",
+              "score": 0.7081035402650926,
+              "rank": 2
+            },
+            {
+              "chunkId": "headphones-v2#3",
+              "score": 0.6911319396662268,
+              "rank": 3
+            },
+            {
+              "chunkId": "headphones-v2#4",
+              "score": 0.6756836956615087,
+              "rank": 4
+            },
+            {
+              "chunkId": "headphones-v2#5",
+              "score": 0.6206151228248696,
+              "rank": 5
+            }
+          ]
+        }
+      ],
+      "historicalChecks": [
+        {
+          "name": "answer_schema",
+          "passed": true
+        },
+        {
+          "name": "known_orders_only",
+          "passed": true
+        },
+        {
+          "name": "citation_ids_and_quotes",
+          "passed": true
+        },
+        {
+          "name": "decision_has_evidence",
+          "passed": true
+        },
+        {
+          "name": "uncertainty_has_explanation",
+          "passed": true
+        },
+        {
+          "name": "expected_decision",
+          "passed": true
+        },
+        {
+          "name": "target_order",
+          "passed": true
+        },
+        {
+          "name": "expected_policy_cited",
+          "passed": true
+        },
+        {
+          "name": "relevant_chunk_retrieved",
+          "passed": true
+        },
+        {
+          "name": "expected_chunk_cited",
+          "passed": true
+        },
+        {
+          "name": "cited_policy_applies_to_order",
+          "passed": true
+        },
+        {
+          "name": "execution_completed",
+          "passed": true
+        },
+        {
+          "name": "orders_actually_queried",
+          "passed": true
+        },
+        {
+          "name": "workflow_complete",
+          "passed": true
+        },
+        {
+          "name": "policy_search_attempted",
+          "passed": true
+        }
+      ],
+      "historicalAutomatedPassed": true,
+      "historicalApiCalls": 4,
+      "historicalElapsedMs": 16831,
+      "expectedProcessPassed": true,
+      "expectedCombinedPassed": true
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "paraphrase",
+      "mode": "agent",
+      "question": "H1001 那个戴在头上的黑色听歌设备，盒子打开了但东西都齐，想寄回去拿回钱，可以吗？",
+      "businessDate": "2026-09-06",
+      "rawAnswer": "{\"status\":\"eligible\",\"orderIds\":[\"H1001\"],\"answer\":\"可以。您的订单 H1001 是官方直营渠道购买的澄音 Studio 黑色耳罩式耳机，购买日期 2026-09-02，适用 2026-09-01 起生效的耳罩式耳机退货政策（v2）。该政策允许外包装拆封，只要配件齐全、没有人为损坏即可退货退款。您的订单显示：签收后已过 2 个自然日（在 7 日期限内）、外包装已拆开（对耳罩式耳机允许）、配件齐全、无损坏，因此满足退货条件。请注意，本结论仅表示依现有证据满足咨询条件，实际退款需凭订单号向客服申请并核实，本助手不执行退款。\",\"citations\":[{\"chunkId\":\"headphones-v2#1\",\"quote\":\"签收后 7 个自然日内可以申请退货退款，包含第 7 日。耳罩式耳机允许外包装拆封，但必须配件齐全、没有人为损坏。仅外包装拆封不构成拒绝理由。\"},{\"chunkId\":\"headphones-v2#2\",\"quote\":\"适用本版政策且满足条件的官方直营耳罩式耳机，可凭订单号向客服申请退货。客服需核实配件和外观。本助手只能判断咨询条件，不执行退款。\"}],\"missingInformation\":[]}",
+      "knownOrderIds": [
+        "H1001"
+      ],
+      "searches": [
+        {
+          "query": "耳机拆封后退货期限与配件齐全条件",
+          "scope": {
+            "category": "headphones",
+            "channel": "official",
+            "policyDate": "2026-09-02"
+          },
+          "ranking": [
+            {
+              "chunkId": "headphones-v2#1",
+              "score": 0.7322820006674328,
+              "rank": 1
+            },
+            {
+              "chunkId": "headphones-v2#2",
+              "score": 0.642385285584499,
+              "rank": 2
+            },
+            {
+              "chunkId": "headphones-v2#3",
+              "score": 0.625346474635922,
+              "rank": 3
+            },
+            {
+              "chunkId": "headphones-v2#4",
+              "score": 0.6001016659032428,
+              "rank": 4
+            },
+            {
+              "chunkId": "headphones-v2#5",
+              "score": 0.5544393138946224,
+              "rank": 5
+            }
+          ]
+        }
+      ],
+      "historicalChecks": [
+        {
+          "name": "answer_schema",
+          "passed": true
+        },
+        {
+          "name": "known_orders_only",
+          "passed": true
+        },
+        {
+          "name": "citation_ids_and_quotes",
+          "passed": true
+        },
+        {
+          "name": "decision_has_evidence",
+          "passed": true
+        },
+        {
+          "name": "uncertainty_has_explanation",
+          "passed": true
+        },
+        {
+          "name": "expected_decision",
+          "passed": true
+        },
+        {
+          "name": "target_order",
+          "passed": true
+        },
+        {
+          "name": "expected_policy_cited",
+          "passed": true
+        },
+        {
+          "name": "relevant_chunk_retrieved",
+          "passed": true
+        },
+        {
+          "name": "expected_chunk_cited",
+          "passed": true
+        },
+        {
+          "name": "cited_policy_applies_to_order",
+          "passed": true
+        },
+        {
+          "name": "execution_completed",
+          "passed": true
+        },
+        {
+          "name": "orders_actually_queried",
+          "passed": true
+        },
+        {
+          "name": "workflow_complete",
+          "passed": true
+        },
+        {
+          "name": "policy_search_attempted",
+          "passed": true
+        }
+      ],
+      "historicalAutomatedPassed": true,
+      "historicalApiCalls": 4,
+      "historicalElapsedMs": 8876,
+      "expectedProcessPassed": true,
+      "expectedCombinedPassed": true
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "historical",
+      "mode": "agent",
+      "question": "H1002 签收十二天了，盒子拆了但配件完整也没有损坏，还能退吗？请按这笔订单适用的政策判断。",
+      "businessDate": "2026-09-06",
+      "rawAnswer": "{\"status\":\"eligible\",\"orderIds\":[\"H1002\"],\"answer\":\"可以退。订单 H1002 为官方直营渠道购买的耳罩式耳机（headphones），购买日期 2026-08-20 落在政策 v1 适用区间（2026-01-01 至 2026-09-01 前），退货期限从签收日 2026-08-25 起算 30 个自然日，当前已签收 12 天，未超期。该品类允许外包装拆封，且订单显示配件完整、无损坏，仅外包装拆封不构成拒绝理由，满足退货咨询条件。注意：本判断仅为咨询结论，不代表已批准、执行或到账。\",\"citations\":[{\"chunkId\":\"headphones-v1#1\",\"quote\":\"签收后 30 个自然日内可以申请退货退款，包含第 30 日。耳罩式耳机允许外包装拆封，但必须配件齐全、没有人为损坏。仅外包装拆封不构成拒绝理由。超过 30 日不能依据本条批准无理由退货。\"}],\"missingInformation\":[]}",
+      "knownOrderIds": [
+        "H1002"
+      ],
+      "searches": [
+        {
+          "query": "耳机拆封后退货期限 配件完整 无损坏 签收后多少天",
+          "scope": {
+            "category": "headphones",
+            "channel": "official",
+            "policyDate": "2026-08-20"
+          },
+          "ranking": [
+            {
+              "chunkId": "headphones-v1#1",
+              "score": 0.7312011516618477,
+              "rank": 1
+            },
+            {
+              "chunkId": "headphones-v1#2",
+              "score": 0.6275163638569301,
+              "rank": 2
+            },
+            {
+              "chunkId": "headphones-v1#4",
+              "score": 0.6087504397025145,
+              "rank": 3
+            },
+            {
+              "chunkId": "headphones-v1#3",
+              "score": 0.6068941917551176,
+              "rank": 4
+            },
+            {
+              "chunkId": "headphones-v1#5",
+              "score": 0.5755727640136933,
+              "rank": 5
+            }
+          ]
+        }
+      ],
+      "historicalChecks": [
+        {
+          "name": "answer_schema",
+          "passed": true
+        },
+        {
+          "name": "known_orders_only",
+          "passed": true
+        },
+        {
+          "name": "citation_ids_and_quotes",
+          "passed": true
+        },
+        {
+          "name": "decision_has_evidence",
+          "passed": true
+        },
+        {
+          "name": "uncertainty_has_explanation",
+          "passed": true
+        },
+        {
+          "name": "expected_decision",
+          "passed": true
+        },
+        {
+          "name": "target_order",
+          "passed": true
+        },
+        {
+          "name": "expected_policy_cited",
+          "passed": true
+        },
+        {
+          "name": "relevant_chunk_retrieved",
+          "passed": true
+        },
+        {
+          "name": "expected_chunk_cited",
+          "passed": true
+        },
+        {
+          "name": "cited_policy_applies_to_order",
+          "passed": true
+        },
+        {
+          "name": "execution_completed",
+          "passed": true
+        },
+        {
+          "name": "orders_actually_queried",
+          "passed": true
+        },
+        {
+          "name": "workflow_complete",
+          "passed": true
+        },
+        {
+          "name": "policy_search_attempted",
+          "passed": true
+        }
+      ],
+      "historicalAutomatedPassed": true,
+      "historicalApiCalls": 4,
+      "historicalElapsedMs": 9796,
+      "expectedProcessPassed": true,
+      "expectedCombinedPassed": true
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "missing",
+      "mode": "agent",
+      "question": "B1003 骨传导耳机已经拆封，能退吗？",
+      "businessDate": "2026-09-06",
+      "rawAnswer": "{\"status\":\"insufficient_evidence\",\"orderIds\":[\"B1003\"],\"answer\":\"已确认订单 B1003（澄音 Trail 骨传导耳机，官方渠道，2026-09-02 购买，2026-09-04 签收，已拆封，配件齐全、无损坏、无质量问题，签收后 2 天）。但按该订单的购买日期、品类（骨传导）与渠道检索，未找到任何适用的退货/拆封政策条款，因此无法依据现有证据判断能否退货。\",\"citations\":[],\"missingInformation\":[\"适用于骨传导耳机品类、官方渠道、2026-09-02 购买日期的退货与拆封政策条款\"]}",
+      "knownOrderIds": [
+        "B1003"
+      ],
+      "searches": [
+        {
+          "query": "骨传导耳机拆封后退货期限与拆封条款",
+          "scope": {
+            "category": "bone-conduction",
+            "channel": "official",
+            "policyDate": "2026-09-02"
+          },
+          "ranking": []
+        }
+      ],
+      "historicalChecks": [
+        {
+          "name": "answer_schema",
+          "passed": true
+        },
+        {
+          "name": "known_orders_only",
+          "passed": true
+        },
+        {
+          "name": "citation_ids_and_quotes",
+          "passed": true
+        },
+        {
+          "name": "decision_has_evidence",
+          "passed": true
+        },
+        {
+          "name": "uncertainty_has_explanation",
+          "passed": true
+        },
+        {
+          "name": "expected_decision",
+          "passed": true
+        },
+        {
+          "name": "target_order",
+          "passed": true
+        },
+        {
+          "name": "execution_completed",
+          "passed": true
+        },
+        {
+          "name": "orders_actually_queried",
+          "passed": true
+        },
+        {
+          "name": "workflow_complete",
+          "passed": true
+        },
+        {
+          "name": "policy_search_attempted",
+          "passed": true
+        }
+      ],
+      "historicalAutomatedPassed": true,
+      "historicalApiCalls": 3,
+      "historicalElapsedMs": 20249,
+      "expectedProcessPassed": true,
+      "expectedCombinedPassed": true
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "ambiguous",
+      "mode": "agent",
+      "question": "帮我看看上次买的那个耳机，拆封了还能退吗？",
+      "businessDate": "2026-09-06",
+      "rawAnswer": "{\"status\":\"needs_clarification\",\"orderIds\":[],\"answer\":\"您提到“上次买的那个耳机”，但系统里找到多个耳机订单候选，请您确认是哪一单：\\n1. H1001 澄音 Studio 黑色耳罩式耳机（2026-09-02 购买，签收 2 天）\\n2. H1002 澄音 Studio 白色耳罩式耳机（2026-08-20 购买，签收 12 天）\\n3. B1003 澄音 Trail 骨传导耳机（2026-09-02 购买，签收 2 天）\\n4. E1004 澄音 Buds 入耳式耳机（卫生封条已拆，2026-09-02 购买，签收 2 天）\\n\\n请提供订单号或具体商品，我再帮您核对拆封退货政策。\",\"citations\":[],\"missingInformation\":[\"目标订单ID\"]}",
+      "knownOrderIds": [
+        "H1001",
+        "H1002",
+        "B1003",
+        "E1004"
+      ],
+      "searches": [],
+      "historicalChecks": [
+        {
+          "name": "answer_schema",
+          "passed": true
+        },
+        {
+          "name": "known_orders_only",
+          "passed": true
+        },
+        {
+          "name": "citation_ids_and_quotes",
+          "passed": true
+        },
+        {
+          "name": "decision_has_evidence",
+          "passed": true
+        },
+        {
+          "name": "uncertainty_has_explanation",
+          "passed": true
+        },
+        {
+          "name": "expected_decision",
+          "passed": true
+        },
+        {
+          "name": "execution_completed",
+          "passed": true
+        },
+        {
+          "name": "orders_actually_queried",
+          "passed": true
+        },
+        {
+          "name": "workflow_complete",
+          "passed": true
+        }
+      ],
+      "historicalAutomatedPassed": true,
+      "historicalApiCalls": 2,
+      "historicalElapsedMs": 5405,
+      "expectedProcessPassed": true,
+      "expectedCombinedPassed": true
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "exception",
+      "mode": "agent",
+      "question": "E1004 入耳式耳机卫生封条拆开了，没有质量问题，能无理由退货吗？",
+      "businessDate": "2026-09-06",
+      "rawAnswer": "{\"status\":\"ineligible\",\"orderIds\":[\"E1004\"],\"answer\":\"根据订单 E1004（澄音 Buds 入耳式耳机，官方直营渠道，2026-09-02 购买，2026-09-04 签收，签收后第 2 天）及适用政策（earbuds-v1，按购买日期 2026-09-02 选择版本）：入耳式耳机的卫生封条一旦拆开，且不存在质量问题，不支持无理由退货退款。该订单卫生封条已拆开（opened=true）、无质量问题（qualityIssue=false），因此不满足无理由退货条件。\",\"citations\":[{\"chunkId\":\"earbuds-v1#1\",\"quote\":\"入耳式耳机的卫生封条一旦拆开，且不存在质量问题，不支持无理由退货退款。未拆卫生封条、配件齐全且签收后 7 个自然日内，可申请无理由退货。\"}] ,\"missingInformation\":[]}",
+      "knownOrderIds": [
+        "E1004"
+      ],
+      "searches": [
+        {
+          "query": "入耳式耳机卫生封条拆开 无理由退货 期限 拆封",
+          "scope": {
+            "category": "earbuds",
+            "channel": "official",
+            "policyDate": "2026-09-02"
+          },
+          "ranking": [
+            {
+              "chunkId": "earbuds-v1#1",
+              "score": 0.7901794551993945,
+              "rank": 1
+            },
+            {
+              "chunkId": "earbuds-v1#2",
+              "score": 0.7223621331203129,
+              "rank": 2
+            }
+          ]
+        }
+      ],
+      "historicalChecks": [
+        {
+          "name": "answer_schema",
+          "passed": true
+        },
+        {
+          "name": "known_orders_only",
+          "passed": true
+        },
+        {
+          "name": "citation_ids_and_quotes",
+          "passed": true
+        },
+        {
+          "name": "decision_has_evidence",
+          "passed": true
+        },
+        {
+          "name": "uncertainty_has_explanation",
+          "passed": true
+        },
+        {
+          "name": "expected_decision",
+          "passed": true
+        },
+        {
+          "name": "target_order",
+          "passed": true
+        },
+        {
+          "name": "expected_policy_cited",
+          "passed": true
+        },
+        {
+          "name": "relevant_chunk_retrieved",
+          "passed": true
+        },
+        {
+          "name": "expected_chunk_cited",
+          "passed": true
+        },
+        {
+          "name": "cited_policy_applies_to_order",
+          "passed": true
+        },
+        {
+          "name": "execution_completed",
+          "passed": true
+        },
+        {
+          "name": "orders_actually_queried",
+          "passed": true
+        },
+        {
+          "name": "workflow_complete",
+          "passed": true
+        },
+        {
+          "name": "policy_search_attempted",
+          "passed": true
+        }
+      ],
+      "historicalAutomatedPassed": true,
+      "historicalApiCalls": 4,
+      "historicalElapsedMs": 11721,
+      "expectedProcessPassed": true,
+      "expectedCombinedPassed": true
+    },
+    {
+      "source": "runs/2026-09-06T03-30-13-928Z-evaluate-434336d2.json",
+      "sourceSha256": "41811c560992bd5f834a13ce459d330fdca18d8d3cf650456741523e4abfe0b7",
+      "caseId": "missing",
+      "mode": "agent",
+      "question": "B1003 骨传导耳机已经拆封，能退吗？",
+      "businessDate": "2026-09-06",
+      "rawAnswer": "{\"status\":\"insufficient_evidence\",\"orderIds\":[\"B1003\"],\"answer\":\"根据现有信息，订单 B1003（澄音 Trail 骨传导耳机）已拆封，但未检索到适用于骨传导耳机拆封后退货的政策条款。请提供相关退货政策或确认该商品是否适用七天无理由退货及拆封影响。\",\"citations\":[],\"missingInformation\":[\"骨传导耳机拆封后的退货政策条款\"]}",
+      "knownOrderIds": [
+        "B1003"
+      ],
+      "searches": [
+        {
+          "query": "骨传导耳机拆封退货期限",
+          "scope": {
+            "category": "bone-conduction",
+            "channel": "official",
+            "policyDate": "2026-09-02"
+          },
+          "ranking": []
+        },
+        {
+          "query": "耳机拆封退货政策",
+          "scope": {
+            "category": "bone-conduction",
+            "channel": "official",
+            "policyDate": "2026-09-02"
+          },
+          "ranking": []
+        },
+        {
+          "query": "退货退款条件",
+          "scope": {
+            "category": "bone-conduction",
+            "channel": "official",
+            "policyDate": "2026-09-02"
+          },
+          "ranking": []
+        }
+      ],
+      "historicalChecks": [
+        {
+          "name": "answer_schema",
+          "passed": true
+        },
+        {
+          "name": "known_orders_only",
+          "passed": true
+        },
+        {
+          "name": "citation_ids_and_quotes",
+          "passed": true
+        },
+        {
+          "name": "decision_has_evidence",
+          "passed": true
+        },
+        {
+          "name": "uncertainty_has_explanation",
+          "passed": true
+        },
+        {
+          "name": "expected_decision",
+          "passed": true
+        },
+        {
+          "name": "target_order",
+          "passed": true
+        },
+        {
+          "name": "execution_completed",
+          "passed": true
+        },
+        {
+          "name": "orders_actually_queried",
+          "passed": true
+        },
+        {
+          "name": "policy_search_attempted",
+          "passed": true
+        }
+      ],
+      "historicalAutomatedPassed": true,
+      "historicalApiCalls": 6,
+      "historicalElapsedMs": 9671,
+      "expectedProcessPassed": false,
+      "expectedCombinedPassed": false
+    },
+    {
+      "source": "runs/2026-09-13T07-13-00-552Z-ask-79ae6ce8.json",
+      "sourceSha256": "db73800c23cb8efec1b2a4d0dcd199628c0a0b93976afd7efada5499da6a08a1",
+      "caseId": "missing",
+      "mode": "agent",
+      "question": "B1003 骨传导耳机已经拆封，能退吗？",
+      "businessDate": "2026-09-06",
+      "rawAnswer": "{\"status\":\"insufficient_evidence\",\"orderIds\":[\"B1003\"],\"answer\":\"我需要先确认订单 B1003 的购买与签收信息，再查询适用政策来判断拆封后的退货条件。\",\"citations\":[],\"missingInformation\":[\"订单 B1003 的购买日期、签收日期、品类与渠道信息\",\"适用于该订单的拆封退货条款\"]}",
+      "knownOrderIds": [],
+      "searches": [],
+      "historicalChecks": [
+        {
+          "name": "answer_schema",
+          "passed": true
+        },
+        {
+          "name": "known_orders_only",
+          "passed": false
+        },
+        {
+          "name": "citation_ids_and_quotes",
+          "passed": true
+        },
+        {
+          "name": "decision_has_evidence",
+          "passed": true
+        },
+        {
+          "name": "uncertainty_has_explanation",
+          "passed": true
+        },
+        {
+          "name": "expected_decision",
+          "passed": true
+        },
+        {
+          "name": "target_order",
+          "passed": true
+        },
+        {
+          "name": "execution_completed",
+          "passed": true
+        },
+        {
+          "name": "orders_actually_queried",
+          "passed": false
+        }
+      ],
+      "historicalAutomatedPassed": false,
+      "historicalApiCalls": 1,
+      "historicalElapsedMs": 3953,
+      "expectedProcessPassed": true,
+      "expectedCombinedPassed": false
+    }
+  ]
+}

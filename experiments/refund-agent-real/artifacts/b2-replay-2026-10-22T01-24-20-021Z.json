@@ -1,0 +1,164 @@
+{
+  "mode": "offline_saved_trace_check_replay",
+  "startedAt": "2026-10-22T01:24:20.021Z",
+  "finishedAt": "2026-10-22T01:24:20.022Z",
+  "realModelCalls": 0,
+  "scriptedModelCalls": 0,
+  "embeddingCalls": 0,
+  "gradingVersion": "historical-checks-plus-empty-candidates-stop-v1",
+  "scope": "新增过程检查与各记录历史检查合并；不是重新运行 Agent，也不是全量现行验证器重评。",
+  "comparisonLimit": "历史运行的 Prompt、流程约束和格式恢复配置有差异，不能据此估计模型改进或节省比例。",
+  "fixtureSha256": "1ea5ac9bb61029cef0892d1b97f729a088886f951cdf6dee733bdc94adf2be91",
+  "results": [
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "normal",
+      "mode": "agent",
+      "beforePassed": true,
+      "afterPassed": true,
+      "processCheck": {
+        "name": "no_search_after_empty_candidates",
+        "passed": true,
+        "violations": []
+      },
+      "failedChecks": [],
+      "searchCount": 1,
+      "historicalApiCalls": 4,
+      "historicalElapsedMs": 16831
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "paraphrase",
+      "mode": "agent",
+      "beforePassed": true,
+      "afterPassed": true,
+      "processCheck": {
+        "name": "no_search_after_empty_candidates",
+        "passed": true,
+        "violations": []
+      },
+      "failedChecks": [],
+      "searchCount": 1,
+      "historicalApiCalls": 4,
+      "historicalElapsedMs": 8876
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "historical",
+      "mode": "agent",
+      "beforePassed": true,
+      "afterPassed": true,
+      "processCheck": {
+        "name": "no_search_after_empty_candidates",
+        "passed": true,
+        "violations": []
+      },
+      "failedChecks": [],
+      "searchCount": 1,
+      "historicalApiCalls": 4,
+      "historicalElapsedMs": 9796
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "missing",
+      "mode": "agent",
+      "beforePassed": true,
+      "afterPassed": true,
+      "processCheck": {
+        "name": "no_search_after_empty_candidates",
+        "passed": true,
+        "violations": []
+      },
+      "failedChecks": [],
+      "searchCount": 1,
+      "historicalApiCalls": 3,
+      "historicalElapsedMs": 20249
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "ambiguous",
+      "mode": "agent",
+      "beforePassed": true,
+      "afterPassed": true,
+      "processCheck": {
+        "name": "no_search_after_empty_candidates",
+        "passed": true,
+        "violations": []
+      },
+      "failedChecks": [],
+      "searchCount": 0,
+      "historicalApiCalls": 2,
+      "historicalElapsedMs": 5405
+    },
+    {
+      "source": "runs/2026-09-13T07-35-49-585Z-evaluate-cf0e6779.json",
+      "sourceSha256": "0751f85c97d9f7227b88d45cf3a24015497b004e22d66a628663cf7736286b8a",
+      "caseId": "exception",
+      "mode": "agent",
+      "beforePassed": true,
+      "afterPassed": true,
+      "processCheck": {
+        "name": "no_search_after_empty_candidates",
+        "passed": true,
+        "violations": []
+      },
+      "failedChecks": [],
+      "searchCount": 1,
+      "historicalApiCalls": 4,
+      "historicalElapsedMs": 11721
+    },
+    {
+      "source": "runs/2026-09-06T03-30-13-928Z-evaluate-434336d2.json",
+      "sourceSha256": "41811c560992bd5f834a13ce459d330fdca18d8d3cf650456741523e4abfe0b7",
+      "caseId": "missing",
+      "mode": "agent",
+      "beforePassed": true,
+      "afterPassed": false,
+      "processCheck": {
+        "name": "no_search_after_empty_candidates",
+        "passed": false,
+        "violations": [
+          {
+            "firstEmptySearch": 1,
+            "repeatedSearch": 2
+          },
+          {
+            "firstEmptySearch": 1,
+            "repeatedSearch": 3
+          }
+        ]
+      },
+      "failedChecks": [
+        "no_search_after_empty_candidates"
+      ],
+      "searchCount": 3,
+      "historicalApiCalls": 6,
+      "historicalElapsedMs": 9671
+    },
+    {
+      "source": "runs/2026-09-13T07-13-00-552Z-ask-79ae6ce8.json",
+      "sourceSha256": "db73800c23cb8efec1b2a4d0dcd199628c0a0b93976afd7efada5499da6a08a1",
+      "caseId": "missing",
+      "mode": "agent",
+      "beforePassed": false,
+      "afterPassed": false,
+      "processCheck": {
+        "name": "no_search_after_empty_candidates",
+        "passed": true,
+        "violations": []
+      },
+      "failedChecks": [
+        "known_orders_only",
+        "orders_actually_queried"
+      ],
+      "searchCount": 0,
+      "historicalApiCalls": 1,
+      "historicalElapsedMs": 3953
+    }
+  ]
+}
