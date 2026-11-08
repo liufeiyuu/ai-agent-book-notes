@@ -1,0 +1,338 @@
+{
+  "operator": "assistant",
+  "started_at_utc": "2026-10-23T01:45:53.975910+00:00",
+  "finished_at_utc": "2026-10-23T01:45:54.047236+00:00",
+  "rule_change": "Add min_duration_ms default=0; failed AND duration_ms >= min_duration_ms",
+  "commands": [
+    {
+      "label": "entry_after_rule_change",
+      "argv": [
+        "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/python-tool-records/.venv/bin/python",
+        "-m",
+        "tool_records"
+      ],
+      "cwd": "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/python-tool-records",
+      "exit_code": 0,
+      "stdout": "{\n  \"all_failures\": {\n    \"input_count\": 6,\n    \"selected_count\": 3,\n    \"selected_ids\": [\n      \"call-002\",\n      \"call-003\",\n      \"call-006\"\n    ],\n    \"tools\": [\n      \"lookup_order\",\n      \"search_policy\"\n    ],\n    \"by_tool\": {\n      \"search_policy\": {\n        \"count\": 2,\n        \"total_duration_ms\": 1100\n      },\n      \"lookup_order\": {\n        \"count\": 1,\n        \"total_duration_ms\": 1500\n      }\n    }\n  },\n  \"failures_at_least_500_ms\": {\n    \"input_count\": 6,\n    \"selected_count\": 2,\n    \"selected_ids\": [\n      \"call-002\",\n      \"call-006\"\n    ],\n    \"tools\": [\n      \"lookup_order\",\n      \"search_policy\"\n    ],\n    \"by_tool\": {\n      \"search_policy\": {\n        \"count\": 1,\n        \"total_duration_ms\": 900\n      },\n      \"lookup_order\": {\n        \"count\": 1,\n        \"total_duration_ms\": 1500\n      }\n    }\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "import_without_starting_cli",
+      "argv": [
+        "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/python-tool-records/.venv/bin/python",
+        "-c",
+        "import tool_records.cli"
+      ],
+      "cwd": "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/python-tool-records",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "missing_field_failure",
+      "argv": [
+        "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/python-tool-records/.venv/bin/python",
+        "-c",
+        "from tool_records.processing import build_report; build_report([{\"call_id\":\"bad-001\",\"tool\":\"search_policy\",\"status\":\"failed\"}], min_duration_ms=500)"
+      ],
+      "cwd": "/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/python-tool-records",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/python-tool-records/tool_records/processing.py\", line 39, in build_report\n    selected = select_failed(records, min_duration_ms=min_duration_ms)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/taikongren/Desktop/workspace/ai-agent-book-notes/experiments/python-tool-records/tool_records/processing.py\", line 14, in select_failed\n    if record[\"status\"] == \"failed\" and record[\"duration_ms\"] >= min_duration_ms:\n                                        ~~~~~~^^^^^^^^^^^^^^^\nKeyError: 'duration_ms'\n"
+    }
+  ],
+  "actual": {
+    "all_failures": {
+      "input_count": 6,
+      "selected_count": 3,
+      "selected_ids": [
+        "call-002",
+        "call-003",
+        "call-006"
+      ],
+      "tools": [
+        "lookup_order",
+        "search_policy"
+      ],
+      "by_tool": {
+        "search_policy": {
+          "count": 2,
+          "total_duration_ms": 1100
+        },
+        "lookup_order": {
+          "count": 1,
+          "total_duration_ms": 1500
+        }
+      }
+    },
+    "failures_at_least_500_ms": {
+      "input_count": 6,
+      "selected_count": 2,
+      "selected_ids": [
+        "call-002",
+        "call-006"
+      ],
+      "tools": [
+        "lookup_order",
+        "search_policy"
+      ],
+      "by_tool": {
+        "search_policy": {
+          "count": 1,
+          "total_duration_ms": 900
+        },
+        "lookup_order": {
+          "count": 1,
+          "total_duration_ms": 1500
+        }
+      }
+    }
+  },
+  "checks": [
+    {
+      "name": "default_retains_original_result",
+      "actual": {
+        "input_count": 6,
+        "selected_count": 3,
+        "selected_ids": [
+          "call-002",
+          "call-003",
+          "call-006"
+        ],
+        "tools": [
+          "lookup_order",
+          "search_policy"
+        ],
+        "by_tool": {
+          "search_policy": {
+            "count": 2,
+            "total_duration_ms": 1100
+          },
+          "lookup_order": {
+            "count": 1,
+            "total_duration_ms": 1500
+          }
+        }
+      },
+      "expected": {
+        "input_count": 6,
+        "selected_count": 3,
+        "selected_ids": [
+          "call-002",
+          "call-003",
+          "call-006"
+        ],
+        "tools": [
+          "lookup_order",
+          "search_policy"
+        ],
+        "by_tool": {
+          "search_policy": {
+            "count": 2,
+            "total_duration_ms": 1100
+          },
+          "lookup_order": {
+            "count": 1,
+            "total_duration_ms": 1500
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "name": "threshold_changes_selected_records_and_summary",
+      "actual": {
+        "input_count": 6,
+        "selected_count": 2,
+        "selected_ids": [
+          "call-002",
+          "call-006"
+        ],
+        "tools": [
+          "lookup_order",
+          "search_policy"
+        ],
+        "by_tool": {
+          "search_policy": {
+            "count": 1,
+            "total_duration_ms": 900
+          },
+          "lookup_order": {
+            "count": 1,
+            "total_duration_ms": 1500
+          }
+        }
+      },
+      "expected": {
+        "input_count": 6,
+        "selected_count": 2,
+        "selected_ids": [
+          "call-002",
+          "call-006"
+        ],
+        "tools": [
+          "lookup_order",
+          "search_policy"
+        ],
+        "by_tool": {
+          "search_policy": {
+            "count": 1,
+            "total_duration_ms": 900
+          },
+          "lookup_order": {
+            "count": 1,
+            "total_duration_ms": 1500
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "name": "threshold_includes_exactly_500",
+      "actual": [
+        "edge-500"
+      ],
+      "expected": [
+        "edge-500"
+      ],
+      "passed": true
+    },
+    {
+      "name": "empty_input",
+      "actual": {
+        "input_count": 0,
+        "selected_count": 0,
+        "selected_ids": [],
+        "tools": [],
+        "by_tool": {}
+      },
+      "expected": {
+        "input_count": 0,
+        "selected_count": 0,
+        "selected_ids": [],
+        "tools": [],
+        "by_tool": {}
+      },
+      "passed": true
+    },
+    {
+      "name": "slow_success_not_selected",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "input_records_unchanged",
+      "actual": [
+        {
+          "call_id": "call-001",
+          "tool": "lookup_order",
+          "status": "succeeded",
+          "duration_ms": 120
+        },
+        {
+          "call_id": "call-002",
+          "tool": "search_policy",
+          "status": "failed",
+          "duration_ms": 900
+        },
+        {
+          "call_id": "call-003",
+          "tool": "search_policy",
+          "status": "failed",
+          "duration_ms": 200
+        },
+        {
+          "call_id": "call-004",
+          "tool": "create_draft",
+          "status": "succeeded",
+          "duration_ms": 80
+        },
+        {
+          "call_id": "call-005",
+          "tool": "search_policy",
+          "status": "succeeded",
+          "duration_ms": 300
+        },
+        {
+          "call_id": "call-006",
+          "tool": "lookup_order",
+          "status": "failed",
+          "duration_ms": 1500
+        }
+      ],
+      "expected": [
+        {
+          "call_id": "call-001",
+          "tool": "lookup_order",
+          "status": "succeeded",
+          "duration_ms": 120
+        },
+        {
+          "call_id": "call-002",
+          "tool": "search_policy",
+          "status": "failed",
+          "duration_ms": 900
+        },
+        {
+          "call_id": "call-003",
+          "tool": "search_policy",
+          "status": "failed",
+          "duration_ms": 200
+        },
+        {
+          "call_id": "call-004",
+          "tool": "create_draft",
+          "status": "succeeded",
+          "duration_ms": 80
+        },
+        {
+          "call_id": "call-005",
+          "tool": "search_policy",
+          "status": "succeeded",
+          "duration_ms": 300
+        },
+        {
+          "call_id": "call-006",
+          "tool": "lookup_order",
+          "status": "failed",
+          "duration_ms": 1500
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "import_remains_silent",
+      "actual": [
+        0,
+        "",
+        ""
+      ],
+      "expected": [
+        0,
+        "",
+        ""
+      ],
+      "passed": true
+    },
+    {
+      "name": "missing_duration_fails_at_field_access",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "same_fixture_before_and_after",
+      "actual": "2a7f837f029b816635cd12a0294a07591e9c079174739807e21a72eb01a7231f",
+      "expected": "2a7f837f029b816635cd12a0294a07591e9c079174739807e21a72eb01a7231f",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "model_calls": 0,
+  "dependency_installs": 0,
+  "sources_after": {
+    "tool_records/processing.py": "\"\"\"C2 的内存数据处理：输入是本课字段齐全、耗时非负的记录。\n\n本轮先理解数据和函数；外部输入的完整校验、文件和异常处理留给 C4。\n\"\"\"\n\n\ndef select_failed(records, min_duration_ms=0):\n    \"\"\"按原顺序取出达到耗时下限的失败记录，返回一个新列表。\"\"\"\n    selected = []\n    # for 每轮取一条字典；冒号和缩进表示循环、条件所属的代码块。\n    for record in records:\n        # 原规则只判断 failed；现在要求“失败”与“耗时达到下限”同时成立。\n        # 默认下限为 0：对本课非负耗时样本，仍保留全部失败记录。\n        if record[\"status\"] == \"failed\" and record[\"duration_ms\"] >= min_duration_ms:\n            # append 把这一条放入新列表；这里不修改原记录里的字段。\n            selected.append(record)\n    # return 在循环外：处理完全部记录后，才把结果交给调用方。\n    return selected\n\n\ndef summarize_by_tool(records):\n    \"\"\"按工具名分组，统计传入记录的条数与耗时之和。\"\"\"\n    summary = {}\n    for record in records:\n        tool = record[\"tool\"]\n        # 字典的键就是工具名；第一次遇到该工具，先建立它自己的统计项。\n        if tool not in summary:\n            summary[tool] = {\"count\": 0, \"total_duration_ms\": 0}\n        # stats 指向 summary 中的同一个统计字典，不是另复制了一份。\n        stats = summary[tool]\n        stats[\"count\"] += 1\n        stats[\"total_duration_ms\"] += record[\"duration_ms\"]\n    return summary\n\n\ndef build_report(records, min_duration_ms=0):\n    \"\"\"组织处理流程并返回结果字典；打印由 cli.main 负责。\"\"\"\n    # 用关键字传参，把调用方选择的下限交给筛选函数。\n    selected = select_failed(records, min_duration_ms=min_duration_ms)\n    selected_ids = []\n    # set 用于去重；空集合写 set()，{} 在这里会得到空字典。\n    tool_names = set()\n    for record in selected:\n        selected_ids.append(record[\"call_id\"])\n        tool_names.add(record[\"tool\"])\n\n    return {\n        \"input_count\": len(records),\n        \"selected_count\": len(selected),\n        \"selected_ids\": selected_ids,\n        # 集合不表达业务顺序；转成排序后的列表，展示稳定且便于 JSON 输出。\n        \"tools\": sorted(tool_names),\n        # 传入的是筛选后的 selected，所以统计口径也只包含选中的失败。\n        \"by_tool\": summarize_by_tool(selected),\n    }\n",
+    "tool_records/cli.py": "\"\"\"命令行入口负责取样本、调用处理函数和展示结果。\"\"\"\n\n# json 属于标准库；这里只把内存结果转成文字，还没有读取 JSON 文件。\nimport json\n\nfrom .processing import build_report\nfrom .samples import SAMPLE_RECORDS\n\n\ndef main():\n    # 函数收到样本列表并返回结果字典；返回结果本身不会自动打印。\n    # 不传下限时使用默认值 0；显式传 500 时，只保留耗时至少 500 毫秒的失败。\n    all_failures = build_report(SAMPLE_RECORDS)\n    slower_failures = build_report(SAMPLE_RECORDS, min_duration_ms=500)\n    # 同一份样本调用两次，只有筛选规则参数不同；原样本不被处理函数修改。\n    comparison = {\n        \"all_failures\": all_failures,\n        \"failures_at_least_500_ms\": slower_failures,\n    }\n    print(json.dumps(comparison, ensure_ascii=False, indent=2))\n"
+  }
+}

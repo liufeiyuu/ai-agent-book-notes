@@ -12,6 +12,7 @@
 
 ## 实验列表
 
+- [Python 工具记录小项目](./python-tool-records/README.md)：Stage 5；以同一本地项目学习环境、语言、文件、测试与必要异步，进度见阶段计划。
 - [官方 async-agent 离线最小路径](./async-agent-official/README.md)：Stage 4 A2；复用官方 Python 运行时，脚本化决策驱动真实子进程，记录中途补充、查询及完成/取消时机对照。
 - [最小 Agent（TypeScript）](./minimal-agent-ts/README.md)
 - [上下文压缩最小对照实验](./context-compression-minimal/README.md)

@@ -23,7 +23,7 @@
 
 学习计划统一按 **Stage（阶段）** 推进：每个 Stage 对应一组学习内容与验收标准，不对应一个自然周。预计用时用于安排投入，实际完成节奏随学习情况调整。
 
-**当前计划：[Stage 4：第 6–7 章异步 Agent、交互与评估](notes/stage-04-plan.md)**
+**当前计划：[Stage 5：Python 基础与本地工具](notes/stage-05-plan.md)**
 
 本节是当前计划的唯一定位入口。每次带学按[协作指引](AGENTS.md)完整读取上方计划正文及其“执行进度”；详细状态、完成证据和下一步只在该计划内维护。
 
@@ -45,7 +45,7 @@
 | 9 | 多模态与实时交互 | 已完成 | [进入笔记](notes/09-multimodal-interaction/README.md) |
 | 10 | 多 Agent 协作 | 待读 | [进入笔记](notes/10-multi-agent/README.md) |
 
-第四、五章的“已完成”指学习者已确认原文读完；对应主线收尾与证据边界见 [Stage 3 复盘](notes/stage-03-review.md)。上表历史编号 9 对应当前原书第六章《交互：观察与动作空间的扩展》，历史编号 6 对应当前原书第七章《Agent 的评估》；第七章按前段重点阅读、后续略读的约定收尾。此表仅记录原文阅读，实践验收、完成证据和下一步统一见[当前计划的执行进度](notes/stage-04-plan.md#执行进度)。
+第四、五章的“已完成”指学习者已确认原文读完；对应主线收尾与证据边界见 [Stage 3 复盘](notes/stage-03-review.md)。上表历史编号 9 对应当前原书第六章《交互：观察与动作空间的扩展》，历史编号 6 对应当前原书第七章《Agent 的评估》；第七章按前段重点阅读、后续略读的约定收尾。此表仅记录原文阅读，第六、七章的实践证据见 [Stage 4 复盘](notes/stage-04-review.md)及其计划；当前学习进度从本页上方的“当前计划”接续。
 
 状态统一使用：`待读`、`阅读中`、`已完成`、`需复习`。
 
@@ -58,6 +58,7 @@
 - [Stage 1：Agent 基础与最小实现](notes/01-agent-basics/stage-01-review.md)
 - [Stage 2：上下文、用户记忆与 RAG](notes/stage-02-review.md)
 - [Stage 3：工具、MCP 与 Coding 协作](notes/stage-03-review.md)
+- [Stage 4：异步 Agent、交互与评估](notes/stage-04-review.md)
 
 ## 仓库结构
 
